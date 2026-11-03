@@ -6,8 +6,8 @@
 <title>Integrar user-module</title>
 <style>
 :root{--bg:#f7f7fb;--card:#fff;--text:#1d1b2c;--soft:#5d5a72;--line:#e3e1ee;--acc:#6c4cf5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--chip:#f0edff}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0e17;--card:#1a1926;--text:#ecebf5;--soft:#a5a2bb;--line:#2c2a3d;--chip:#262241}}
-:root[data-theme="dark"]{--bg:#0f0e17;--card:#1a1926;--text:#ecebf5;--soft:#a5a2bb;--line:#2c2a3d;--chip:#262241}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}}
+:root[data-theme="dark"]{--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:1040px;margin:0 auto;padding:24px 16px 48px}
 h1{font-size:1.7rem;margin:.2em 0}h2{font-size:1.25rem;margin:1.6em 0 .6em}h3{margin:0 0 .4em;font-size:1.05rem}
@@ -22,9 +22,15 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 .foot{color:var(--soft);font-size:.85rem;margin-top:32px}
 pre{background:var(--chip);padding:12px;border-radius:8px;overflow-x:auto;font-size:.86rem;line-height:1.45;margin:.5em 0}pre code{background:none;padding:0}
 .two{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.theme-btn{position:fixed;top:12px;right:12px;z-index:10;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font:600 .85rem system-ui,sans-serif;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
 </style>
+<script>(function(){var t="light";try{t=localStorage.getItem("theme")||"light"}catch(e){}document.documentElement.setAttribute("data-theme",t)})();</script>
+
 </head>
-<body><div class="wrap">
+<body>
+<button class="theme-btn" id="themeBtn" type="button" aria-label="Cambiar entre modo claro y oscuro">🌙 Modo oscuro</button>
+<script>(function(){var b=document.getElementById("themeBtn"),r=document.documentElement;function paint(){b.textContent=r.getAttribute("data-theme")==="dark"?"☀️ Modo claro":"🌙 Modo oscuro"}paint();b.addEventListener("click",function(){var t=r.getAttribute("data-theme")==="dark"?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}paint()})})();</script>
+<div class="wrap">
 <span class="tag">Capstone Delivery System · Sección E</span> <a href="index.html">← Índice</a>
 <h1>Integrar user-module en tu módulo</h1>
 <p class="lead">Qué se desarrolló en el módulo de usuarios en el Sprint 2 (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/56">#56</a>–<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/61">#61</a>, ya en <code>main</code>) y cómo lo usa cada equipo. El cambio principal: <b>dejar de usar un usuario fijo</b> (<code>SampleUsers.CUSTOMER</code>, <code>MERCHANT</code>…) y <b>leer el usuario que inició sesión</b> con <code>CurrentUserService</code>.</p>

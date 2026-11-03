@@ -6,8 +6,8 @@
 <title>Pendientes Sprint 2</title>
 <style>
 :root{--bg:#f7f7fb;--card:#fff;--text:#1d1b2c;--soft:#5d5a72;--line:#e3e1ee;--acc:#6c4cf5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--chip:#f0edff}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0e17;--card:#1a1926;--text:#ecebf5;--soft:#a5a2bb;--line:#2c2a3d;--chip:#262241}}
-:root[data-theme="dark"]{--bg:#0f0e17;--card:#1a1926;--text:#ecebf5;--soft:#a5a2bb;--line:#2c2a3d;--chip:#262241}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}}
+:root[data-theme="dark"]{--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:1040px;margin:0 auto;padding:24px 16px 48px}
 h1{font-size:1.7rem;margin:.2em 0}h2{font-size:1.25rem;margin:1.6em 0 .6em}h3{margin:0 0 .4em;font-size:1.05rem}
@@ -20,9 +20,15 @@ table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{border-bottom:1
 ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;position:relative}ul.chk li::before{content:"☐";position:absolute;left:4px;color:var(--acc)}
 .team{border-left:4px solid var(--acc)}a{color:var(--acc)}
 .foot{color:var(--soft);font-size:.85rem;margin-top:32px}
+.theme-btn{position:fixed;top:12px;right:12px;z-index:10;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font:600 .85rem system-ui,sans-serif;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
 </style>
+<script>(function(){var t="light";try{t=localStorage.getItem("theme")||"light"}catch(e){}document.documentElement.setAttribute("data-theme",t)})();</script>
+
 </head>
-<body><div class="wrap">
+<body>
+<button class="theme-btn" id="themeBtn" type="button" aria-label="Cambiar entre modo claro y oscuro">🌙 Modo oscuro</button>
+<script>(function(){var b=document.getElementById("themeBtn"),r=document.documentElement;function paint(){b.textContent=r.getAttribute("data-theme")==="dark"?"☀️ Modo claro":"🌙 Modo oscuro"}paint();b.addEventListener("click",function(){var t=r.getAttribute("data-theme")==="dark"?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}paint()})})();</script>
+<div class="wrap">
 <span class="tag">Capstone Delivery System · Sección E</span> <a href="index.html">← Índice</a>
 <h1>Pendientes Sprint 2</h1>
 <p class="lead">Sprint 2: <b>2 – 8 de noviembre de 2026</b>. Corte al <b>2 de noviembre</b>, después del cierre del Sprint 1. Primero se <b>cierra lo entregado</b> (MRs en Review); después se empieza lo nuevo. Revisa tu equipo y marca lo que vayas cerrando en GitLab.</p>
@@ -120,6 +126,14 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <tr><td><code>UserService</code> · <code>CurrentUserService</code></td><td>Usuarios ✅</td><td>Todos</td><td>Usar el usuario de la sesión en lugar de ids fijos · <a href="usuarios-integracion.html">cómo hacerlo</a></td></tr>
 </table></div>
 <p class="lead">Hoy ningún equipo implementa su contrato: todos usan el respaldo de <code>core</code>.</p></div>
+
+<div class="card" style="border-left:4px solid var(--bad)"><h3>⚠️ Revisar en la reunión: D-08 "Pedidos de mi comercio" y el menú por rol</h3>
+<p>La pantalla <b>"Pedidos de mi comercio"</b> la usa el comerciante (<b>MERCHANT</b>), pero va dentro de <code>order-module</code>, que se abre con el botón <b>Orders</b>. Con el menú por rol de hoy, <b>Orders</b> solo lo ve el cliente (<b>CUSTOMER</b>). Si Pedidos programa esa pantalla tal como está, <b>el comerciante nunca va a poder abrirla</b>, porque no le aparece el botón.</p>
+<p>Hay dos salidas, y conviene decidirlo en la reunión de Scrum Masters <b>antes de que el equipo B la programe</b>:</p>
+<ul class="chk">
+<li><b>Opción 1:</b> que el MERCHANT también vea <b>Orders</b>. Es un cambio de una línea en <code>RoleMenu</code> (en <code>delivery-system</code>).</li>
+<li><b>Opción 2:</b> que <code>order-module</code> agregue un segundo botón, por ejemplo <b>"My commerce orders"</b>, que solo vea el MERCHANT.</li>
+</ul></div>
 
 <div class="grid">
 <div class="card"><h3>Base de datos · Propuesta 1 (recomendada)</h3><p><b>Un esquema compartido, migraciones por módulo.</b> Cada equipo agrega su entidad JPA, su adaptador y sus migraciones Flyway en <code>db/migration/&lt;módulo&gt;/</code> dentro de la historia que necesita guardar datos. Tablas con prefijo (<code>cat_</code>, <code>ord_</code>, <code>del_</code>, <code>pay_</code>) y <b>sin claves foráneas entre módulos</b>: otro módulo se referencia por su UUID y se valida con su contrato. Así ya funciona <code>user-module</code> con el perfil <code>-Pjpa</code>.</p></div>
