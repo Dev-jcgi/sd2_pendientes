@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pendientes Sprint 2</title>
+<style>
+:root{--bg:#f7f7fb;--card:#fff;--text:#1d1b2c;--soft:#5d5a72;--line:#e3e1ee;--acc:#6c4cf5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--chip:#f0edff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0e17;--card:#1a1926;--text:#ecebf5;--soft:#a5a2bb;--line:#2c2a3d;--chip:#262241}}
+:root[data-theme="dark"]{--bg:#0f0e17;--card:#1a1926;--text:#ecebf5;--soft:#a5a2bb;--line:#2c2a3d;--chip:#262241}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.7rem;margin:.2em 0}h2{font-size:1.25rem;margin:1.6em 0 .6em}h3{margin:0 0 .4em;font-size:1.05rem}
+.lead{color:var(--soft)}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}th{color:var(--soft);font-weight:600}
+.tw{overflow-x:auto}code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:.88em}
+.ok{color:var(--ok);font-weight:600}.warn{color:var(--warn);font-weight:600}.bad{color:var(--bad);font-weight:600}
+.tag{display:inline-block;background:var(--chip);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;position:relative}ul.chk li::before{content:"☐";position:absolute;left:4px;color:var(--acc)}
+.team{border-left:4px solid var(--acc)}a{color:var(--acc)}
+.foot{color:var(--soft);font-size:.85rem;margin-top:32px}
+</style>
+</head>
+<body><div class="wrap">
+<span class="tag">Capstone Delivery System · Sección E</span>
+<h1>Pendientes Sprint 2</h1>
+<p class="lead">Sprint 2: <b>2 – 8 de noviembre de 2026</b>. Corte al <b>2 de noviembre</b>, después del cierre del Sprint 1. Primero se <b>cierra lo entregado</b> (MRs en Review); después se empieza lo nuevo. Revisa tu equipo y marca lo que vayas cerrando en GitLab.</p>
+
+<div class="grid">
+<div class="card"><h3>🔗 Enlaces</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone">Repositorio</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/boards">Board</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/home">Wiki</a><br><a href="https://jcgi.lat/guia_git_flow/paso-a-paso.html">Paso a paso</a> · <a href="https://jcgi.lat/guia_git_flow/requerimientos.html">Requerimientos</a> · <a href="index.html">Pendientes Sprint 1</a></div>
+<div class="card"><h3>📝 Feedback de la semana 5</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-5---General-report">General</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-5---Equipo-A">A</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-5---Equipo-B">B</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-5---Equipo-C">C</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-5---Equipo-D">D</a><br>Cada reporte detalla qué trabajó cada integrante.</div>
+<div class="card"><h3>🧭 Scrum Masters · Sprint 2</h3>A <b>Andrés Veizaga</b>* · B <b>Carla Devora Flores</b> · C <b>Alejandro Juchasara</b> · D <b>Jeferson Cortes</b>*<br><span class="lead">* A y D no informaron cambio: sigue el SM del Sprint 1.</span></div>
+</div>
+
+<h2>Cómo cerró el Sprint 1</h2>
+<div class="card tw"><table>
+<tr><th></th><th>A · Entregas</th><th>B · Pedidos</th><th>C · Catálogo</th><th>D · Pagos</th></tr>
+<tr><td>Banda (Lab 5, act. 1 y 2)</td><td class="bad">C</td><td class="ok">A</td><td class="warn">B</td><td class="warn">B · entrega tardía</td></tr>
+<tr><td>Historias cerradas</td><td class="bad">0 de 4</td><td class="ok">1 de 6 (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/35">#35</a>)</td><td class="bad">0 de 6</td><td class="bad">0 de 3</td></tr>
+<tr><td>Wiki del módulo</td><td class="warn">Completa, hecha casi por una persona</td><td class="ok">Completa y repartida</td><td class="warn">Refinamiento y Sprint Review vacíos</td><td class="warn">Plan de acción fuera de plazo</td></tr>
+<tr><td>Daily (días · grabaciones)</td><td class="bad">2 · 2</td><td class="ok">5 · 5</td><td class="warn">3 · 2</td><td class="warn">7 en la wiki · 3</td></tr>
+<tr><td>Reporte de avance en la PBI</td><td class="bad">Ninguno</td><td class="bad">Ninguno</td><td class="bad">Ninguno</td><td class="bad">Ninguno</td></tr>
+<tr><td>MRs</td><td class="warn">4 en Review</td><td class="warn">3 en Review</td><td class="bad">6 apilados</td><td class="bad">1 MR + 2 ramas sin MR</td></tr>
+</table></div>
+
+<h2>Áreas de oportunidad (todos los equipos)</h2>
+<div class="grid">
+<div class="card"><h3>📌 En GitLab</h3><ul class="chk">
+<li><b>Comentario de avance en tu historia</b> cada vez que mueves la tarjeta: qué hiciste, qué falta y si hay bloqueo. Mover la tarjeta no es un reporte.</li>
+<li>Rama <code>FEAT-&lt;n&gt;/feature/…</code> <b>desde <code>main</code> actualizado</b>, nunca desde la rama de un compañero.</li>
+<li><b>MR en Draft el mismo día</b> que creas la rama, con <code>Closes #n</code>.</li>
+<li><b>Rebase, nunca merge</b>: <code>git pull --rebase origin main</code>.</li>
+<li>Commits atómicos: uno por paso (dominio, caso de uso, adaptador, UI, pruebas).</li>
+<li>Revisar los MRs del equipo <b>con comentarios</b>, no solo aprobar.</li>
+</ul></div>
+<div class="card"><h3>🗓️ En las reuniones Scrum</h3><ul class="chk">
+<li><b>Daily cada día hábil</b>, 15 min, con las 3 preguntas por integrante y el enlace real a la grabación.</li>
+<li>Actas el <b>mismo día</b> de la reunión, no al cierre del sprint.</li>
+<li>Retrospectiva con <b>acciones, responsable y fecha</b>, revisadas en la siguiente.</li>
+<li>Repartir el trabajo durante el sprint: el código no puede aparecer solo el último día.</li>
+<li>Lo que se declara en el PDF debe estar en GitLab: lo que no está, no se puede evaluar.</li>
+</ul></div>
+</div>
+
+<h2>Qué se trabaja en el Sprint 2</h2>
+
+<div class="card team"><h3>Equipo A · delivery-module <span class="tag">[DEL] · &amp;3</span></h3><ul class="chk">
+<li>Cerrar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/21">#21</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/18">!18</a>: rebase sin merge commit.</li>
+<li>Cerrar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/22">#22</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/20">!20</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/24">#24</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/24">!24</a>: aprobación y merge.</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/23">#23</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/11">!11</a>: <b>rehacer desde <code>main</code></b>, commit <code>FEAT-23: …</code> y rebase (pendiente desde la semana 4).</li>
+<li>Asignar y refinar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/25">#25</a> (epic &amp;3, D-02) y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/26">#26</a>.</li>
+<li>Cerrar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/27">#27</a> (criterio de #22) y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/28">#28</a> (se fusiona con #24).</li>
+<li>Pegar los enlaces reales de las grabaciones en las actas.</li>
+</ul></div>
+
+<div class="card team"><h3>Equipo B · order-module <span class="tag">[ORD] · &amp;2</span></h3><ul class="chk">
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/34">#34</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/22">!22</a>: rama <code>FEAT-34/…</code>, commits con formato, <code>Closes #34</code>, sin commits de #36; borrar la rama duplicada sin MR.</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/36">#36</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/13">!13</a>: agregar <code>Closes #36</code> y rebase.</li>
+<li>Cerrar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/38">#38</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/21">!21</a>.</li>
+<li>Continuar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/37">#37</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/41">#41</a> con rama y MR en Draft.</li>
+<li>Crear la historia <b>"Pedidos de mi comercio" (FUN-005 / D-08)</b>: desbloquea a entregas.</li>
+<li>Refinar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/39">#39</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/40">#40</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/42">#42</a> para el Sprint 3.</li>
+</ul></div>
+
+<div class="card team"><h3>Equipo C · catalog-module <span class="tag">[CAT] · &amp;1</span></h3><ul class="chk">
+<li>Fusionar <b>en este orden</b>, con rebase sobre <code>main</code> después de cada merge: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/45">#45</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/14">!14</a> → <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/46">#46</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/15">!15</a> → <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/48">#48</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/17">!17</a> → <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/47">#47</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/19">!19</a> → <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/49">#49</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/16">!16</a> → <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/50">#50</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/23">!23</a>.</li>
+<li>Epic &amp;1 en <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/45">#45</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/46">#46</a>; plantilla en <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/16">!16</a>.</li>
+<li>Implementar <code>CatalogService</code> real (lo usan pedidos y entregas), incluido <code>findCommerceIdsByMerchant</code> (D-08).</li>
+<li>Completar en la wiki el Refinamiento, la Sprint Review y la Retrospectiva.</li>
+</ul></div>
+
+<div class="card team"><h3>Equipo D · payment-module <span class="tag">[PAY] · &amp;4</span></h3><ul class="chk">
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/33">#33</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/25">!25</a>: plantilla del MR y <code>Closes #33</code>.</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/29">#29</a>: renombrar la rama a <code>FEAT-29/feature/…</code> y <b>abrir el MR</b>.</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/30">#30</a>: rehacer la rama <code>FEAT-30/feature/…</code> desde <code>main</code>, <b>sin merges</b>, y abrir el MR.</li>
+<li>Empezar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/31">#31</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/32">#32</a> después de #30; asignar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/51">#51</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/52">#52</a>.</li>
+<li>Promociones <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/53">#53</a>–<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/55">#55</a> solo si queda capacidad (D-03).</li>
+<li>Borrar las páginas sueltas de la wiki y trabajar solo en <code>Modulos/Pagos</code>.</li>
+</ul></div>
+
+<h2>Reunión de Scrum Masters · esta semana</h2>
+<div class="card" style="border-left:4px solid var(--warn)"><p>Como en LeSS (varios equipos, <b>un solo producto</b>), los cuatro Scrum Masters del Sprint 2 se reúnen con el practitioner (PO) para acordar <b>las integraciones entre módulos</b> y <b>la base de datos</b>. Duración: 45–60 min, grabada. Acta en <code>Modulos/&lt;módulo&gt;/Actas/Sprint-2/Sprint-Review</code>.</p>
+<div class="tw"><table>
+<tr><th>Contrato (core-module)</th><th>Lo implementa</th><th>Lo usa</th><th>Acordar</th></tr>
+<tr><td><code>CatalogService</code></td><td>C</td><td>B, A</td><td>Cuándo se reserva y libera el stock; D-08</td></tr>
+<tr><td><code>OrderService</code></td><td>B</td><td>A</td><td>Estados del pedido; quién marca "Listo para entrega"</td></tr>
+<tr><td><code>PaymentService</code></td><td>D</td><td>B</td><td>Qué pasa con el pedido si el pago es rechazado</td></tr>
+<tr><td><code>UserService</code> · <code>CurrentUserService</code></td><td>Usuarios ✅</td><td>Todos</td><td>Usar el usuario de la sesión en lugar de ids fijos</td></tr>
+</table></div>
+<p class="lead">Hoy ningún equipo implementa su contrato: todos usan el respaldo de <code>core</code>.</p></div>
+
+<div class="grid">
+<div class="card"><h3>Base de datos · Propuesta 1 (recomendada)</h3><p><b>Un esquema compartido, migraciones por módulo.</b> Cada equipo agrega su entidad JPA, su adaptador y sus migraciones Flyway en <code>db/migration/&lt;módulo&gt;/</code> dentro de la historia que necesita guardar datos. Tablas con prefijo (<code>cat_</code>, <code>ord_</code>, <code>del_</code>, <code>pay_</code>) y <b>sin claves foráneas entre módulos</b>: otro módulo se referencia por su UUID y se valida con su contrato. Así ya funciona <code>user-module</code> con el perfil <code>-Pjpa</code>.</p></div>
+<div class="card"><h3>Base de datos · Propuesta 2</h3><p><b>Modelo de datos primero, migraciones centralizadas.</b> Se acuerda un diagrama entidad-relación único (pedido, línea, producto, comercio, stock, pago, entrega) y se publica en la wiki. Un SM responsable por sprint mantiene las migraciones en <code>delivery-system</code>. Los equipos siguen en memoria en el Sprint 2 y conectan sus adaptadores JPA en el Sprint 3.</p></div>
+</div>
+
+<h2>Scrum con LeSS: qué se espera</h2>
+<div class="card tw"><table>
+<tr><th>Evento</th><th>Cómo se hace en LeSS</th><th>Qué mejorar</th></tr>
+<tr><td>Sprint Planning 1</td><td>Los SM eligen juntos los ítems del único Product Backlog y detectan dependencias</td><td>Hoy cada equipo planifica solo</td></tr>
+<tr><td>Sprint Planning 2</td><td>Cada equipo divide sus historias en tareas</td><td>Tareas visibles en la historia</td></tr>
+<tr><td>Daily</td><td>Por equipo, 15 min, cada día; los bloqueos entre equipos se hablan directamente</td><td>Días faltantes; bloqueos no escalados</td></tr>
+<tr><td>Refinamiento multi-equipo</td><td>Las historias con dependencias se refinan con los equipos involucrados</td><td>D-08 sigue sin historia</td></tr>
+<tr><td>Sprint Review general</td><td>Un solo Review del producto integrado, con el PO</td><td>Integrar contratos para mostrar el flujo completo</td></tr>
+<tr><td>Retrospectiva</td><td>Por equipo y una general del sistema</td><td>Acciones con responsable y seguimiento</td></tr>
+</table></div>
+<div class="card"><h3>Definition of Done común (un solo producto)</h3><ul class="chk">
+<li>Criterios de aceptación cumplidos y comentario de cierre en la historia.</li>
+<li>MR revisado por el equipo, aprobado por el SM y el PO, y <b>fusionado</b> con el pipeline en verde.</li>
+<li>Pruebas unitarias del caso de uso; adaptador en memoria funcionando.</li>
+<li>Demostrado en <code>delivery-system</code>.</li>
+</ul></div>
+
+<h2>Practitioner · user-module <span class="tag">[USR] · &amp;5</span></h2>
+<div class="card"><div class="tw"><table>
+<tr><th>Ya en <code>main</code> (Sprint 2)</th><th>Para los equipos</th></tr>
+<tr><td>Usuario actual <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/56">#56</a> · inicio de sesión con correo y contraseña <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/61">#61</a></td><td>Leer el usuario con <code>CurrentUserService</code>; el menú se filtra por rol</td></tr>
+<tr><td>Último administrador protegido <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/57">#57</a> · búsqueda por correo y teléfono E.164 <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/58">#58</a></td><td>—</td></tr>
+<tr><td>Perfil MySQL <code>-Pjpa</code> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/59">#59</a> · contraseña cifrada <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/60">#60</a></td><td>Base para la propuesta de base de datos</td></tr>
+</table></div>
+<p class="lead">Siguen en el Sprint 3: usuario COURIER inactivo de prueba, historial de estados del usuario y apoyo a los adaptadores JPA de cada módulo.</p></div>
+
+<p class="foot">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Esta página se actualiza en cada corte del sprint.</p>
+</div></body></html>
