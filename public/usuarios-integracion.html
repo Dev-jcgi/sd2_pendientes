@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Integrar user-module</title>
+<style>
+:root{--bg:#f7f7fb;--card:#fff;--text:#1d1b2c;--soft:#5d5a72;--line:#e3e1ee;--acc:#6c4cf5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--chip:#f0edff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0e17;--card:#1a1926;--text:#ecebf5;--soft:#a5a2bb;--line:#2c2a3d;--chip:#262241}}
+:root[data-theme="dark"]{--bg:#0f0e17;--card:#1a1926;--text:#ecebf5;--soft:#a5a2bb;--line:#2c2a3d;--chip:#262241}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.7rem;margin:.2em 0}h2{font-size:1.25rem;margin:1.6em 0 .6em}h3{margin:0 0 .4em;font-size:1.05rem}
+.lead{color:var(--soft)}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}th{color:var(--soft);font-weight:600}
+.tw{overflow-x:auto}code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:.88em}
+.ok{color:var(--ok);font-weight:600}.warn{color:var(--warn);font-weight:600}.bad{color:var(--bad);font-weight:600}
+.tag{display:inline-block;background:var(--chip);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;position:relative}ul.chk li::before{content:"☐";position:absolute;left:4px;color:var(--acc)}
+.team{border-left:4px solid var(--acc)}a{color:var(--acc)}
+.foot{color:var(--soft);font-size:.85rem;margin-top:32px}
+pre{background:var(--chip);padding:12px;border-radius:8px;overflow-x:auto;font-size:.86rem;line-height:1.45;margin:.5em 0}pre code{background:none;padding:0}
+.two{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+</style>
+</head>
+<body><div class="wrap">
+<span class="tag">Capstone Delivery System · Sección E</span>
+<h1>Integrar user-module en tu módulo</h1>
+<p class="lead">Qué se desarrolló en el módulo de usuarios en el Sprint 2 (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/56">#56</a>–<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/61">#61</a>, ya en <code>main</code>) y cómo lo usa cada equipo. El cambio principal: <b>dejar de usar un usuario fijo</b> (<code>SampleUsers.CUSTOMER</code>, <code>MERCHANT</code>…) y <b>leer el usuario que inició sesión</b> con <code>CurrentUserService</code>.</p>
+
+<div class="grid">
+<div class="card"><h3>🔗 Enlaces</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone">Repositorio</a> · <a href="pendientes-sprint-2.html">Pendientes Sprint 2</a> · <a href="index.html">Pendientes Sprint 1</a><br>READMEs: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/core-module/README.md">core-module</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/README.md">user-module</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/delivery-system/README.md">delivery-system</a></div>
+<div class="card"><h3>📘 Ejemplo de historia</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/61">#61</a> tiene el reporte de avance completo, los commits y el MR. Úsala como modelo.</div>
+</div>
+
+<h2>1. Qué hay nuevo en <code>main</code></h2>
+<div class="card tw"><table>
+<tr><th>Historia</th><th>Qué hace</th><th>Qué cambia para tu equipo</th></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/56">#56</a> Usuario actual</td><td>Contrato <code>CurrentUserService</code> en <code>core-module</code>: devuelve <code>CurrentUser(id, role, displayName)</code> del usuario con sesión</td><td><b>Reemplazar los ids fijos</b> por <code>currentUserService.currentUser().id()</code></td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/61">#61</a> Inicio de sesión y menú por rol</td><td>Pantalla de login con correo y contraseña antes de la ventana principal; menú según el rol; botón <b>Sign out</b></td><td>El botón de tu módulo solo aparece para los roles que lo usan (ver punto 5)</td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/60">#60</a> Contraseña cifrada</td><td>Cada usuario tiene contraseña (mínimo 8 caracteres); se guarda solo el hash BCrypt</td><td>Nada en tu código; para entrar usa los usuarios de prueba</td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/59">#59</a> Perfil MySQL</td><td><code>-Pjpa</code> arranca con MySQL; los puertos sin adaptador JPA usan el de memoria y lo avisan en el log</td><td>Base para la persistencia de tu módulo (ver punto 6)</td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/58">#58</a> Búsqueda y teléfono</td><td>Buscar usuarios por correo; teléfono en formato E.164 (<code>+59170000000</code>)</td><td>Nada</td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/57">#57</a> Último administrador</td><td>No se borran usuarios: se activan o desactivan; siempre queda un ADMIN activo</td><td>Un usuario puede quedar <b>inactivo</b>: <code>isActiveWithRole</code> lo rechaza</td></tr>
+</table></div>
+
+<h2>2. Actualiza tu rama y prueba el login</h2>
+<div class="two">
+<div class="card"><h3>Comandos</h3><pre><code>git switch main &amp;&amp; git pull --rebase origin main
+git switch FEAT-&lt;n&gt;/feature/&lt;tu-rama&gt; &amp;&amp; git rebase main     # tu rama al día
+
+cd core-module    &amp;&amp; ./mvnw install -DskipTests
+cd ../user-module &amp;&amp; ./mvnw install -DskipTests
+cd ../&lt;tu-modulo&gt; &amp;&amp; ./mvnw install -DskipTests
+cd ../delivery-system &amp;&amp; ./mvnw javafx:run -Pmemory</code></pre><p class="lead">En Windows usa <code>mvnw.cmd</code>. Si tu rama tiene conflictos al hacer rebase, resuélvelos, <code>git add</code> y <code>git rebase --continue</code>.</p></div>
+<div class="card"><h3>Usuarios de prueba</h3><div class="tw"><table>
+<tr><th>Correo</th><th>Rol</th><th>Ve en el menú</th></tr>
+<tr><td><code>admin@sample.delivery</code></td><td>ADMIN</td><td>Users, Catalog</td></tr>
+<tr><td><code>merchant@sample.delivery</code></td><td>MERCHANT</td><td>Catalog</td></tr>
+<tr><td><code>customer@sample.delivery</code></td><td>CUSTOMER</td><td>Orders, Payments</td></tr>
+<tr><td><code>courier@sample.delivery</code></td><td>COURIER</td><td>Deliveries</td></tr>
+<tr><td><code>inactive@sample.delivery</code></td><td>CUSTOMER inactivo</td><td>No entra: "Inactive user"</td></tr>
+</table></div><p>La contraseña de prueba de todos está en el <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/README.md">README de user-module</a> (<code>SampleUsersLoader.SAMPLE_PASSWORD</code>). Los ids son los mismos de <code>SampleUsers</code>.</p></div>
+</div>
+
+<h2>3. Leer el usuario de la sesión</h2>
+<div class="card"><p>Inyecta <code>CurrentUserService</code> (paquete <code>org.jala.edu.core.contract</code>) en el <b>controlador</b> de la pantalla y pasa el id al caso de uso. Tu módulo <b>no depende de user-module</b>: solo de <code>core-module</code>.</p>
+<div class="two"><div><h3>❌ Antes</h3><pre><code>@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@RequiredArgsConstructor
+public class NewCartController {
+
+    private static final UUID CURRENT_CUSTOMER = SampleUsers.CUSTOMER;   // ❌ usuario fijo
+
+    private final AddProductToCartUseCase addProductToCart;
+    ...
+    () -&gt; addProductToCart.execute(CURRENT_CUSTOMER, product.productId(), quantity)</code></pre></div><div><h3>✅ Después</h3><pre><code>@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@RequiredArgsConstructor
+public class NewCartController {
+
+    private final CurrentUserService currentUserService;               // ✅ contrato de core
+    private final AddProductToCartUseCase addProductToCart;
+    ...
+    UUID customerId = currentUserService.currentUser().id();          // quién inició sesión
+    () -&gt; addProductToCart.execute(customerId, product.productId(), quantity)</code></pre></div></div>
+<p class="lead">Lee <code>currentUser()</code> en el momento de la acción (al pulsar el botón), no en una constante. Si nadie inició sesión lanza <code>NotAuthenticatedException</code>; <code>findCurrentUser()</code> devuelve un <code>Optional</code> si prefieres decidir tú.</p></div>
+
+<h2>4. Permisos y pruebas</h2>
+<div class="two">
+<div class="card"><h3>Los permisos siguen en el caso de uso</h3><p><code>CurrentUserService</code> dice <b>quién</b> es; <code>UserService.isActiveWithRole</code> dice si <b>puede</b> (D-07). No quites esa validación: así un usuario desactivado no opera aunque tenga sesión.</p><pre><code>// AddProductToCartUseCase NO cambia: sigue validando el permiso con UserService (D-07)
+if (!users.isActiveWithRole(customerId, UserRole.CUSTOMER)) {
+    throw new DomainException(&quot;User not authorized for this operation&quot;);
+}</code></pre></div>
+<div class="card"><h3>Pruebas sin user-module</h3><pre><code>// En las pruebas no hace falta user-module: CurrentUserService tiene un solo método
+CurrentUserService asCustomer = () -&gt; Optional.of(
+        new CurrentUser(SampleUsers.CUSTOMER, UserRole.CUSTOMER, &quot;Sample Customer&quot;));
+
+CurrentUserService nobody = Optional::empty;   // currentUser() lanza NotAuthenticatedException</code></pre><p class="lead">Sin login (pruebas con Spring o un módulo sin user-module), <code>core</code> responde con un usuario de ejemplo del rol en <code>delivery.sample-user</code> (<code>CUSTOMER</code> por defecto; variable <code>DELIVERY_SAMPLE_USER=COURIER</code>).</p></div>
+</div>
+
+<h2>5. Menú según el rol</h2>
+<div class="card"><p>La regla vive en <code>delivery-system</code> (<code>RoleMenu</code>) y se busca por el <b>título del botón</b> de tu <code>NavigationItem</code>. No cambies el título de tu botón: un título que no está en la tabla lo ven todos.</p>
+<div class="tw"><table>
+<tr><th>Título del botón</th><th>Módulo</th><th>Roles que lo ven</th></tr>
+<tr><td><code>Users</code></td><td>user-module</td><td>ADMIN</td></tr>
+<tr><td><code>Catalog</code></td><td>catalog-module</td><td>ADMIN, MERCHANT</td></tr>
+<tr><td><code>Orders</code></td><td>order-module</td><td>CUSTOMER</td></tr>
+<tr><td><code>Payments</code></td><td>payment-module</td><td>CUSTOMER</td></tr>
+<tr><td><code>Deliveries</code></td><td>delivery-module</td><td>COURIER</td></tr>
+</table></div>
+<p>⚠️ <b>D-08 "Pedidos de mi comercio"</b> está en order-module y lo usa el MERCHANT, que hoy no ve <code>Orders</code>. Se acuerda en la reunión de Scrum Masters: agregar MERCHANT a <code>Orders</code> o un botón propio. El cambio en <code>RoleMenu</code> se pide con un MR (code owner: practitioner).</p>
+<p>Al pulsar <b>Sign out</b> se publica <code>SignOutEvent</code>. Si tu módulo guarda algo por usuario en memoria, puedes escucharlo:</p><pre><code>// Opcional: limpiar datos de la sesión al cerrar sesión (por ejemplo, un carrito en memoria)
+@EventListener(SignOutEvent.class)
+public void clearOnSignOut() {
+    cart.clear();
+}</code></pre></div>
+
+<h2>6. Base de datos</h2>
+<div class="card"><p>Con <code>-Pjpa</code> la aplicación usa MySQL. Hoy solo user-module guarda en la base (tabla <code>users</code>, migraciones en <code>db/migration/user</code>); tu módulo sigue en memoria hasta que tenga su adaptador JPA, y el log lo avisa.</p><pre><code>cd delivery-system
+docker compose up -d              # MySQL en Docker
+./mvnw javafx:run -Pjpa           # o DELIVERY_PERSISTENCE_TYPE=jpa ./mvnw javafx:run</code></pre>
+<p>Cuando tu equipo agregue persistencia (según lo que se acuerde en la reunión de Scrum Masters): entidad y adaptador con <code>@ConditionalOnJpaPersistence</code>, migraciones en <code>db/migration/&lt;tu-modulo&gt;/V&lt;yyyyMMddHHmm&gt;__…sql</code> y <b>sin claves foráneas a <code>users</code></b>: guarda el UUID del usuario y valídalo con <code>UserService</code>. Modelo a seguir: <code>UserPersistenceAdapter</code> y su prueba con H2.</p></div>
+
+<h2>7. Dónde está el usuario fijo hoy</h2>
+<div class="card"><p>Revisión de <code>main</code> y de las ramas abiertas al 2 de noviembre. Cambia estas líneas en tu historia o en una nueva rama con el número de tu historia.</p><div class="tw"><table>
+<tr><th>Equipo</th><th>Archivo</th><th>Hoy</th><th>Cambiar por</th></tr>
+<tr><td>B · Pedidos</td><td><code>NewCartController</code> (en <code>main</code>), <code>RemoveItemPanelController</code> (FEAT-38)</td><td><code>CURRENT_CUSTOMER = SampleUsers.CUSTOMER</code></td><td>id del CUSTOMER con sesión</td></tr>
+<tr><td>C · Catálogo</td><td><code>CreateProductController</code> (FEAT-45, FEAT-49), <code>CatalogSession</code> (FEAT-46/47/48)</td><td><code>CURRENT_USER = SampleUsers.MERCHANT</code></td><td>id del MERCHANT con sesión; luego <code>findCommerceIdsByMerchant</code> (D-08)</td></tr>
+<tr><td>A · Entregas</td><td><code>ReadyOrdersController</code> (FEAT-23), <code>DeliveryHistoryController</code> (FEAT-22), <code>CourierRegistrationController</code> (FEAT-21)</td><td><code>SampleUsers.COURIER</code> / <code>ADMIN</code>; campo de texto con el id del repartidor</td><td>id del COURIER con sesión; el historial muestra <b>solo el suyo</b> (criterio de #22)</td></tr>
+<tr><td>D · Pagos</td><td>Casos de uso de #29, #30 y #33</td><td><code>userId</code> recibido como dato</td><td>id del CUSTOMER con sesión desde el controlador</td></tr>
+</table></div></div>
+
+<h2>Checklist por equipo</h2>
+<div class="card"><ul class="chk">
+<li>Rebase de mi rama sobre <code>main</code> y <code>install</code> de core-module y user-module.</li>
+<li>Entrar con el usuario de prueba de mi rol y ver el botón de mi módulo.</li>
+<li>Reemplazar <code>SampleUsers.X</code> en controladores por <code>currentUserService.currentUser().id()</code>.</li>
+<li>Mantener <code>isActiveWithRole</code> en el caso de uso y probar con el usuario inactivo.</li>
+<li>Pruebas con un <code>CurrentUserService</code> falso (lambda), sin user-module.</li>
+<li>Comentario de avance en la historia y MR en Draft con <code>Closes #n</code>.</li>
+</ul></div>
+
+<p class="foot">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Dudas: comenta en tu historia mencionando al practitioner.</p>
+</div></body></html>
