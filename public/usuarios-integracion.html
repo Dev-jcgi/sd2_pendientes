@@ -44,6 +44,7 @@ pre{background:var(--chip);padding:12px;border-radius:8px;overflow-x:auto;font-s
 <h2>1. Qué hay nuevo en <code>main</code></h2>
 <div class="card tw"><table>
 <tr><th>Historia</th><th>Qué hace</th><th>Qué cambia para tu equipo</th></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/79">#79</a> Botón del comerciante</td><td><code>RoleMenu</code>: el botón <code>My commerce orders</code> solo lo ve el MERCHANT (D-08, opción 2)</td><td><b>Pedidos (B):</b> declarar ese <code>NavigationItem</code> en #72; <b>Catálogo (C):</b> <code>findCommerceIdsByMerchant</code></td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/82">#82</a> Historial de estados</td><td>El ADMIN ve quién activó o desactivó a cada usuario y cuándo (botón <b>History</b> en la lista de usuarios); con <code>-Pjpa</code> se guarda en la tabla <code>user_status_changes</code></td><td>Nada en tu código; ejemplo de migración Flyway con clave foránea <b>dentro del mismo módulo</b></td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/80">#80</a> Repartidor inactivo de prueba</td><td><code>SampleUsers.INACTIVE_COURIER</code> (COURIER inactivo); <code>isActiveWithRole(INACTIVE_COURIER, COURIER)</code> responde <code>false</code></td><td><b>Entregas (A):</b> úsalo en las pruebas de #21 y #26 para rechazar a un repartidor inactivo</td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/56">#56</a> Usuario actual</td><td>Contrato <code>CurrentUserService</code> en <code>core-module</code>: devuelve <code>CurrentUser(id, role, displayName)</code> del usuario con sesión</td><td><b>Reemplazar los ids fijos</b> por <code>currentUserService.currentUser().id()</code></td></tr>
@@ -66,7 +67,7 @@ cd ../delivery-system &amp;&amp; ./mvnw javafx:run -Pmemory</code></pre><p class
 <div class="card"><h3>Usuarios de prueba</h3><div class="tw"><table>
 <tr><th>Correo</th><th>Rol</th><th>Ve en el menú</th></tr>
 <tr><td><code>admin@sample.delivery</code></td><td>ADMIN</td><td>Users, Catalog</td></tr>
-<tr><td><code>merchant@sample.delivery</code></td><td>MERCHANT</td><td>Catalog</td></tr>
+<tr><td><code>merchant@sample.delivery</code></td><td>MERCHANT</td><td>Catalog, My commerce orders (cuando #72 esté en <code>main</code>)</td></tr>
 <tr><td><code>customer@sample.delivery</code></td><td>CUSTOMER</td><td>Orders, Payments</td></tr>
 <tr><td><code>courier@sample.delivery</code></td><td>COURIER</td><td>Deliveries</td></tr>
 <tr><td><code>inactive@sample.delivery</code></td><td>CUSTOMER inactivo</td><td>No entra: "Inactive user"</td></tr>
@@ -117,10 +118,15 @@ CurrentUserService nobody = Optional::empty;   // currentUser() lanza NotAuthent
 <tr><td><code>Users</code></td><td>user-module</td><td>ADMIN</td></tr>
 <tr><td><code>Catalog</code></td><td>catalog-module</td><td>ADMIN, MERCHANT</td></tr>
 <tr><td><code>Orders</code></td><td>order-module</td><td>CUSTOMER</td></tr>
+<tr><td><code>My commerce orders</code></td><td>order-module</td><td>MERCHANT</td></tr>
 <tr><td><code>Payments</code></td><td>payment-module</td><td>CUSTOMER</td></tr>
 <tr><td><code>Deliveries</code></td><td>delivery-module</td><td>COURIER</td></tr>
 </table></div>
-<p>⚠️ <b>D-08 "Pedidos de mi comercio"</b> está en order-module y lo usa el MERCHANT, que hoy no ve <code>Orders</code>. Se acuerda en la reunión de Scrum Masters: agregar MERCHANT a <code>Orders</code> o un botón propio. El cambio en <code>RoleMenu</code> se pide con un MR (code owner: practitioner).</p>
+<p>✅ <b>D-08 "Pedidos de mi comercio"</b> (decidido el 04/11, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/79">#79</a>): es un <b>segundo botón</b> de order-module, <code>My commerce orders</code>, que solo ve el MERCHANT. <code>Orders</code> sigue siendo del CUSTOMER. El equipo B lo declara en <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/72">#72</a> con <b>este título exacto</b>:</p><pre><code>@Bean
+@Order(310)
+public NavigationItem commerceOrdersNavigationItem() {
+    return new NavigationItem("My commerce orders", COMMERCE_ORDERS_VIEW);
+}</code></pre>
 <p>Al pulsar <b>Sign out</b> se publica <code>SignOutEvent</code>. Si tu módulo guarda algo por usuario en memoria, puedes escucharlo:</p><pre><code>// Opcional: limpiar datos de la sesión al cerrar sesión (por ejemplo, un carrito en memoria)
 @EventListener(SignOutEvent.class)
 public void clearOnSignOut() {

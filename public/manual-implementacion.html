@@ -399,7 +399,7 @@ class UserPersistenceAdapterTest {
 <h2 id="ui">8. Pantallas y menú por rol</h2>
 <div class="card"><ul class="chk">
 <li>Controladores: <code>@Component</code> + <code>@Scope(PROTOTYPE)</code> + <code>@RequiredArgsConstructor</code>; Spring los crea al cargar el FXML (<code>SpringFxmlLoader</code>).</li>
-<li>Tu botón en la barra es un <code>NavigationItem</code>. El <b>título</b> decide qué roles lo ven en <code>RoleMenu</code> (delivery-system): Catalog → ADMIN y MERCHANT; Orders y Payments → CUSTOMER; Deliveries → COURIER. No cambies el título.</li>
+<li>Tu botón en la barra es un <code>NavigationItem</code>. El <b>título</b> decide qué roles lo ven en <code>RoleMenu</code> (delivery-system): Catalog → ADMIN y MERCHANT; Orders y Payments → CUSTOMER; My commerce orders → MERCHANT (D-08); Deliveries → COURIER. No cambies el título.</li>
 <li>"Sign out" publica <code>SignOutEvent</code>: escúchalo si guardas datos por usuario en memoria.</li>
 </ul><pre><code>// infrastructure/config/UserUiConfiguration.java
 @Bean

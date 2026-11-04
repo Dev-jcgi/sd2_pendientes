@@ -96,7 +96,7 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/36">#36</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/13">!13</a>: agregar <code>Closes #36</code> y rebase.</li>
 <li>Cerrar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/38">#38</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/21">!21</a>.</li>
 <li>Continuar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/37">#37</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/41">#41</a> con rama y MR en Draft.</li>
-<li>Crear la historia <b>"Pedidos de mi comercio" (FUN-005 / D-08)</b>: desbloquea a entregas.</li>
+<li>Historia <b>"Pedidos de mi comercio" (D-08)</b>: ya existe, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/72">#72</a>; ponerle el hito Sprint 2 y el botón <code>My commerce orders</code>. Desbloquea a entregas.</li>
 <li>Refinar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/39">#39</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/40">#40</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/42">#42</a> para el Sprint 3.</li>
 </ul></div>
 
@@ -127,13 +127,11 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 </table></div>
 <p class="lead">Hoy ningún equipo implementa su contrato: todos usan el respaldo de <code>core</code>.</p></div>
 
-<div class="card" style="border-left:4px solid var(--bad)"><h3>⚠️ Revisar en la reunión: D-08 "Pedidos de mi comercio" y el menú por rol</h3>
-<p>La pantalla <b>"Pedidos de mi comercio"</b> la usa el comerciante (<b>MERCHANT</b>), pero va dentro de <code>order-module</code>, que se abre con el botón <b>Orders</b>. Con el menú por rol de hoy, <b>Orders</b> solo lo ve el cliente (<b>CUSTOMER</b>). Si Pedidos programa esa pantalla tal como está, <b>el comerciante nunca va a poder abrirla</b>, porque no le aparece el botón.</p>
-<p>Hay dos salidas, y conviene decidirlo en la reunión de Scrum Masters <b>antes de que el equipo B la programe</b>:</p>
-<ul class="chk">
-<li><b>Opción 1:</b> que el MERCHANT también vea <b>Orders</b>. Es un cambio de una línea en <code>RoleMenu</code> (en <code>delivery-system</code>).</li>
-<li><b>Opción 2:</b> que <code>order-module</code> agregue un segundo botón, por ejemplo <b>"My commerce orders"</b>, que solo vea el MERCHANT.</li>
-</ul></div>
+<div class="card" style="border-left:4px solid var(--ok)"><h3>✅ D-08 "Pedidos de mi comercio" y el menú por rol (decidido el 04/11)</h3><p>Se eligió la <b>opción 2</b>: <code>order-module</code> agrega un <b>segundo botón</b>, <code>My commerce orders</code>, que solo ve el comerciante (MERCHANT). <code>Orders</code> sigue siendo del cliente (CUSTOMER). <code>RoleMenu</code> ya está en <code>main</code> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/79">#79</a>).</p><p><b>Equipo B</b>, en <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/72">#72</a>: declarar el botón con <b>este título exacto</b> y ponerle el hito Sprint 2. <b>Equipo C:</b> <code>findCommerceIdsByMerchant</code> en <code>CatalogService</code>.</p><pre><code>@Bean
+@Order(310)
+public NavigationItem commerceOrdersNavigationItem() {
+    return new NavigationItem("My commerce orders", COMMERCE_ORDERS_VIEW);
+}</code></pre></div>
 
 <div class="grid">
 <div class="card" style="border-left:4px solid var(--ok)"><h3>✅ Base de datos · Propuesta 1 (decidida el 04/11)</h3><p><b>Un esquema compartido, migraciones por módulo.</b> Cada equipo agrega su entidad JPA, su adaptador y sus migraciones Flyway en <code>db/migration/&lt;módulo&gt;/</code> dentro de la historia que necesita guardar datos. Tablas con prefijo (<code>cat_</code>, <code>ord_</code>, <code>del_</code>, <code>pay_</code>) y <b>sin claves foráneas entre módulos</b>: otro módulo se referencia por su UUID y se valida con su contrato. Así ya funciona <code>user-module</code> con el perfil <code>-Pjpa</code>.</p><p><b>Cómo hacerlo:</b> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Gu%C3%ADas/Persistencia-JPA">guía Persistencia JPA</a> en la wiki, con el ejemplo de <code>user-module</code>, la tabla que le toca a cada equipo y la lista de verificación para revisar el MR.</p></div>
@@ -145,7 +143,7 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <tr><td>Sprint Planning 1</td><td>Los SM eligen juntos los ítems del único Product Backlog y detectan dependencias</td><td>Hoy cada equipo planifica solo</td></tr>
 <tr><td>Sprint Planning 2</td><td>Cada equipo divide sus historias en tareas</td><td>Tareas visibles en la historia</td></tr>
 <tr><td>Daily</td><td>Por equipo, 15 min, cada día; los bloqueos entre equipos se hablan directamente</td><td>Días faltantes; bloqueos no escalados</td></tr>
-<tr><td>Refinamiento multi-equipo</td><td>Las historias con dependencias se refinan con los equipos involucrados</td><td>D-08 sigue sin historia</td></tr>
+<tr><td>Refinamiento multi-equipo</td><td>Las historias con dependencias se refinan con los equipos involucrados</td><td>D-08 se refinó tarde (#72, #79)</td></tr>
 <tr><td>Sprint Review general</td><td>Un solo Review del producto integrado, con el PO</td><td>Integrar contratos para mostrar el flujo completo</td></tr>
 <tr><td>Retrospectiva</td><td>Por equipo y una general del sistema</td><td>Acciones con responsable y seguimiento</td></tr>
 </table></div>
