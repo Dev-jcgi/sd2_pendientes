@@ -128,10 +128,10 @@ public void clearOnSignOut() {
 }</code></pre></div>
 
 <h2>6. Base de datos</h2>
-<div class="card"><p>Con <code>-Pjpa</code> la aplicación usa MySQL. Hoy solo user-module guarda en la base (tabla <code>users</code>, migraciones en <code>db/migration/user</code>); tu módulo sigue en memoria hasta que tenga su adaptador JPA, y el log lo avisa.</p><pre><code>cd delivery-system
+<div class="card"><p>Con <code>-Pjpa</code> la aplicación usa MySQL. Hoy solo user-module guarda en la base (tablas <code>users</code> y <code>user_status_changes</code>, migraciones en <code>db/migration/user</code>); tu módulo sigue en memoria hasta que tenga su adaptador JPA, y el log lo avisa.</p><pre><code>cd delivery-system
 docker compose up -d              # MySQL en Docker
 ./mvnw javafx:run -Pjpa           # o DELIVERY_PERSISTENCE_TYPE=jpa ./mvnw javafx:run</code></pre>
-<p>Cuando tu equipo agregue persistencia (según lo que se acuerde en la reunión de Scrum Masters): entidad y adaptador con <code>@ConditionalOnJpaPersistence</code>, migraciones en <code>db/migration/&lt;tu-modulo&gt;/V&lt;yyyyMMddHHmm&gt;__…sql</code> y <b>sin claves foráneas a <code>users</code></b>: guarda el UUID del usuario y valídalo con <code>UserService</code>. Modelo a seguir: <code>UserPersistenceAdapter</code> y su prueba con H2.</p></div>
+<p>Cuando tu equipo agregue persistencia (<b>propuesta 1</b>, decidida el 04/11; paso a paso en la <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Gu%C3%ADas/Persistencia-JPA">guía Persistencia JPA</a>): entidad y adaptador con <code>@ConditionalOnJpaPersistence</code>, migraciones en <code>db/migration/&lt;tu-modulo&gt;/V&lt;yyyyMMddHHmm&gt;__…sql</code> y <b>sin claves foráneas a <code>users</code></b>: guarda el UUID del usuario y valídalo con <code>UserService</code>. Modelo a seguir: <code>UserPersistenceAdapter</code> y su prueba con H2.</p></div>
 
 <h2>7. Dónde está el usuario fijo hoy</h2>
 <div class="card"><p>Revisión de <code>main</code> y de las ramas abiertas al 2 de noviembre. Cambia estas líneas en tu historia o en una nueva rama con el número de tu historia.</p><div class="tw"><table>
