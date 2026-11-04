@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual de implementación</title>
+<style>
+:root{--bg:#f7f7fb;--card:#fff;--text:#1d1b2c;--soft:#5d5a72;--line:#e3e1ee;--acc:#6c4cf5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--chip:#f0edff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}}
+:root[data-theme="dark"]{--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.7rem;margin:.2em 0}h2{font-size:1.25rem;margin:1.6em 0 .6em}h3{margin:0 0 .4em;font-size:1.05rem}
+.lead{color:var(--soft)}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}th{color:var(--soft);font-weight:600}
+.tw{overflow-x:auto}code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:.88em}
+.ok{color:var(--ok);font-weight:600}.warn{color:var(--warn);font-weight:600}.bad{color:var(--bad);font-weight:600}
+.tag{display:inline-block;background:var(--chip);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;position:relative}ul.chk li::before{content:"☐";position:absolute;left:4px;color:var(--acc)}
+.team{border-left:4px solid var(--acc)}a{color:var(--acc)}
+.foot{color:var(--soft);font-size:.85rem;margin-top:32px}
+pre{background:var(--chip);padding:12px;border-radius:8px;overflow-x:auto;font-size:.86rem;line-height:1.45;margin:.5em 0}pre code{background:none;padding:0}
+.two{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.theme-btn{position:fixed;top:12px;right:12px;z-index:10;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font:600 .85rem system-ui,sans-serif;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+</style>
+<script>(function(){var t="light";try{t=localStorage.getItem("theme")||"light"}catch(e){}document.documentElement.setAttribute("data-theme",t)})();</script>
+
+<link rel="stylesheet" href="manual/diagramas.css">
+<style>.toc a{display:inline-block;margin:2px 10px 2px 0}.step{counter-increment:step}.step h3::before{content:counter(step) ". ";color:var(--acc)}.steps{counter-reset:step}.note{border-left:4px solid var(--warn)}.tip{border-left:4px solid var(--ok)}</style>
+</head>
+<body>
+
+<button class="theme-btn" id="themeBtn" type="button" aria-label="Cambiar entre modo claro y oscuro">🌙 Modo oscuro</button>
+<script>(function(){var b=document.getElementById("themeBtn"),r=document.documentElement;function paint(){b.textContent=r.getAttribute("data-theme")==="dark"?"☀️ Modo claro":"🌙 Modo oscuro"}paint();b.addEventListener("click",function(){var t=r.getAttribute("data-theme")==="dark"?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}paint()})})();</script>
+<div class="wrap">
+<span class="tag">Capstone Delivery System · Sección E</span> <a href="index.html">← Índice</a>
+<h1>Manual de implementación</h1>
+<p class="lead">Cómo está construido <code>user-module</code> por dentro y cómo replicarlo, paso a paso, en tu módulo. Está pensado para que lo sigas por tu cuenta: cada paso tiene el código real del repositorio, el archivo donde está y qué cambia en tu módulo. Si solo necesitas lo mínimo para integrarte, empieza por <a href="usuarios-integracion.html">Integrar user-module</a>.</p>
+
+<div class="card toc"><h3>📑 Contenido</h3>
+<a href="#diagramas">1. Diagramas</a><a href="#capas">2. Regla de dependencias</a><a href="#paquetes">3. Paquetes</a><a href="#receta">4. Receta de una historia</a><a href="#usar">5. Usar user-module</a><a href="#contrato">6. Tu contrato</a><a href="#jpa">7. Persistencia JPA</a><a href="#ui">8. UI y menú</a><a href="#pruebas">9. Pruebas</a><a href="#errores">10. Errores frecuentes</a><a href="#checklist">11. Checklist</a></div>
+
+<div class="card tip"><h3>Antes de empezar</h3><ul class="chk">
+<li>Tu rama sale de <code>main</code> actualizado: <code>git pull --rebase origin main</code>.</li>
+<li>Instalaste <code>core-module</code> y <code>user-module</code> (<code>./mvnw install</code> en cada uno).</li>
+<li>Tienes abierto el código de <code>user-module</code> en tu IDE para comparar mientras lees.</li>
+<li>Ejemplos de historias completas: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/57">#57</a> (regla de negocio), <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/59">#59</a> (MySQL), <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/61">#61</a> (login, con el reporte de avance en el hilo).</li>
+</ul></div>
+
+<h2 id="diagramas">1. Diagramas interactivos</h2>
+<div class="card"><div id="diagrama-arquitectura"><p class="lead">Cargando los diagramas…</p></div>
+<noscript><p>Los diagramas necesitan JavaScript. La sección 2 tiene la misma información en una tabla.</p></noscript></div>
+
+<h2 id="capas">2. La regla de dependencias</h2>
+<div class="card tw"><p>En la arquitectura hexagonal (clean) <b>las dependencias apuntan hacia adentro</b>. El dominio no sabe que existe Spring, JavaFX ni MySQL; por eso se prueba sin levantar nada y se puede cambiar la base de datos o la pantalla sin tocar las reglas.</p>
+<table>
+<tr><th>Capa</th><th>Paquete</th><th>Puede usar</th><th>Nunca usa</th></tr>
+<tr><td><b>Dominio</b></td><td><code>domain.model</code>, <code>domain.exception</code></td><td>Java, <code>core.domain</code> (BaseModel, DomainException)</td><td>Spring, JPA, JavaFX, <code>application</code>, <code>infrastructure</code></td></tr>
+<tr><td><b>Aplicación</b></td><td><code>application.port.in</code>, <code>.port.out</code>, <code>.usecase</code></td><td>Dominio, <code>core.application</code> (UseCase, CrudRepositoryPort), contratos de <code>core.contract</code></td><td>Spring, JPA, JavaFX, <code>infrastructure</code></td></tr>
+<tr><td><b>Infraestructura · entrada</b></td><td><code>infrastructure.adapter.in.ui</code>, <code>.in.contract</code></td><td>Casos de uso, commands, contratos de core, JavaFX, Spring</td><td>Adaptadores de salida (repositorios) directamente</td></tr>
+<tr><td><b>Infraestructura · salida</b></td><td><code>infrastructure.adapter.out.*</code></td><td>Puertos de salida, dominio, JPA, librerías</td><td>Casos de uso, UI</td></tr>
+<tr><td><b>Configuración</b></td><td><code>infrastructure.config</code></td><td>Todo lo del módulo, para registrar beans</td><td>—</td></tr>
+<tr><td><b>Otro módulo</b></td><td>—</td><td>Solo <code>core-module</code> (contratos)</td><td>Clases de otro módulo de negocio</td></tr>
+</table></div>
+
+<h2 id="paquetes">3. Estructura de paquetes</h2>
+<div class="card"><p>Así está organizado <code>user-module</code>. Tu módulo sigue la misma estructura con su propio paquete raíz (<code>org.jala.edu.catalog</code>, <code>.order</code>, <code>.delivery</code>, <code>.payment</code>).</p><pre><code>org.jala.edu.user
+├── domain                      ← el centro: no importa Spring ni otros paquetes del módulo
+│   ├── model                   User, Email, Password, PhoneNumber, UserId, UserRole, UserStatus
+│   └── exception               UserNotFoundException, LastActiveAdminException, InvalidCredentialsException…
+├── application
+│   ├── port
+│   │   ├── in                  LoginCommand, ChangeUserStatusCommand, CreateUserCommand, ListUsersQuery…
+│   │   └── out                 UserRepositoryPort, PasswordHasher
+│   └── usecase                 LoginUseCase, ChangeUserStatusUseCase, CreateUserUseCase, ActiveAdminRule…
+└── infrastructure
+    ├── adapter
+    │   ├── in
+    │   │   ├── ui              LoginController, ListUsersController… (+ FXML en resources)
+    │   │   └── contract        UserServiceAdapter, SessionCurrentUserService
+    │   └── out
+    │       ├── persistence
+    │       │   ├── memory      InMemoryUserRepositoryAdapter
+    │       │   └── jpa         UserPersistenceAdapter, UserJpaEntity, UserJpaRepository, UserPersistenceMapper
+    │       └── security        BCryptPasswordHasher
+    └── config                  UserModuleConfiguration, UserUiConfiguration, SampleUsersLoader
+
+resources/db/migration/user     V202609250001__create_users_table.sql, V202611020001__add_users_password_hash.sql</code></pre></div>
+
+<h2 id="receta">4. Receta: una historia de punta a punta</h2>
+<p class="lead">Ejemplo real: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/57">#57</a> "Proteger al último administrador y desactivar en lugar de borrar". Cada paso es un commit pequeño que compila solo.</p>
+<div class="steps">
+<div class="card step"><h3>Dominio: la regla vive en el modelo</h3><p><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/domain/model/User.java"><code>User.java</code></a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/domain/model/PhoneNumber.java"><code>PhoneNumber.java</code></a>. Tu modelo extiende <code>BaseModel&lt;ID&gt;</code> de core (id, <code>createdAt</code>, <code>updatedAt</code>, <code>touch()</code>). Un value object es un <code>record</code> que valida en su constructor y lanza <code>DomainException</code>.</p><pre><code>// domain/model/User.java — la regla vive en el modelo
+public void activate() {
+    this.status = UserStatus.ACTIVE;
+    touch();                       // BaseModel actualiza updatedAt
+}
+
+public void deactivate() {
+    this.status = UserStatus.INACTIVE;
+    touch();
+}
+
+// domain/model/PhoneNumber.java — value object: valida en su constructor
+public record PhoneNumber(String value) {
+    private static final Pattern PATTERN = Pattern.compile(&quot;^\\+[1-9]\\d{1,14}$&quot;);
+
+    public PhoneNumber {
+        if (value == null || !PATTERN.matcher(value.strip()).matches()) {
+            throw new DomainException(&quot;Invalid phone number: &quot; + value);
+        }
+        value = value.strip();
+    }
+}</code></pre></div>
+<div class="card step"><h3>Puerto de entrada: un record por caso de uso</h3><p><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/application/port/in/ChangeUserStatusCommand.java"><code>ChangeUserStatusCommand.java</code></a>. Command si cambia estado, Query si solo consulta.</p><pre><code>// application/port/in/ChangeUserStatusCommand.java
+public record ChangeUserStatusCommand(UUID id, UserStatus status) {
+}</code></pre></div>
+<div class="card step"><h3>Puerto de salida: lo que la aplicación necesita guardar o consultar</h3><p><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/application/port/out/UserRepositoryPort.java"><code>UserRepositoryPort.java</code></a>. Extiende <code>CrudRepositoryPort</code> de core y agrega solo las consultas que tus casos de uso usan.</p><pre><code>// application/port/out/UserRepositoryPort.java
+public interface UserRepositoryPort extends CrudRepositoryPort&lt;User, UserId&gt; {   // save, findById, findAll… de core
+
+    boolean existsByEmail(Email email);
+
+    long countActiveByRole(UserRole role);
+
+    List&lt;User&gt; findByEmailContaining(String fragment);
+
+    Optional&lt;User&gt; findByEmail(Email email);
+}</code></pre></div>
+<div class="card step"><h3>Caso de uso: Java puro que orquesta</h3><p><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/application/usecase/ChangeUserStatusUseCase.java"><code>ChangeUserStatusUseCase.java</code></a>. Implementa <code>UseCase&lt;Input, Output&gt;</code>; recibe los puertos por constructor; sin anotaciones de Spring. Si la operación necesita un rol, aquí se valida con <code>UserService.isActiveWithRole</code>.</p><pre><code>// application/usecase/ChangeUserStatusUseCase.java — Java puro, sin anotaciones de Spring
+public class ChangeUserStatusUseCase implements UseCase&lt;ChangeUserStatusCommand, Void&gt; {
+
+    private final UserRepositoryPort userRepository;
+
+    public ChangeUserStatusUseCase(UserRepositoryPort userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public Void execute(ChangeUserStatusCommand command) {
+        UserId id = new UserId(command.id());
+        User user = userRepository.findById(id).orElseThrow(() -&gt; new UserNotFoundException(id));
+        if (command.status() == user.getStatus()) {
+            return null;
+        }
+        ActiveAdminRule.check(user, user.getRole(), command.status(), userRepository);   // nunca sin ADMIN activo
+        if (command.status() == UserStatus.ACTIVE) {
+            user.activate();
+        } else {
+            user.deactivate();
+        }
+        userRepository.save(user);
+        return null;
+    }
+}</code></pre></div>
+<div class="card step"><h3>Adaptador en memoria (modo por defecto y fake de pruebas)</h3><p><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/infrastructure/adapter/out/persistence/memory/InMemoryUserRepositoryAdapter.java"><code>InMemoryUserRepositoryAdapter.java</code></a>. Extiende <code>InMemoryCrudRepository</code> de core: solo implementas las consultas nuevas con <code>stream()</code>.</p><pre><code>// infrastructure/adapter/out/persistence/memory/InMemoryUserRepositoryAdapter.java
+@Component
+@ConditionalOnInMemoryPersistence
+public class InMemoryUserRepositoryAdapter extends InMemoryCrudRepository&lt;User, UserId&gt; implements UserRepositoryPort {
+
+    @Override
+    public long countActiveByRole(UserRole role) {
+        return stream().filter(user -&gt; user.isActive() &amp;&amp; user.getRole() == role).count();
+    }
+
+    @Override
+    public Optional&lt;User&gt; findByEmail(Email email) {
+        return stream().filter(user -&gt; user.getEmail().equals(email)).findFirst();
+    }
+    // … existsByEmail y findByEmailContaining igual, con stream()
+}</code></pre></div>
+<div class="card step"><h3>Configuración: registrar el caso de uso</h3><p><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/infrastructure/config/UserModuleConfiguration.java"><code>UserModuleConfiguration.java</code></a>. Spring inyecta el adaptador que corresponda (memoria o JPA) en el puerto.</p><pre><code>// infrastructure/config/UserModuleConfiguration.java — un @Bean por caso de uso
+@Configuration
+public class UserModuleConfiguration {
+
+    @Bean
+    public ChangeUserStatusUseCase changeUserStatusUseCase(UserRepositoryPort userRepositoryPort) {
+        return new ChangeUserStatusUseCase(userRepositoryPort);
+    }
+    // … createUserUseCase, loginUseCase, checkUserAccessUseCase…
+}</code></pre></div>
+<div class="card step"><h3>Pantalla: el controlador llama al caso de uso</h3><p><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/infrastructure/adapter/in/ui/ListUsersController.java"><code>ListUsersController.java</code></a>. <code>BackgroundTasks.run</code> ejecuta fuera del hilo de JavaFX; <code>ErrorMessages.of</code> convierte la excepción del dominio en un mensaje.</p><pre><code>// infrastructure/adapter/in/ui/ListUsersController.java
+@FXML
+void onToggleStatus() {
+    User selected = usersTable.getSelectionModel().getSelectedItem();
+    UserStatus newStatus = selected.isActive() ? UserStatus.INACTIVE : UserStatus.ACTIVE;
+    BackgroundTasks.run(                                                    // fuera del hilo de JavaFX
+            () -&gt; changeUserStatusUseCase.execute(new ChangeUserStatusCommand(selected.getId().value(), newStatus)),
+            done -&gt; reload(&quot;User &quot; + selected.fullName() + &quot; updated.&quot;),
+            error -&gt; showMessage(ErrorMessages.of(error, &quot;change the user status&quot;), &quot;error&quot;));
+}</code></pre></div>
+<div class="card step"><h3>Pruebas: patrón Arrange / Act / Assert</h3><p>El adaptador en memoria es el fake del puerto: no hace falta Mockito ni Spring.</p><pre><code>// test: application/usecase/ChangeUserStatusUseCaseTest.java — el adaptador en memoria es el fake
+class ChangeUserStatusUseCaseTest {
+
+    private final InMemoryUserRepositoryAdapter repository = new InMemoryUserRepositoryAdapter();
+    private final ChangeUserStatusUseCase changeStatus = new ChangeUserStatusUseCase(repository);
+
+    @Test
+    void activatesAnInactiveUser() {
+        // Arrange
+        User customer = repository.save(user(&quot;ana@example.com&quot;));
+        customer.deactivate();
+        repository.save(customer);
+
+        // Act
+        changeStatus.execute(new ChangeUserStatusCommand(customer.getId().value(), UserStatus.ACTIVE));
+
+        // Assert
+        assertThat(repository.findById(customer.getId()).orElseThrow().isActive()).isTrue();
+    }
+}</code></pre></div>
+<div class="card step"><h3>Rama, commits y MR</h3><p>Un commit por paso, con el formato <code>FEAT-&lt;n&gt;: Verbo + qué.</code>; MR en Draft con la plantilla y <code>Closes #n</code>.</p><pre><code>git switch main &amp;&amp; git pull --rebase origin main
+git switch -c FEAT-57/feature/last-admin-guard
+
+git commit -m &quot;FEAT-57: Count active users by role in the user repository.&quot;
+git commit -m &quot;FEAT-57: Keep at least one active administrator when changing a role or status.&quot;
+git commit -m &quot;FEAT-57: Replace user deletion with activate and deactivate in the user list.&quot;
+
+git pull --rebase origin main &amp;&amp; git push -u origin FEAT-57/feature/last-admin-guard</code></pre></div>
+</div>
+
+<h2 id="usar">5. Usar user-module desde tu módulo</h2>
+<div class="card"><p>Tu módulo <b>no depende de user-module</b>: usa los contratos de <code>core</code>. <code>CurrentUserService</code> dice <b>quién</b> es (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/56">#56</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/61">#61</a>); <code>UserService</code> dice si <b>puede</b> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/18">#18</a>).</p><pre><code>// Tu controlador (infrastructure/adapter/in/ui) — quién inició sesión
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@RequiredArgsConstructor
+public class NewCartController {
+
+    private final CurrentUserService currentUserService;      // org.jala.edu.core.contract
+    private final AddProductToCartUseCase addProductToCart;
+
+    void onAdd(ProductInfo product, int quantity) {
+        UUID customerId = currentUserService.currentUser().id();  // en el momento de la acción, nunca en una constante
+        BackgroundTasks.run(
+                () -&gt; addProductToCart.execute(customerId, product.productId(), quantity),
+                done -&gt; refresh(),
+                error -&gt; showError(ErrorMessages.of(error, &quot;add the product&quot;)));
+    }
+}
+
+// Tu caso de uso (application/usecase) — si puede (D-07)
+if (!users.isActiveWithRole(customerId, UserRole.CUSTOMER)) {
+    throw new DomainException(&quot;User not authorized for this operation&quot;);
+}</code></pre>
+<p>En las pruebas los contratos tienen un solo método, así que se simulan con lambdas:</p><pre><code>// Pruebas de tu módulo: sin user-module, los contratos se simulan con lambdas
+CurrentUserService asCustomer = () -&gt; Optional.of(
+        new CurrentUser(SampleUsers.CUSTOMER, UserRole.CUSTOMER, &quot;Sample Customer&quot;));
+CurrentUserService nobody = Optional::empty;                    // currentUser() lanza NotAuthenticatedException
+
+UserService everyoneAllowed = (userId, roles) -&gt; true;
+UserService nobodyAllowed = (userId, roles) -&gt; false;          // para probar el rechazo</code></pre>
+<p class="lead">Sin login (pruebas con Spring sin user-module), core responde con el usuario de ejemplo del rol en <code>delivery.sample-user</code>.</p></div>
+
+<h2 id="contrato">6. Implementar el contrato de tu módulo</h2>
+<div class="card"><p>Catálogo implementa <code>CatalogService</code>, Pedidos <code>OrderService</code> y Pagos <code>PaymentService</code>. Hoy ninguno está implementado: todos usan el fallback de core (lo dice el log con <code>No module provides …</code>). El patrón es el de <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/infrastructure/adapter/in/contract/UserServiceAdapter.java"><code>UserServiceAdapter.java</code></a>:</p>
+<ol><li>Un caso de uso por operación del contrato (con sus pruebas).</li><li>Un adaptador en <code>infrastructure/adapter/in/contract</code> que implementa el contrato y delega en esos casos de uso, traduciendo tus modelos a los records de core (<code>ProductInfo</code>, <code>ReadyOrder</code>, <code>PaymentResult</code>).</li><li>Un <code>@Bean</code> del contrato en tu configuración. Al arrancar, el aviso del fallback desaparece.</li></ol>
+<pre><code>// PLANTILLA (catálogo): infrastructure/adapter/in/contract/CatalogServiceAdapter.java
+// Mismo patrón que UserServiceAdapter: el contrato de core delega en tus casos de uso.
+public class CatalogServiceAdapter implements CatalogService {
+
+    private final FindProductUseCase findProduct;
+    private final ReserveStockUseCase reserveStock;
+    // … un caso de uso por operación del contrato
+
+    public CatalogServiceAdapter(FindProductUseCase findProduct, ReserveStockUseCase reserveStock /* … */) {
+        this.findProduct = findProduct;
+        this.reserveStock = reserveStock;
+    }
+
+    @Override
+    public Optional&lt;ProductInfo&gt; findProduct(UUID productId) {
+        return findProduct.execute(productId)                        // tu modelo de dominio
+                .map(p -&gt; new ProductInfo(p.getId().value(), p.getCommerceId(), p.getName(), p.getPrice()));
+    }
+
+    @Override
+    public void reserveStock(UUID productId, int quantity) {
+        reserveStock.execute(new ReserveStockCommand(productId, quantity));
+    }
+    // … isAvailable, releaseStock, findCommerceIdsByMerchant
+}
+
+// infrastructure/config/CatalogModuleConfiguration.java — al registrarlo, el fallback de core desaparece solo
+@Bean
+public CatalogService catalogService(FindProductUseCase findProduct, ReserveStockUseCase reserveStock /* … */) {
+    return new CatalogServiceAdapter(findProduct, reserveStock /* … */);
+}</code></pre>
+<p class="lead">Los nombres de los casos de uso de la plantilla son de ejemplo: usa los de tus historias. Un cambio en la firma del contrato se acuerda en la reunión de Scrum Masters.</p></div>
+
+<h2 id="jpa">7. Persistencia en MySQL (JPA + Flyway)</h2>
+<div class="card"><p>Modelo: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/59">#59</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/60">#60</a>. Mientras tu puerto no tenga adaptador JPA, <code>delivery-system</code> usa el de memoria en modo <code>jpa</code> (puente de <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/83">#83</a>) y lo avisa en el log.</p>
+<h3>7.1 Entidad y repositorio Spring Data</h3><p><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/infrastructure/adapter/out/persistence/jpa/UserJpaEntity.java"><code>UserJpaEntity.java</code></a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/infrastructure/adapter/out/persistence/jpa/UserJpaRepository.java"><code>UserJpaRepository.java</code></a></p><pre><code>// infrastructure/adapter/out/persistence/jpa/UserJpaEntity.java
+@Entity
+@Table(name = &quot;users&quot;)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class UserJpaEntity extends BaseJpaEntity {          // created_at y updated_at vienen de core
+
+    @Id
+    @Column(length = 36, nullable = false, updatable = false)
+    private String id;                                     // el UUID como texto
+
+    @Column(length = 255, nullable = false, unique = true)
+    private String email;
+
+    @Column(length = 20, nullable = false)
+    private String role;                                   // enums como texto: role.name()
+    // … resto de columnas y un constructor con todos los campos
+}
+
+// UserJpaRepository.java — Spring Data genera la implementación a partir del nombre del método
+interface UserJpaRepository extends BaseEntityRepository&lt;UserJpaEntity, String&gt; {
+
+    Optional&lt;UserJpaEntity&gt; findByEmail(String email);
+
+    long countByRoleAndStatus(String role, String status);
+}</code></pre>
+<h3>7.2 Mapper y adaptador</h3><p><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/infrastructure/adapter/out/persistence/jpa/UserPersistenceMapper.java"><code>UserPersistenceMapper.java</code></a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/src/main/java/org/jala/edu/user/infrastructure/adapter/out/persistence/jpa/UserPersistenceAdapter.java"><code>UserPersistenceAdapter.java</code></a></p><pre><code>// UserPersistenceMapper.java — dominio ↔ entidad, en los dos sentidos
+final class UserPersistenceMapper implements PersistenceMapper&lt;User, UserId, UserJpaEntity, String&gt; {
+
+    @Override
+    public UserJpaEntity toEntity(User user) {
+        return new UserJpaEntity(toEntityId(user.getId()), user.getFirstName(), user.getLastName(),
+                user.getEmail().value(), user.getPhoneNumber(), user.getRole().name(), user.getStatus().name(),
+                user.getPasswordHash(), user.getCreatedAt(), user.getUpdatedAt());
+    }
+
+    @Override
+    public User toDomain(UserJpaEntity entity) {
+        return User.restore(UserId.of(entity.getId()), entity.getFirstName(), entity.getLastName(),
+                new Email(entity.getEmail()), entity.getPhoneNumber(), UserRole.valueOf(entity.getRole()),
+                UserStatus.valueOf(entity.getStatus()), entity.getPasswordHash(),
+                entity.getCreatedAt(), entity.getUpdatedAt());
+    }
+
+    @Override
+    public String toEntityId(UserId id) {
+        return id.toString();
+    }
+}
+
+// UserPersistenceAdapter.java — solo en modo jpa
+@Component
+@ConditionalOnJpaPersistence
+class UserPersistenceAdapter extends JpaCrudRepositoryAdapter&lt;User, UserId, UserJpaEntity, String&gt;
+        implements UserRepositoryPort {
+
+    private final UserJpaRepository repository;
+    private final UserPersistenceMapper mapper = new UserPersistenceMapper();
+
+    UserPersistenceAdapter(UserJpaRepository repository) {
+        super(repository, new UserPersistenceMapper());     // save, findById, findAll… ya resueltos
+        this.repository = repository;
+    }
+
+    @Override
+    public Optional&lt;User&gt; findByEmail(Email email) {
+        return repository.findByEmail(email.value()).map(mapper::toDomain);
+    }
+    // … el resto de consultas del puerto
+}</code></pre>
+<h3>7.3 Migraciones Flyway</h3><p>Carpeta <code>src/main/resources/db/migration/&lt;tu-modulo&gt;/</code>; nombre <code>V&lt;yyyyMMddHHmm&gt;__descripcion.sql</code> para que las versiones no choquen entre módulos. <b>Nunca edites una migración ya aplicada</b>: crea otra.</p><pre><code>-- resources/db/migration/user/V202609250001__create_users_table.sql
+CREATE TABLE users
+(
+    id           VARCHAR(36)  NOT NULL,
+    first_name   VARCHAR(100) NOT NULL,
+    last_name    VARCHAR(100) NOT NULL,
+    email        VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(30),
+    role         VARCHAR(20)  NOT NULL,
+    status       VARCHAR(20)  NOT NULL,
+    created_at   DATETIME(6)  NOT NULL,
+    updated_at   DATETIME(6)  NOT NULL,
+    CONSTRAINT pk_users PRIMARY KEY (id),
+    CONSTRAINT uk_users_email UNIQUE (email)
+);
+
+-- V202611020001__add_users_password_hash.sql — un cambio nuevo es una migración nueva
+ALTER TABLE users
+    ADD COLUMN password_hash VARCHAR(100) NULL;</code></pre>
+<div class="card note"><h3>Reglas para tus tablas</h3><ul class="chk"><li>Prefijo del módulo: <code>cat_</code>, <code>ord_</code>, <code>del_</code>, <code>pay_</code>.</li><li><b>Sin claves foráneas entre módulos</b>: guarda el UUID del usuario o del producto y valídalo con su contrato.</li><li>UUID como <code>VARCHAR(36)</code>, enums como texto, fechas <code>DATETIME(6)</code> con <code>created_at</code> y <code>updated_at</code>.</li><li>Cuando tu adaptador JPA esté listo, pide quitar tu puerto de <code>MissingJpaAdaptersAutoConfiguration</code>.</li></ul></div>
+<h3>7.4 Prueba del adaptador</h3><pre><code>// test: UserPersistenceAdapterTest.java — H2 en modo MySQL con las migraciones reales
+@DataJpaTest(properties = &quot;spring.datasource.url=jdbc:h2:mem:users;MODE=MySQL;DATABASE_TO_LOWER=TRUE&quot;)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(UserPersistenceAdapter.class)
+class UserPersistenceAdapterTest {
+
+    @Autowired
+    private UserPersistenceAdapter adapter;
+
+    @Test
+    void findByIdReadsBackEveryField() {
+        // Arrange
+        User saved = adapter.save(user(&quot;ana@example.com&quot;));
+        // Act + Assert: findById devuelve todos los campos guardados
+    }
+}</code></pre></div>
+
+<h2 id="ui">8. Pantallas y menú por rol</h2>
+<div class="card"><ul class="chk">
+<li>Controladores: <code>@Component</code> + <code>@Scope(PROTOTYPE)</code> + <code>@RequiredArgsConstructor</code>; Spring los crea al cargar el FXML (<code>SpringFxmlLoader</code>).</li>
+<li>Tu botón en la barra es un <code>NavigationItem</code>. El <b>título</b> decide qué roles lo ven en <code>RoleMenu</code> (delivery-system): Catalog → ADMIN y MERCHANT; Orders y Payments → CUSTOMER; Deliveries → COURIER. No cambies el título.</li>
+<li>"Sign out" publica <code>SignOutEvent</code>: escúchalo si guardas datos por usuario en memoria.</li>
+</ul><pre><code>// infrastructure/config/UserUiConfiguration.java
+@Bean
+@Order(100)                                                // posición del botón en la barra
+public NavigationItem userNavigationItem() {
+    return new NavigationItem(&quot;Users&quot;, UserViews.MAIN);    // el título decide qué roles lo ven (RoleMenu)
+}
+
+// Opcional: limpiar datos por usuario al cerrar sesión
+@EventListener(SignOutEvent.class)
+public void clearOnSignOut() {
+    cart.clear();
+}</code></pre></div>
+
+<h2 id="pruebas">9. Pruebas y comandos</h2>
+<div class="card"><div class="tw"><table>
+<tr><th>Qué pruebas</th><th>Cómo</th><th>Ejemplo en user-module</th></tr>
+<tr><td>Reglas del dominio</td><td>JUnit puro</td><td><code>UserTest</code>, <code>PhoneNumberTest</code></td></tr>
+<tr><td>Casos de uso</td><td>Adaptador en memoria como fake; lambdas para los contratos</td><td><code>ChangeUserStatusUseCaseTest</code>, <code>LoginUseCaseTest</code></td></tr>
+<tr><td>Adaptador de contrato</td><td>JUnit con el caso de uso real y memoria</td><td><code>UserServiceAdapterTest</code></td></tr>
+<tr><td>Adaptador JPA</td><td><code>@DataJpaTest</code> con H2 en modo MySQL</td><td><code>UserPersistenceAdapterTest</code></td></tr>
+<tr><td>La aplicación completa en modo jpa</td><td><code>@SpringBootTest</code> en delivery-system</td><td><code>JpaModeStartupTest</code></td></tr>
+</table></div><pre><code>cd core-module    &amp;&amp; ./mvnw install
+cd ../user-module &amp;&amp; ./mvnw install
+cd ../&lt;tu-modulo&gt; &amp;&amp; ./mvnw verify                       # tus pruebas
+cd ../&lt;tu-modulo&gt; &amp;&amp; ./mvnw install -DskipTests
+cd ../delivery-system &amp;&amp; ./mvnw verify                   # incluye JpaModeStartupTest
+cd ../delivery-system &amp;&amp; ./mvnw javafx:run -Pmemory      # o -Pjpa con docker compose up -d</code></pre></div>
+
+<h2 id="errores">10. Errores frecuentes</h2>
+<div class="card tw"><table>
+<tr><th>Síntoma</th><th>Causa</th><th>Solución</th></tr>
+<tr><td><code>No qualifying bean of type '…RepositoryPort'</code> con <code>-Pjpa</code> (o falla <code>JpaModeStartupTest</code>)</td><td>Tu puerto solo tiene adaptador en memoria</td><td>Agrega tu adaptador JPA, o pide su entrada en el puente (como <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/83">#83</a>)</td></tr>
+<tr><td>El log dice <code>No module provides CatalogService</code></td><td>Tu contrato no está registrado como <code>@Bean</code></td><td>Sección 6</td></tr>
+<tr><td><code>NotAuthenticatedException</code></td><td>Leíste <code>currentUser()</code> fuera de una sesión o en un campo estático</td><td>Léelo dentro del método de la acción</td></tr>
+<tr><td>Tu botón no aparece</td><td>El título del <code>NavigationItem</code> no coincide con <code>RoleMenu</code> o el rol no lo ve</td><td>Revisa la tabla de la sección 8; entra con el usuario del rol</td></tr>
+<tr><td>Un usuario desactivado sigue operando</td><td>Quitaste <code>isActiveWithRole</code> del caso de uso</td><td>Valida siempre el permiso en el caso de uso</td></tr>
+<tr><td>Flyway: <code>checksum mismatch</code> o versión repetida</td><td>Editaste una migración aplicada o usaste <code>V1__</code></td><td>Crea una migración nueva con fecha y hora; en local, <code>docker compose down -v</code> reinicia la base</td></tr>
+<tr><td>Un campo del controlador llega <code>null</code></td><td>Falta <code>@Component</code>, <code>@Scope(PROTOTYPE)</code> o <code>final</code> en el campo</td><td>Copia las anotaciones de <code>LoginController</code></td></tr>
+<tr><td>Tu MR trae commits de otra historia</td><td>La rama salió de la rama de un compañero</td><td>Rama desde <code>main</code>; si dependes de otra historia, espera su merge y haz rebase</td></tr>
+</table></div>
+
+<h2 id="checklist">11. Checklist de tu historia</h2>
+<div class="card"><ul class="chk">
+<li>Dominio con sus reglas y pruebas.</li>
+<li>Command o Query en <code>application/port/in</code>; puerto de salida con solo las consultas necesarias.</li>
+<li>Caso de uso sin Spring, con <code>isActiveWithRole</code> si exige un rol, y sus pruebas con el fake en memoria.</li>
+<li>Adaptador en memoria; adaptador JPA y migración si la historia guarda datos.</li>
+<li><code>@Bean</code> del caso de uso (y del contrato, si aplica) en la configuración.</li>
+<li>Controlador con <code>CurrentUserService</code>, sin ids fijos de <code>SampleUsers</code>.</li>
+<li><code>./mvnw verify</code> en tu módulo y en <code>delivery-system</code>; probado en la aplicación con el usuario del rol.</li>
+<li>Commits <code>FEAT-&lt;n&gt;:</code>, MR con la plantilla y <code>Closes #n</code>, comentario de avance en la historia.</li>
+</ul></div>
+
+<p class="foot">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Código citado de <code>main</code> al 3 de noviembre de 2026. Diagramas hechos con <a href="https://github.com/projectstorm/react-diagrams">react-diagrams</a>; su código fuente está en <code>diagramas/</code> del repo de pendientes.</p>
+</div>
+<script type="module" src="manual/diagramas.js"></script>
+</body></html>

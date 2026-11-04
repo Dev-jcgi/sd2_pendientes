@@ -1,0 +1,22 @@
+{
+  "name": "diagramas-capstone",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Diagramas interactivos de arquitectura (react-diagrams) para el manual de implementación",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@emotion/react": "11.13.3",
+    "@emotion/styled": "11.13.0",
+    "@projectstorm/react-diagrams": "7.0.4",
+    "lodash": "4.17.21",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.4",
+    "vite": "5.4.11"
+  }
+}

@@ -1,0 +1,175 @@
+// Nodes and links of each diagram. x/y are canvas coordinates; layer picks the color and the legend entry.
+// Each node explains what it is, where it lives in user-module and what a team copies into its own module.
+
+export const LAYERS = {
+  uiIn: { label: 'Infraestructura · entrada (UI y contratos)', color: 'rgb(37, 99, 235)' },
+  app: { label: 'Aplicación (puertos y casos de uso)', color: 'rgb(22, 163, 74)' },
+  domain: { label: 'Dominio (modelo y reglas)', color: 'rgb(202, 138, 4)' },
+  infraOut: { label: 'Infraestructura · salida (persistencia, seguridad)', color: 'rgb(147, 51, 234)' },
+  config: { label: 'Configuración Spring (@Bean)', color: 'rgb(100, 116, 139)' },
+  core: { label: 'core-module (contratos y base común)', color: 'rgb(13, 148, 136)' },
+  team: { label: 'Tu módulo (catálogo, pedidos, entregas, pagos)', color: 'rgb(220, 38, 38)' },
+  system: { label: 'delivery-system (ensambla la aplicación)', color: 'rgb(234, 88, 12)' }
+};
+
+const U = 'user-module/src/main/java/org/jala/edu/user/';
+const C = 'core-module/src/main/java/org/jala/edu/core/';
+
+export const DIAGRAMS = [
+  {
+    id: 'hexagonal',
+    title: '1 · Hexagonal de user-module',
+    intro:
+      'Las dependencias apuntan hacia el centro: la UI y los adaptadores conocen a la aplicación, la aplicación conoce al dominio, y el dominio no conoce a nadie. Los adaptadores de salida implementan los puertos que define la aplicación.',
+    nodes: [
+      { id: 'ui', layer: 'uiIn', x: 20, y: 40, name: 'UI JavaFX', items: ['LoginController', 'ListUsersController', 'CreateUserController', '*.fxml'],
+        file: U + 'infrastructure/adapter/in/ui/',
+        what: 'Controladores de pantalla (Spring @Component @Scope(PROTOTYPE)) y sus FXML. Solo leen el formulario, arman el command y llaman al caso de uso en segundo plano con BackgroundTasks.',
+        copy: 'En tu módulo: infrastructure/adapter/in/ui/. Inyecta los casos de uso y CurrentUserService por constructor (@RequiredArgsConstructor). Nunca accedas al repositorio desde un controlador.' },
+      { id: 'contractIn', layer: 'uiIn', x: 20, y: 300, name: 'Adaptadores de contrato', items: ['UserServiceAdapter', 'SessionCurrentUserService'],
+        file: U + 'infrastructure/adapter/in/contract/',
+        what: 'Implementan los contratos de core (UserService, CurrentUserService) para que otros módulos los usen sin depender de user-module. Traducen los tipos de core (UserRole de core) a los del dominio.',
+        copy: 'Si tu equipo es dueño de un contrato (CatalogService, OrderService, PaymentService), crea aquí su adaptador y regístralo como @Bean: reemplaza solo al fallback de core.' },
+      { id: 'portIn', layer: 'app', x: 360, y: 40, name: 'Puertos de entrada', items: ['LoginCommand', 'ChangeUserStatusCommand', 'CheckUserAccessQuery', 'CreateUserCommand'],
+        file: U + 'application/port/in/',
+        what: 'Records inmutables con los datos de entrada de cada caso de uso. Un command cambia estado; una query solo consulta.',
+        copy: 'Un record por caso de uso en application/port/in/. Valida en el dominio, no aquí.' },
+      { id: 'usecase', layer: 'app', x: 360, y: 250, name: 'Casos de uso', items: ['LoginUseCase', 'ChangeUserStatusUseCase', 'CheckUserAccessUseCase', 'ActiveAdminRule'],
+        file: U + 'application/usecase/',
+        what: 'Clases Java puras (sin anotaciones de Spring) que implementan UseCase<Input, Output> de core. Orquestan: buscan en el puerto de salida, aplican reglas del dominio y guardan.',
+        copy: 'Una clase por historia en application/usecase/. Recibe los puertos por constructor. Aquí va la validación de permisos con UserService.isActiveWithRole (D-07).' },
+      { id: 'domain', layer: 'domain', x: 700, y: 120, name: 'Dominio', items: ['User', 'Email · Password · PhoneNumber', 'UserRole · UserStatus', 'excepciones'],
+        file: U + 'domain/',
+        what: 'El modelo y sus reglas: User se activa o desactiva, Email y PhoneNumber validan su formato, Password exige 8 caracteres. Las excepciones extienden DomainException, NotFoundException o ConflictException de core.',
+        copy: 'Tu modelo extiende BaseModel<ID> de core. Las reglas viven en el modelo y en value objects (records que validan en su constructor).' },
+      { id: 'portOut', layer: 'app', x: 700, y: 380, name: 'Puertos de salida', items: ['UserRepositoryPort', 'PasswordHasher'],
+        file: U + 'application/port/out/',
+        what: 'Interfaces que la aplicación necesita del exterior. UserRepositoryPort extiende CrudRepositoryPort<User, UserId> de core y agrega sus consultas (findByEmail, countActiveByRole…).',
+        copy: 'Tu puerto extiende CrudRepositoryPort<TuModelo, TuId> y declara solo las consultas que tus casos de uso usan.' },
+      { id: 'memory', layer: 'infraOut', x: 1040, y: 220, name: 'Adaptador en memoria', items: ['InMemoryUserRepositoryAdapter', '@ConditionalOnInMemoryPersistence'],
+        file: U + 'infrastructure/adapter/out/persistence/memory/',
+        what: 'Extiende InMemoryCrudRepository de core y resuelve las consultas con stream(). Se usa en modo memory y como fake en las pruebas de los casos de uso.',
+        copy: 'Siempre ten este adaptador: es el modo por defecto y tu fake de pruebas.' },
+      { id: 'jpa', layer: 'infraOut', x: 1040, y: 380, name: 'Adaptador JPA', items: ['UserPersistenceAdapter', 'UserJpaEntity · UserPersistenceMapper', 'UserJpaRepository', 'db/migration/user/*.sql'],
+        file: U + 'infrastructure/adapter/out/persistence/jpa/',
+        what: 'Extiende JpaCrudRepositoryAdapter de core: delega en un repositorio Spring Data y convierte entidad ↔ dominio con el mapper. Flyway crea las tablas con las migraciones del módulo.',
+        copy: 'Marca el adaptador con @ConditionalOnJpaPersistence. Migraciones en db/migration/<tu-modulo>/V<yyyyMMddHHmm>__descripcion.sql. Sin claves foráneas a tablas de otros módulos.' },
+      { id: 'bcrypt', layer: 'infraOut', x: 1040, y: 580, name: 'Seguridad', items: ['BCryptPasswordHasher'],
+        file: U + 'infrastructure/adapter/out/security/',
+        what: 'Implementa PasswordHasher con BCrypt (spring-security-crypto). El dominio nunca ve la librería.',
+        copy: 'Patrón para cualquier servicio externo: interfaz en application/port/out, implementación en infrastructure/adapter/out.' },
+      { id: 'config', layer: 'config', x: 20, y: 520, name: 'Configuración', items: ['UserModuleConfiguration', 'UserUiConfiguration', 'SampleUsersLoader'],
+        file: U + 'infrastructure/config/',
+        what: 'Registra cada caso de uso como @Bean (así la aplicación no depende de Spring), el NavigationItem "Users" y la pantalla de login.',
+        copy: 'Un @Bean por caso de uso en <Tu>ModuleConfiguration; tu NavigationItem en <Tu>UiConfiguration.' },
+      { id: 'coreContracts', layer: 'core', x: 360, y: 540, name: 'core · contratos', items: ['UserService', 'CurrentUserService', 'UseCase · CrudRepositoryPort'],
+        file: C + 'contract/',
+        what: 'Interfaces compartidas por todos los módulos. user-module implementa UserService y CurrentUserService.',
+        copy: 'Tu módulo depende solo de core-module, nunca de otro módulo de negocio.' }
+    ],
+    links: [
+      ['ui', 'portIn', 'crea'],
+      ['ui', 'usecase', 'execute()'],
+      ['contractIn', 'usecase', 'delega en'],
+      ['contractIn', 'coreContracts', 'implementa'],
+      ['portIn', 'usecase', 'entrada de'],
+      ['usecase', 'domain', 'aplica reglas'],
+      ['usecase', 'portOut', 'depende de'],
+      ['memory', 'portOut', 'implementa'],
+      ['jpa', 'portOut', 'implementa'],
+      ['bcrypt', 'portOut', 'implementa'],
+      ['config', 'usecase', '@Bean'],
+      ['portOut', 'domain', 'guarda']
+    ]
+  },
+  {
+    id: 'integracion',
+    title: '2 · Integración entre módulos',
+    intro:
+      'Ningún módulo depende de otro: todos dependen de los contratos de core. Si nadie implementa un contrato, core usa su fallback con datos de ejemplo; cuando el equipo dueño registra su @Bean, el fallback desaparece solo.',
+    nodes: [
+      { id: 'teamUi', layer: 'team', x: 20, y: 40, name: 'Tu controlador', items: ['p. ej. NewCartController', 'currentUserService.currentUser().id()'],
+        file: '<tu-modulo>/.../infrastructure/adapter/in/ui/',
+        what: 'Lee quién inició sesión en el momento de la acción y pasa su id al caso de uso.',
+        copy: 'Reemplaza SampleUsers.CUSTOMER (u otro id fijo) por currentUserService.currentUser().id().' },
+      { id: 'teamUseCase', layer: 'team', x: 20, y: 250, name: 'Tu caso de uso', items: ['p. ej. AddProductToCartUseCase', 'users.isActiveWithRole(id, ROLE)'],
+        file: '<tu-modulo>/.../application/usecase/',
+        what: 'Valida que el usuario esté activo y tenga el rol, y aplica la regla de tu módulo.',
+        copy: 'Mantén isActiveWithRole: un usuario desactivado no opera aunque tenga sesión.' },
+      { id: 'teamContract', layer: 'team', x: 20, y: 460, name: 'Tu adaptador de contrato', items: ['p. ej. CatalogServiceAdapter', 'implements CatalogService'],
+        file: '<tu-modulo>/.../infrastructure/adapter/in/contract/',
+        what: 'Expone tu módulo a los demás a través del contrato de core, igual que UserServiceAdapter.',
+        copy: 'Catálogo → CatalogService · Pedidos → OrderService · Pagos → PaymentService. Regístralo como @Bean en tu configuración.' },
+      { id: 'core', layer: 'core', x: 430, y: 180, name: 'core · contratos', items: ['UserService', 'CurrentUserService', 'CatalogService', 'OrderService', 'PaymentService'],
+        file: C + 'contract/',
+        what: 'El único punto de encuentro entre módulos. Cambiar un contrato se acuerda entre los equipos (D-00 a D-09).',
+        copy: 'Importa org.jala.edu.core.contract.*; nunca importes clases de otro módulo de negocio.' },
+      { id: 'fallback', layer: 'core', x: 430, y: 470, name: 'Fallbacks de core', items: ['ContractFallbackAutoConfiguration', '@ConditionalOnMissingBean'],
+        file: C + 'infrastructure/contract/',
+        what: 'Si ningún módulo registra un contrato, core usa uno de ejemplo y avisa en el log ("No module provides …").',
+        copy: 'Cuando el log deje de mostrar el aviso de tu contrato, tu adaptador ya está activo.' },
+      { id: 'users', layer: 'uiIn', x: 840, y: 60, name: 'user-module', items: ['UserServiceAdapter', 'SessionCurrentUserService'],
+        file: U + 'infrastructure/adapter/in/contract/',
+        what: 'Implementación real de UserService y CurrentUserService (#18, #56, #61).',
+        copy: 'Es el ejemplo a seguir para tu adaptador de contrato.' },
+      { id: 'roleMenu', layer: 'system', x: 840, y: 280, name: 'Menú por rol', items: ['RoleMenu (NavigationFilter)', 'título del NavigationItem → roles'],
+        file: 'delivery-system/src/main/java/org/jala/edu/system/RoleMenu.java',
+        what: 'Decide qué botón ve cada rol según el título del NavigationItem: Catalog → ADMIN y MERCHANT; Orders y Payments → CUSTOMER; Deliveries → COURIER.',
+        copy: 'No cambies el título de tu botón. Si un rol necesita otra pantalla (D-08), se pide un MR a delivery-system.' },
+      { id: 'bridge', layer: 'system', x: 840, y: 480, name: 'Modo jpa', items: ['MissingJpaAdaptersAutoConfiguration', 'JpaModeStartupTest'],
+        file: 'delivery-system/src/main/java/org/jala/edu/system/',
+        what: 'Si un puerto no tiene adaptador JPA, el puente usa el de memoria con un aviso. La prueba arranca toda la app en modo jpa y falla en el MR si falta algo.',
+        copy: 'Cuando agregues tu adaptador JPA, pide quitar la entrada de tu puerto del puente.' }
+    ],
+    links: [
+      ['teamUi', 'core', 'CurrentUserService'],
+      ['teamUi', 'teamUseCase', 'execute(id, …)'],
+      ['teamUseCase', 'core', 'UserService'],
+      ['teamContract', 'core', 'implementa'],
+      ['users', 'core', 'implementa'],
+      ['fallback', 'core', 'si falta'],
+      ['teamUi', 'roleMenu', 'NavigationItem'],
+      ['teamContract', 'bridge', 'adaptador JPA']
+    ]
+  },
+  {
+    id: 'login',
+    title: '3 · Flujo del inicio de sesión',
+    intro:
+      'Sigue los pasos de izquierda a derecha: así viaja un inicio de sesión por las capas. Tus historias siguen el mismo recorrido: pantalla → command → caso de uso → puertos → dominio → respuesta.',
+    nodes: [
+      { id: 'screen', layer: 'uiIn', x: 20, y: 60, name: '1 · Pantalla', items: ['login.fxml', 'LoginController.onSignIn()'],
+        file: U + 'infrastructure/adapter/in/ui/LoginController.java',
+        what: 'AppShell muestra primero la LoginScreen del módulo. El controlador lee correo y contraseña y crea el command.',
+        copy: 'Tus controladores siguen igual: leer campos → command → BackgroundTasks → caso de uso.' },
+      { id: 'cmd', layer: 'app', x: 320, y: 60, name: '2 · Command', items: ['LoginCommand(email, password)', 'toString() oculta la contraseña'],
+        file: U + 'application/port/in/LoginCommand.java',
+        what: 'Datos de entrada del caso de uso. Nunca imprime la contraseña.',
+        copy: 'Si tu command lleva datos sensibles, sobrescribe toString().' },
+      { id: 'loginUseCase', layer: 'app', x: 620, y: 60, name: '3 · LoginUseCase', items: ['valida formato', 'busca por correo', 'compara hash', 'revisa estado'],
+        file: U + 'application/usecase/LoginUseCase.java',
+        what: 'Correo o contraseña con formato inválido, correo inexistente o hash distinto → InvalidCredentialsException. Usuario inactivo → InactiveUserException.',
+        copy: 'Un caso de uso devuelve el resultado o lanza una excepción del dominio; el controlador la muestra con ErrorMessages.' },
+      { id: 'repo', layer: 'app', x: 620, y: 300, name: '4 · Puertos de salida', items: ['UserRepositoryPort.findByEmail', 'PasswordHasher.matches'],
+        file: U + 'application/port/out/',
+        what: 'El caso de uso solo conoce las interfaces; en ejecución llegan el adaptador de memoria o JPA y BCrypt.',
+        copy: 'Tus casos de uso reciben interfaces, no adaptadores concretos.' },
+      { id: 'session', layer: 'uiIn', x: 920, y: 60, name: '5 · Sesión', items: ['SessionCurrentUserService.signIn(user)', 'CurrentUser(id, role, name)'],
+        file: U + 'infrastructure/adapter/in/contract/SessionCurrentUserService.java',
+        what: 'Guarda el usuario de la sesión. Desde aquí cualquier módulo lo lee con CurrentUserService.',
+        copy: 'Lee siempre el usuario con currentUserService.currentUser(); no guardes el id en una constante.' },
+      { id: 'shell', layer: 'core', x: 920, y: 300, name: '6 · Ventana principal', items: ['AppShell.showMainWindow()', 'MainViewController + RoleMenu', 'Sign out → SignOutEvent'],
+        file: C + 'infrastructure/ui/AppShell.java',
+        what: 'Muestra solo los botones del rol. Sign out publica SignOutEvent, borra la sesión y vuelve al login.',
+        copy: 'Si tu módulo guarda algo por usuario en memoria, escucha @EventListener(SignOutEvent.class) para limpiarlo.' }
+    ],
+    links: [
+      ['screen', 'cmd', 'crea'],
+      ['cmd', 'loginUseCase', 'execute()'],
+      ['loginUseCase', 'repo', 'consulta'],
+      ['loginUseCase', 'session', 'usuario válido'],
+      ['session', 'shell', 'abre'],
+      ['shell', 'screen', 'Sign out']
+    ]
+  }
+];
