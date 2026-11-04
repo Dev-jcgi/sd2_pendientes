@@ -44,6 +44,8 @@ pre{background:var(--chip);padding:12px;border-radius:8px;overflow-x:auto;font-s
 <h2>1. Qué hay nuevo en <code>main</code></h2>
 <div class="card tw"><table>
 <tr><th>Historia</th><th>Qué hace</th><th>Qué cambia para tu equipo</th></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/82">#82</a> Historial de estados</td><td>El ADMIN ve quién activó o desactivó a cada usuario y cuándo (botón <b>History</b> en la lista de usuarios); con <code>-Pjpa</code> se guarda en la tabla <code>user_status_changes</code></td><td>Nada en tu código; ejemplo de migración Flyway con clave foránea <b>dentro del mismo módulo</b></td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/80">#80</a> Repartidor inactivo de prueba</td><td><code>SampleUsers.INACTIVE_COURIER</code> (COURIER inactivo); <code>isActiveWithRole(INACTIVE_COURIER, COURIER)</code> responde <code>false</code></td><td><b>Entregas (A):</b> úsalo en las pruebas de #21 y #26 para rechazar a un repartidor inactivo</td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/56">#56</a> Usuario actual</td><td>Contrato <code>CurrentUserService</code> en <code>core-module</code>: devuelve <code>CurrentUser(id, role, displayName)</code> del usuario con sesión</td><td><b>Reemplazar los ids fijos</b> por <code>currentUserService.currentUser().id()</code></td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/61">#61</a> Inicio de sesión y menú por rol</td><td>Pantalla de login con correo y contraseña antes de la ventana principal; menú según el rol; botón <b>Sign out</b></td><td>El botón de tu módulo solo aparece para los roles que lo usan (ver punto 5)</td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/60">#60</a> Contraseña cifrada</td><td>Cada usuario tiene contraseña (mínimo 8 caracteres); se guarda solo el hash BCrypt</td><td>Nada en tu código; para entrar usa los usuarios de prueba</td></tr>
@@ -68,6 +70,7 @@ cd ../delivery-system &amp;&amp; ./mvnw javafx:run -Pmemory</code></pre><p class
 <tr><td><code>customer@sample.delivery</code></td><td>CUSTOMER</td><td>Orders, Payments</td></tr>
 <tr><td><code>courier@sample.delivery</code></td><td>COURIER</td><td>Deliveries</td></tr>
 <tr><td><code>inactive@sample.delivery</code></td><td>CUSTOMER inactivo</td><td>No entra: "Inactive user"</td></tr>
+<tr><td><code>inactive.courier@sample.delivery</code></td><td>COURIER inactivo</td><td>No entra: "Inactive user"</td></tr>
 </table></div><p>La contraseña de prueba de todos está en el <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/blob/main/user-module/README.md">README de user-module</a> (<code>SampleUsersLoader.SAMPLE_PASSWORD</code>). Los ids son los mismos de <code>SampleUsers</code>.</p></div>
 </div>
 
