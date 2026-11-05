@@ -41,9 +41,16 @@ pre{background:var(--chip);padding:12px;border-radius:8px;overflow-x:auto;font-s
 <div class="card"><h3>📘 Ejemplo de historia</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/61">#61</a> tiene el reporte de avance completo, los commits y el MR. Úsala como modelo.</div>
 </div>
 
+<div class="card" style="border-left:4px solid var(--ok)"><h3>📘 Nuevo: tutorial paso a paso</h3><a href="tutorial-integracion.html"><b>Tutorial de integración</b></a>: diagrama interactivo de la arquitectura y el código completo para Pedidos, Entregas, Catálogo y Pagos (sesión, permisos, <code>findUser</code>, <code>TransactionRunner</code>, datos de prueba y pruebas).</div>
+
 <h2>1. Qué hay nuevo en <code>main</code></h2>
 <div class="card tw"><table>
 <tr><th>Historia</th><th>Qué hace</th><th>Qué cambia para tu equipo</th></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/96">#96</a> Transacciones</td><td><code>TransactionRunner</code> en <code>core</code>: varias escrituras se confirman o se deshacen juntas (RNF-1.05)</td><td><b>Úsalo</b> si tu caso de uso guarda más de una cosa (pedido + stock, pago + transacción). Ver el <a href="tutorial-integracion.html#s5">tutorial, paso 5</a></td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/94">#94</a> Sesión terminada → login</td><td>Si una operación encuentra la sesión inválida, la app vuelve al login con un aviso</td><td>Lee <code>currentUser()</code> <b>dentro</b> de <code>BackgroundTasks.run</code>; no atrapes <code>NotAuthenticatedException</code></td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/100">#100</a> / <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/101">#101</a> Inactividad</td><td>La sesión se cierra tras <code>delivery.session.idle-timeout</code> sin actividad (30 min)</td><td>Nada que programar; prueba con <code>DELIVERY_SESSION_IDLE_TIMEOUT=1m</code></td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/95">#95</a> Solo ADMIN</td><td>Users valida el rol dentro de cada caso de uso, no solo en el menú</td><td>Haz lo mismo en tus casos de uso con <code>isActiveWithRole</code></td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/97">#97</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/98">#98</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/99">#99</a></td><td>Historial con transacción; My account con perfil editable; filtros por rol y estado</td><td>Nada en tu código</td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/85">#85</a> Datos de un usuario</td><td><code>UserService.findUser(id)</code> → <code>UserSummary</code> (nombre, correo, teléfono, rol, activo) y <code>findActiveByRole(rol)</code></td><td>Guarda solo el <b>id</b> del usuario y lee el resto de aquí (ver punto 4). <b>A:</b> nombre y teléfono del repartidor · <b>C:</b> lista de comerciantes · <b>B:</b> cliente en "Pedidos de mi comercio"</td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/86">#86</a> Método de pago</td><td><code>PaymentService.pay(orderId, userId, <b>paymentMethodId</b>, amount)</code> y la tarjeta de prueba <code>SamplePaymentMethods.CUSTOMER_CARD</code></td><td><b>B:</b> pasa el método al pagar · <b>D:</b> valida el método y guarda la tarjeta de prueba al arrancar</td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/87">#87</a> Catálogo de prueba</td><td><code>SampleCatalog</code> en <code>core</code>: comercio, Pizza y Empanada con los mismos ids de siempre</td><td>Úsalo en pruebas y pantallas (ver punto 8). <code>FallbackCatalogService.AVAILABLE_PRODUCT</code> y similares quedan <b>obsoletos</b> · <b>C:</b> cárgalo al arrancar</td></tr>
@@ -180,7 +187,8 @@ docker compose up -d              # MySQL en Docker
 <li>Pruebas con un <code>CurrentUserService</code> falso (lambda), sin user-module.</li>
 <li>Guardar solo el id de los usuarios y leer nombre o teléfono con <code>userService.findUser</code>.</li>
 <li>Usar <code>SampleCatalog</code> y <code>SamplePaymentMethods</code> en lugar de ids propios o constantes obsoletas.</li>
-<li>Mostrar el error cuando <code>currentUser()</code> lanza <code>NotAuthenticatedException</code>.</li>
+<li>Leer <code>currentUser()</code> dentro de <code>BackgroundTasks.run</code> (si la sesión terminó, core vuelve al login).</li>
+<li>Usar <code>TransactionRunner</code> cuando el caso de uso guarda más de una cosa.</li>
 <li>Comentario de avance en la historia y MR en Draft con <code>Closes #n</code>.</li>
 </ul></div>
 

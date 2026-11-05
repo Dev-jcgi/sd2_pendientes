@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tutorial de integración</title>
+<style>
+:root{--bg:#f7f7fb;--card:#fff;--text:#1d1b2c;--soft:#5d5a72;--line:#e3e1ee;--acc:#6c4cf5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--chip:#f0edff;--node:#fff;--hl:#6c4cf5;--hlbg:#efeaff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7;--node:#2b2d37;--hl:#9d8cf7;--hlbg:#3a3554}}
+:root[data-theme="dark"]{--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7;--node:#2b2d37;--hl:#9d8cf7;--hlbg:#3a3554}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:1.75rem;margin:.2em 0}h2{font-size:1.3rem;margin:0 0 .5em}h3{font-size:1.05rem;margin:1.1em 0 .4em}
+.lead{color:var(--soft)}a{color:var(--acc)}
+.tag{display:inline-block;background:var(--chip);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:.87em}
+pre{background:var(--chip);padding:12px;border-radius:8px;overflow-x:auto;font-size:.84rem;line-height:1.45;margin:.5em 0}pre code{background:none;padding:0}
+.file{font:600 .78rem ui-monospace,monospace;color:var(--soft);margin:.9em 0 -.2em}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}th{color:var(--soft)}
+.tw{overflow-x:auto}
+.note{border-left:4px solid var(--warn);background:var(--card);padding:10px 14px;border-radius:8px;margin:10px 0}
+.good{border-left-color:var(--ok)}
+/* explainer layout: sticky diagram + scrolling steps */
+.explainer{display:grid;grid-template-columns:minmax(0,430px) minmax(0,1fr);gap:28px;align-items:start}
+.stage{position:sticky;top:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stage .cap{font-size:.85rem;color:var(--soft);min-height:2.6em;margin:.4em .2em 0}
+.steps{min-width:0}
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:0 0 22px;min-height:70vh;transition:border-color .25s}
+.step.active{border-color:var(--hl)}
+.num{display:inline-block;background:var(--hl);color:#fff;border-radius:999px;width:26px;height:26px;text-align:center;line-height:26px;font-weight:700;font-size:.85rem;margin-right:6px}
+svg text{fill:var(--text);font:600 11px system-ui,sans-serif}svg .sub{fill:var(--soft);font-weight:400;font-size:9.5px}
+svg .n rect{fill:var(--node);stroke:var(--line);stroke-width:1.5;transition:all .3s}
+svg .n.on rect{fill:var(--hlbg);stroke:var(--hl);stroke-width:2.5}
+svg .e{stroke:var(--line);stroke-width:1.6;fill:none;transition:all .3s}
+svg .e.on{stroke:var(--hl);stroke-width:2.6;stroke-dasharray:6 4;animation:flow 1s linear infinite}
+svg .zone{fill:none;stroke:var(--line);stroke-dasharray:4 4}svg .zl{fill:var(--soft);font-size:10px;font-weight:600}
+@keyframes flow{to{stroke-dashoffset:-20}}
+@media (prefers-reduced-motion:reduce){svg .e.on{animation:none}}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.tabs button{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font:600 .9rem system-ui,sans-serif;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--hl);border-color:var(--hl);color:#fff}
+.panel{display:none}.panel.show{display:block}
+.toc{columns:2;font-size:.9rem}.toc li{margin:2px 0}
+.theme-btn{position:fixed;top:12px;right:12px;z-index:10;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font:600 .85rem system-ui,sans-serif;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+@media (max-width:860px){.explainer{grid-template-columns:1fr}.stage{position:sticky;top:0;z-index:5}.step{min-height:auto}.toc{columns:1}}
+</style>
+<script>(function(){var t="light";try{t=localStorage.getItem("theme")||"light"}catch(e){}document.documentElement.setAttribute("data-theme",t)})();</script>
+</head>
+<body>
+<button class="theme-btn" id="themeBtn" type="button" aria-label="Cambiar entre modo claro y oscuro">🌙 Modo oscuro</button>
+<div class="wrap">
+<span class="tag">Capstone Delivery System · Sección E</span> <a href="index.html">← Índice</a> · <a href="usuarios-integracion.html">Integrar user-module</a>
+<h1>Tutorial: integrar tu módulo con core y user-module</h1>
+<p class="lead">Paso a paso, con el código completo. Baja despacio: el diagrama de la izquierda muestra en cada paso <b>qué parte de la arquitectura</b> estás tocando y por dónde viaja la llamada. Al final, cada equipo tiene su sección con el código de su módulo (Pedidos, Entregas, Catálogo y Pagos).</p>
+
+<div class="note good"><b>Antes de empezar:</b> todo esto ya está en <code>main</code> (historias #85–#101). Actualiza tu rama:
+<pre><code>git switch main &amp;&amp; git pull --rebase origin main
+git switch FEAT-&lt;n&gt;/feature/&lt;tu-rama&gt; &amp;&amp; git rebase main
+cd core-module &amp;&amp; ./mvnw install -DskipTests &amp;&amp; cd ../user-module &amp;&amp; ./mvnw install -DskipTests</code></pre></div>
+
+<ol class="toc">
+<li><a href="#s1">El mapa: capas y contratos</a></li>
+<li><a href="#s2">¿Quién es? <code>CurrentUserService</code></a></li>
+<li><a href="#s3">¿Puede? <code>isActiveWithRole</code> en el caso de uso</a></li>
+<li><a href="#s4">Mostrar o elegir un usuario: <code>findUser</code></a></li>
+<li><a href="#s5">Todo o nada: <code>TransactionRunner</code></a></li>
+<li><a href="#s6">Conectar: la configuración Spring</a></li>
+<li><a href="#s7">La pantalla: <code>BackgroundTasks</code> y la sesión</a></li>
+<li><a href="#s8">Datos de prueba compartidos</a></li>
+<li><a href="#s9">Pruebas sin base de datos ni user-module</a></li>
+<li><a href="#modulos">Código por módulo</a></li>
+</ol>
+
+<div class="explainer">
+<div class="stage" aria-label="Diagrama de la arquitectura">
+<svg viewBox="0 0 420 470" role="img" aria-labelledby="dgTitle">
+<title id="dgTitle">Arquitectura: pantalla, caso de uso, puertos y contratos de core, implementaciones en user-module, base de datos</title>
+<rect class="zone" x="8" y="8" width="404" height="262" rx="10"/><text class="zl" x="18" y="24">TU MÓDULO (orders · delivery · catalog · payment)</text>
+<rect class="zone" x="8" y="282" width="196" height="180" rx="10"/><text class="zl" x="18" y="298">CORE-MODULE</text>
+<rect class="zone" x="216" y="282" width="196" height="180" rx="10"/><text class="zl" x="226" y="298">USER-MODULE</text>
+<path class="e" id="e-ui-uc" d="M210 74 V104"/>
+<path class="e" id="e-uc-repo" d="M210 150 L95 186"/>
+<path class="e" id="e-uc-tx" d="M210 150 V186"/>
+<path class="e" id="e-uc-contract" d="M210 150 L325 186"/>
+<path class="e" id="e-repo-db" d="M95 232 V246 H40 V430"/>
+<path class="e" id="e-tx-db" d="M210 232 V250 H60 V430"/>
+<path class="e" id="e-contract-core" d="M325 232 L110 320"/>
+<path class="e" id="e-contract-user" d="M325 232 L315 320"/>
+<path class="e" id="e-ui-session" d="M290 52 H395 V340 H380"/>
+<g class="n" id="n-ui"><rect x="130" y="34" width="160" height="40" rx="8"/><text x="210" y="52" text-anchor="middle">Pantalla (Controller)</text><text class="sub" x="210" y="66" text-anchor="middle">BackgroundTasks.run</text></g>
+<g class="n" id="n-uc"><rect x="130" y="104" width="160" height="46" rx="8"/><text x="210" y="124" text-anchor="middle">Caso de uso</text><text class="sub" x="210" y="139" text-anchor="middle">application/usecase</text></g>
+<g class="n" id="n-repo"><rect x="20" y="186" width="150" height="46" rx="8"/><text x="95" y="206" text-anchor="middle">Tu puerto + adaptador</text><text class="sub" x="95" y="221" text-anchor="middle">XxxRepositoryPort</text></g>
+<g class="n" id="n-tx"><rect x="178" y="186" width="64" height="46" rx="8"/><text x="210" y="206" text-anchor="middle">Tx</text><text class="sub" x="210" y="221" text-anchor="middle">Runner</text></g>
+<g class="n" id="n-contract"><rect x="250" y="186" width="150" height="46" rx="8"/><text x="325" y="206" text-anchor="middle">Contratos de core</text><text class="sub" x="325" y="221" text-anchor="middle">UserService · CurrentUser…</text></g>
+<g class="n" id="n-core"><rect x="20" y="320" width="172" height="52" rx="8"/><text x="106" y="340" text-anchor="middle">Fallbacks + Sample*</text><text class="sub" x="106" y="356" text-anchor="middle">si no hay módulo real</text></g>
+<g class="n" id="n-txi"><rect x="20" y="384" width="172" height="40" rx="8"/><text x="106" y="402" text-anchor="middle">SpringTransactionRunner</text><text class="sub" x="106" y="416" text-anchor="middle">TransactionTemplate</text></g>
+<g class="n" id="n-user"><rect x="228" y="320" width="172" height="52" rx="8"/><text x="314" y="340" text-anchor="middle">UserServiceAdapter</text><text class="sub" x="314" y="356" text-anchor="middle">findUser · isActiveWithRole</text></g>
+<g class="n" id="n-session"><rect x="228" y="384" width="172" height="40" rx="8"/><text x="314" y="402" text-anchor="middle">SessionCurrentUserService</text><text class="sub" x="314" y="416" text-anchor="middle">login · inactividad</text></g>
+<g class="n" id="n-db"><rect x="20" y="430" width="380" height="28" rx="8"/><text x="210" y="448" text-anchor="middle">MySQL (-Pjpa) · memoria (por defecto)</text></g>
+</svg>
+<p class="cap" id="cap">Baja para empezar.</p>
+</div>
+
+<div class="steps">
+
+<section class="step" id="s1" data-hl="n-ui n-uc n-repo n-tx n-contract n-core n-user n-session n-db" data-cap="Las tres zonas: tu módulo, core (contratos y respaldos) y user-module (la implementación real).">
+<h2><span class="num">1</span>El mapa: capas y contratos</h2>
+<p>Tu módulo es hexagonal: la <b>pantalla</b> llama a un <b>caso de uso</b>; el caso de uso solo conoce <b>interfaces</b> (puertos y contratos). Nunca importa clases de otro módulo.</p>
+<table><tr><th>Necesitas…</th><th>Usa (paquete)</th><th>Lo implementa</th></tr>
+<tr><td>Saber quién está usando la app</td><td><code>CurrentUserService</code> (<code>org.jala.edu.core.contract</code>)</td><td>user-module (login)</td></tr>
+<tr><td>Saber si puede operar</td><td><code>UserService.isActiveWithRole</code></td><td>user-module</td></tr>
+<tr><td>Mostrar o elegir usuarios</td><td><code>UserService.findUser</code>, <code>findActiveByRole</code></td><td>user-module</td></tr>
+<tr><td>Guardar varias cosas juntas</td><td><code>TransactionRunner</code> (<code>org.jala.edu.core.application.port.out</code>)</td><td>core</td></tr>
+<tr><td>Productos, pedidos, pagos</td><td><code>CatalogService</code>, <code>OrderService</code>, <code>PaymentService</code></td><td>C, B, D (respaldo en core mientras tanto)</td></tr></table>
+<p>Mientras otro equipo no implementa su contrato, <code>core</code> registra un <b>fallback</b> con datos de prueba (<code>Sample*</code>). Por eso tu módulo arranca desde el primer día.</p>
+</section>
+
+<section class="step" id="s2" data-hl="n-uc n-contract n-session" data-edges="e-uc-contract e-contract-user" data-cap="El caso de uso pregunta a CurrentUserService; user-module responde con el usuario del login.">
+<h2><span class="num">2</span>¿Quién es? <code>CurrentUserService</code></h2>
+<p>Nunca uses un id fijo (<code>SampleUsers.CUSTOMER</code>) en el código de producción. Recibe <code>CurrentUserService</code> por constructor y pregunta <b>dentro del caso de uso</b>:</p>
+<pre><code>CurrentUser me = currentUserService.currentUser();   // id(), role(), displayName()
+UUID customerId = me.id();</code></pre>
+<ul>
+<li>Si nadie inició sesión, o la sesión terminó, lanza <code>NotAuthenticatedException</code>. <b>No la atrapes</b>: la pantalla vuelve sola al login (#94).</li>
+<li>La sesión termina si el ADMIN desactiva al usuario (#88) o tras 30 min sin actividad (#100, #101).</li>
+</ul>
+</section>
+
+<section class="step" id="s3" data-hl="n-uc n-contract n-user" data-edges="e-uc-contract e-contract-user" data-cap="La regla de acceso se valida en el caso de uso, no solo escondiendo el botón del menú.">
+<h2><span class="num">3</span>¿Puede? <code>isActiveWithRole</code> en el caso de uso</h2>
+<p>El menú esconde botones, pero eso no es seguridad (RF-1.14). Valida el rol <b>en el caso de uso</b>, como hace user-module desde #95:</p>
+<pre><code>if (!userService.isActiveWithRole(me.id(), UserRole.CUSTOMER)) {
+    throw new DomainException("User not authorized for this operation");
+}</code></pre>
+<p>Usa los nombres del enum (<code>ADMIN</code>, <code>MERCHANT</code>, <code>CUSTOMER</code>, <code>COURIER</code>). Puedes pasar varios: <code>isActiveWithRole(id, ADMIN, MERCHANT)</code>.</p>
+</section>
+
+<section class="step" id="s4" data-hl="n-uc n-contract n-user" data-edges="e-uc-contract e-contract-user" data-cap="Tu módulo guarda solo el UUID del usuario; el nombre y el teléfono se piden a user-module cuando se muestran.">
+<h2><span class="num">4</span>Mostrar o elegir un usuario: <code>findUser</code></h2>
+<p>Guarda solo el <b>id</b> del usuario en tus tablas (sin claves foráneas entre módulos, propuesta 1). Para mostrar datos, pídelos (#85):</p>
+<pre><code>// Un usuario: nombre, correo, teléfono (puede ser null), rol y si está activo
+UserSummary courier = userService.findUser(courierId)
+        .orElseThrow(() -&gt; new NotFoundException("User not found: " + courierId));
+String label = courier.fullName() + " · " + courier.phoneNumber();
+
+// Una lista para un ComboBox: activos de un rol, ordenados por nombre
+List&lt;UserSummary&gt; merchants = userService.findActiveByRole(UserRole.MERCHANT);</code></pre>
+</section>
+
+<section class="step" id="s5" data-hl="n-uc n-tx n-repo n-txi n-db" data-edges="e-uc-tx e-uc-repo e-tx-db e-repo-db" data-cap="TransactionRunner abre una transacción: todas las escrituras del caso de uso se confirman juntas o se deshacen juntas.">
+<h2><span class="num">5</span>Todo o nada: <code>TransactionRunner</code></h2>
+<p>Si tu caso de uso <b>escribe más de una vez</b> (pedido + líneas, pedido + stock, pago + transacción), una falla a la mitad dejaría datos a medias. <code>TransactionRunner</code> (#96) lo evita (RNF-1.05):</p>
+<pre><code>return transactions.inTransaction(() -&gt; {
+    Order saved = orders.save(order);
+    catalog.reserveStock(productId, quantity);   // si lanza excepción…
+    return saved.getId();                        // …se deshace también el save
+});</code></pre>
+<ul>
+<li>Con <code>-Pjpa</code> es una transacción real de MySQL; en memoria solo ejecuta.</li>
+<li>La aplicación no conoce Spring: solo el puerto <code>TransactionRunner</code>.</li>
+<li>Las validaciones que no escriben (rol, existencia) van <b>antes</b> de la transacción.</li>
+</ul>
+</section>
+
+<section class="step" id="s6" data-hl="n-uc n-tx n-contract n-repo" data-edges="e-uc-tx e-uc-contract e-uc-repo" data-cap="La configuración de tu módulo arma el caso de uso con los beans que core y user-module ya registran.">
+<h2><span class="num">6</span>Conectar: la configuración Spring</h2>
+<p>Los contratos y el <code>TransactionRunner</code> ya son beans: solo pídelos como parámetros del <code>@Bean</code>:</p>
+<pre><code>@Configuration
+public class OrderModuleConfiguration {
+
+    @Bean
+    public ConfirmOrderUseCase confirmOrderUseCase(OrderRepositoryPort orders, CartRepositoryPort carts,
+                                                   CatalogService catalog, PaymentService payments,
+                                                   UserService users, CurrentUserService currentUser,
+                                                   TransactionRunner transactions) {
+        return new ConfirmOrderUseCase(orders, carts, catalog, payments, users, currentUser, transactions);
+    }
+}</code></pre>
+<p>El caso de uso <b>no</b> lleva <code>@Component</code>: es Java puro, se crea aquí.</p>
+</section>
+
+<section class="step" id="s7" data-hl="n-ui n-uc n-session" data-edges="e-ui-uc e-ui-session" data-cap="La pantalla corre el caso de uso en segundo plano; si la sesión terminó, core vuelve al login con un aviso.">
+<h2><span class="num">7</span>La pantalla: <code>BackgroundTasks</code> y la sesión</h2>
+<p>Toda llamada a un caso de uso va en <code>BackgroundTasks.run</code>. Lee la sesión <b>dentro</b> del trabajo, no antes:</p>
+<pre><code>@FXML
+void onConfirm() {
+    String address = addressField.getText();               // lee la pantalla aquí (hilo JavaFX)
+    form.setDisable(true);
+    BackgroundTasks.run(
+            () -&gt; confirmOrder.execute(new ConfirmOrderCommand(address, SamplePaymentMethods.CUSTOMER_CARD)),
+            orderId -&gt; showMessage("Order confirmed", "success"),
+            error -&gt; {                                      // nunca llega aquí si la sesión terminó:
+                showMessage(ErrorMessages.of(error, "confirm the order"), "error");   // core abre el login
+                form.setDisable(false);
+            });
+}</code></pre>
+<div class="note">❌ Si llamas <code>currentUserService.currentUser()</code> <b>fuera</b> de <code>BackgroundTasks.run</code> y la sesión terminó, el botón "no hace nada". Este error se encontró y corrigió en My account (#98).</div>
+</section>
+
+<section class="step" id="s8" data-hl="n-core n-contract" data-edges="e-contract-core" data-cap="Los ids de prueba viven en core y valen igual con el respaldo y con el módulo real.">
+<h2><span class="num">8</span>Datos de prueba compartidos</h2>
+<table><tr><th>Constante</th><th>Dato</th></tr>
+<tr><td><code>SampleUsers.ADMIN / MERCHANT / CUSTOMER / COURIER</code></td><td>Un usuario activo por rol (contraseña en el README de user-module)</td></tr>
+<tr><td><code>SampleUsers.INACTIVE_CUSTOMER / INACTIVE_COURIER</code></td><td>Para probar el rechazo de inactivos</td></tr>
+<tr><td><code>SampleCatalog.COMMERCE</code></td><td>"Sample Pizzeria", del MERCHANT de prueba</td></tr>
+<tr><td><code>SampleCatalog.PIZZA</code> / <code>EMPANADA</code></td><td>50.00 con stock 10 / 8.50 agotada</td></tr>
+<tr><td><code>SamplePaymentMethods.CUSTOMER_CARD</code></td><td>Tarjeta del cliente de prueba</td></tr></table>
+<div class="note">⚠️ <code>FallbackCatalogService.AVAILABLE_PRODUCT</code>, <code>SOLD_OUT_PRODUCT</code> y <code>SAMPLE_COMMERCE</code> están <b>obsoletos</b> y se eliminarán: usa <code>SampleCatalog</code>.</div>
+</section>
+
+<section class="step" id="s9" data-hl="n-uc n-core n-repo" data-edges="e-contract-core" data-cap="En las pruebas, los respaldos de core y un TransactionRunner directo reemplazan a user-module y a MySQL.">
+<h2><span class="num">9</span>Pruebas sin base de datos ni user-module</h2>
+<pre><code>class ConfirmOrderUseCaseTest {
+
+    private static final CurrentUserService AS_CUSTOMER = () -&gt; Optional.of(
+            new CurrentUser(SampleUsers.CUSTOMER, UserRole.CUSTOMER, "Sample Customer"));
+
+    private final InMemoryOrderRepositoryAdapter orders = new InMemoryOrderRepositoryAdapter();
+    private final InMemoryCartRepositoryAdapter carts = new InMemoryCartRepositoryAdapter();
+    private final FallbackCatalogService catalog = new FallbackCatalogService();
+    private final ConfirmOrderUseCase confirm = new ConfirmOrderUseCase(orders, carts, catalog,
+            new FallbackPaymentService(), new FallbackUserService(), AS_CUSTOMER, TransactionRunner.direct());
+
+    @Test
+    void confirmsAPaidOrderAndReservesTheStock() {
+        // Arrange
+        Cart cart = carts.findOrCreate(SampleUsers.CUSTOMER);
+        cart.add(SampleCatalog.PIZZA, 2);
+        carts.save(cart);
+
+        // Act
+        UUID orderId = confirm.execute(new ConfirmOrderCommand("Av. Siempre Viva 742",
+                SamplePaymentMethods.CUSTOMER_CARD));
+
+        // Assert
+        assertThat(orders.findById(orderId)).isPresent();
+        assertThat(catalog.isAvailable(SampleCatalog.PIZZA, SampleCatalog.PIZZA_STOCK - 2)).isTrue();
+        assertThat(catalog.isAvailable(SampleCatalog.PIZZA, SampleCatalog.PIZZA_STOCK - 1)).isFalse();
+    }
+}</code></pre>
+<p><code>CurrentUserService</code> se puede escribir como lambda; <code>UserService</code> ya no (tiene tres métodos): usa <code>new FallbackUserService()</code>.</p>
+</section>
+
+</div>
+</div>
+
+<h2 id="modulos" style="margin-top:1.5em">Código por módulo</h2>
+<p class="lead">Elige tu equipo. Cada sección trae los archivos completos: comando, caso de uso, configuración, pantalla y prueba. Las clases de tu dominio (<code>Order</code>, <code>Courier</code>, <code>Commerce</code>, <code>PaymentMethod</code>…) se llaman como en tu rama: adapta los nombres, no la estructura.</p>
+<div class="tabs" role="tablist">
+<button role="tab" aria-selected="true" data-tab="orders">🛒 Pedidos (B)</button>
+<button role="tab" aria-selected="false" data-tab="delivery">🛵 Entregas (A)</button>
+<button role="tab" aria-selected="false" data-tab="catalog">📦 Catálogo (C)</button>
+<button role="tab" aria-selected="false" data-tab="payment">💳 Pagos (D)</button>
+</div>
+
+<div class="panel show" id="orders">
+<h3>Finalizar la compra (#41): usuario, catálogo, pago y stock en una transacción</h3>
+<p>Requerimientos: ORD FUN-002, INT-001 (precio vigente y disponibilidad), INT-002 (pago → Confirmado o Cancelado), INT-003 (cliente activo), D-09 (stock).</p>
+<p class="file">order-module/src/main/java/org/jala/edu/order/application/port/in/ConfirmOrderCommand.java</p>
+<pre><code>package org.jala.edu.order.application.port.in;
+
+import java.util.UUID;
+
+/** Lo que el cliente indica al confirmar: dirección de entrega y método de pago (#86). */
+public record ConfirmOrderCommand(String deliveryAddress, UUID paymentMethodId) {
+}</code></pre>
+<p class="file">order-module/src/main/java/org/jala/edu/order/application/usecase/ConfirmOrderUseCase.java</p>
+<pre><code>package org.jala.edu.order.application.usecase;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+import org.jala.edu.core.application.port.out.TransactionRunner;
+import org.jala.edu.core.application.usecase.UseCase;
+import org.jala.edu.core.contract.CatalogService;
+import org.jala.edu.core.contract.CurrentUserService;
+import org.jala.edu.core.contract.PaymentResult;
+import org.jala.edu.core.contract.PaymentService;
+import org.jala.edu.core.contract.ProductInfo;
+import org.jala.edu.core.contract.UserRole;
+import org.jala.edu.core.contract.UserService;
+import org.jala.edu.core.domain.exception.ConflictException;
+import org.jala.edu.core.domain.exception.DomainException;
+import org.jala.edu.order.application.port.in.ConfirmOrderCommand;
+import org.jala.edu.order.application.port.out.CartRepositoryPort;
+import org.jala.edu.order.application.port.out.OrderRepositoryPort;
+import org.jala.edu.order.domain.model.Cart;
+import org.jala.edu.order.domain.model.Order;
+
+/**
+ * ORD FUN-002 + INT-001..003: convierte el carrito del cliente en un pedido, reserva el stock y pide el pago.
+ */
+public class ConfirmOrderUseCase implements UseCase&lt;ConfirmOrderCommand, UUID&gt; {
+
+    private final OrderRepositoryPort orders;
+    private final CartRepositoryPort carts;
+    private final CatalogService catalog;
+    private final PaymentService payments;
+    private final UserService users;
+    private final CurrentUserService currentUser;
+    private final TransactionRunner transactions;
+
+    public ConfirmOrderUseCase(OrderRepositoryPort orders, CartRepositoryPort carts, CatalogService catalog,
+                               PaymentService payments, UserService users, CurrentUserService currentUser,
+                               TransactionRunner transactions) {
+        this.orders = orders;
+        this.carts = carts;
+        this.catalog = catalog;
+        this.payments = payments;
+        this.users = users;
+        this.currentUser = currentUser;
+        this.transactions = transactions;
+    }
+
+    @Override
+    public UUID execute(ConfirmOrderCommand command) {
+        UUID customerId = currentUser.currentUser().id();                       // paso 2
+        if (!users.isActiveWithRole(customerId, UserRole.CUSTOMER)) {           // paso 3 (INT-003)
+            throw new DomainException("User not authorized for this operation");
+        }
+        Cart cart = carts.findOrCreate(customerId);
+        if (cart.isEmpty()) {
+            throw new DomainException("The cart is empty");
+        }
+        return transactions.inTransaction(() -&gt; {                               // paso 5
+            Order order = Order.create(customerId, command.deliveryAddress());
+            cart.items().forEach(item -&gt; {
+                ProductInfo product = catalog.findProduct(item.productId())     // INT-001: precio vigente
+                        .orElseThrow(() -&gt; new ConflictException("Product not available: " + item.productId()));
+                catalog.reserveStock(item.productId(), item.quantity());       // D-09; sin stock → excepción → rollback
+                order.addLine(product.productId(), product.name(), product.price(), item.quantity());
+            });
+            orders.save(order);
+            PaymentResult payment = payments.pay(order.getId(), customerId,   // INT-002 (#86: con método)
+                    command.paymentMethodId(), order.total());
+            if (payment.approved()) {
+                order.confirm(payment.paymentReference());
+                cart.clear();
+                carts.save(cart);
+            } else {
+                order.cancel("Payment rejected: " + payment.reason());
+                cart.items().forEach(item -&gt; catalog.releaseStock(item.productId(), item.quantity()));
+            }
+            orders.save(order);
+            return order.getId();
+        });
+    }
+}</code></pre>
+<p class="file">order-module/…/infrastructure/config/OrderModuleConfiguration.java (fragmento)</p>
+<pre><code>@Bean
+public ConfirmOrderUseCase confirmOrderUseCase(OrderRepositoryPort orders, CartRepositoryPort carts,
+                                               CatalogService catalog, PaymentService payments, UserService users,
+                                               CurrentUserService currentUser, TransactionRunner transactions) {
+    return new ConfirmOrderUseCase(orders, carts, catalog, payments, users, currentUser, transactions);
+}</code></pre>
+<p>La pantalla es la del paso 7. La prueba es la del paso 9; agrega dos más: <b>pago rechazado</b> (monto &gt; <code>FallbackPaymentService.MAX_AMOUNT</code>) → pedido Cancelado y stock liberado; <b>cliente inactivo</b> (<code>SampleUsers.INACTIVE_CUSTOMER</code>) → excepción y nada guardado.</p>
+<h3>"Pedidos de mi comercio" (#72, D-08): mostrar el cliente</h3>
+<pre><code>// En el caso de uso que lista los pedidos del comercio del MERCHANT
+UUID merchantId = currentUser.currentUser().id();
+List&lt;UUID&gt; myCommerces = catalog.findCommerceIdsByMerchant(merchantId);
+return orders.findReadyOrConfirmedByCommerces(myCommerces).stream()
+        .map(order -&gt; new CommerceOrderRow(order.getId(), order.total(),
+                users.findUser(order.customerId()).map(UserSummary::fullName).orElse("—")))
+        .toList();</code></pre>
+<p>El botón se llama exactamente <code>My commerce orders</code> (<code>@Order(310)</code>, #79).</p>
+</div>
+
+<div class="panel" id="delivery">
+<h3>Registrar repartidor con los datos del usuario (Entregas FUN-001)</h3>
+<p>El nombre y el teléfono ya están en user-module: el repartidor guarda solo su id, el medio de transporte y la disponibilidad.</p>
+<p class="file">delivery-module/src/main/java/org/jala/edu/delivery/application/usecase/RegisterCourierUseCase.java</p>
+<pre><code>package org.jala.edu.delivery.application.usecase;
+
+import java.util.UUID;
+import org.jala.edu.core.application.usecase.UseCase;
+import org.jala.edu.core.contract.CurrentUserService;
+import org.jala.edu.core.contract.UserRole;
+import org.jala.edu.core.contract.UserService;
+import org.jala.edu.core.domain.exception.ConflictException;
+import org.jala.edu.core.domain.exception.DomainException;
+import org.jala.edu.delivery.application.port.in.RegisterCourierCommand;
+import org.jala.edu.delivery.application.port.out.CourierRepositoryPort;
+import org.jala.edu.delivery.domain.model.Courier;
+
+/** DEL FUN-001 + INT-002: el ADMIN registra a un usuario COURIER activo como repartidor. */
+public class RegisterCourierUseCase implements UseCase&lt;RegisterCourierCommand, UUID&gt; {
+
+    private final CourierRepositoryPort couriers;
+    private final UserService users;
+    private final CurrentUserService currentUser;
+
+    public RegisterCourierUseCase(CourierRepositoryPort couriers, UserService users,
+                                  CurrentUserService currentUser) {
+        this.couriers = couriers;
+        this.users = users;
+        this.currentUser = currentUser;
+    }
+
+    @Override
+    public UUID execute(RegisterCourierCommand command) {
+        if (!users.isActiveWithRole(currentUser.currentUser().id(), UserRole.ADMIN)) {
+            throw new DomainException("User not authorized for this operation");
+        }
+        if (!users.isActiveWithRole(command.courierUserId(), UserRole.COURIER)) {   // INT-002
+            throw new DomainException("The user is not an active courier");
+        }
+        if (couriers.existsById(command.courierUserId())) {
+            throw new ConflictException("The courier is already registered");
+        }
+        Courier courier = Courier.register(command.courierUserId(), command.transport());
+        return couriers.save(courier).getId();
+    }
+}</code></pre>
+<p class="file">Pantalla: elegir al repartidor de una lista (CourierRegistrationController, fragmento)</p>
+<pre><code>@FXML
+void initialize() {
+    courierCombo.setConverter(new StringConverter&lt;&gt;() {
+        @Override public String toString(UserSummary user) {
+            return user == null ? "" : user.fullName() + " · " + user.email();
+        }
+        @Override public UserSummary fromString(String text) { throw new UnsupportedOperationException(); }
+    });
+    BackgroundTasks.run(() -&gt; userService.findActiveByRole(UserRole.COURIER),      // #85
+            couriers -&gt; courierCombo.getItems().setAll(couriers),
+            error -&gt; showMessage(ErrorMessages.of(error, "load the couriers"), "error"));
+}</code></pre>
+<h3>Tomar un pedido (FUN-002, #24) en una transacción</h3>
+<pre><code>public UUID execute(UUID orderId) {
+    UUID courierId = currentUser.currentUser().id();
+    if (!users.isActiveWithRole(courierId, UserRole.COURIER)) {
+        throw new DomainException("User not authorized for this operation");
+    }
+    return transactions.inTransaction(() -&gt; {
+        Delivery delivery = Delivery.take(orderId, courierId);   // estado Asignada (D-01)
+        deliveries.save(delivery);
+        orders.assign(orderId, courierId);                        // OrderService: si otro lo tomó, excepción → rollback
+        return delivery.getId();
+    });
+}</code></pre>
+<p>"Retirado" es un estado interno de Entregas (D-01 = C): no se informa a <code>OrderService</code>. Prueba el rechazo con <code>SampleUsers.INACTIVE_COURIER</code>.</p>
+</div>
+
+<div class="panel" id="catalog">
+<h3>Registrar un comercio eligiendo al MERCHANT (CAT FUN-001, #75)</h3>
+<p class="file">catalog-module/src/main/java/org/jala/edu/catalog/application/usecase/RegisterCommerceUseCase.java</p>
+<pre><code>package org.jala.edu.catalog.application.usecase;
+
+import java.util.UUID;
+import org.jala.edu.catalog.application.port.in.RegisterCommerceCommand;
+import org.jala.edu.catalog.application.port.out.CommerceRepositoryPort;
+import org.jala.edu.catalog.domain.model.Commerce;
+import org.jala.edu.core.application.usecase.UseCase;
+import org.jala.edu.core.contract.CurrentUserService;
+import org.jala.edu.core.contract.UserRole;
+import org.jala.edu.core.contract.UserService;
+import org.jala.edu.core.domain.exception.DomainException;
+
+/** CAT FUN-001 + INT-002: el ADMIN registra un comercio Deshabilitado para un MERCHANT activo. */
+public class RegisterCommerceUseCase implements UseCase&lt;RegisterCommerceCommand, UUID&gt; {
+
+    private final CommerceRepositoryPort commerces;
+    private final UserService users;
+    private final CurrentUserService currentUser;
+
+    public RegisterCommerceUseCase(CommerceRepositoryPort commerces, UserService users,
+                                   CurrentUserService currentUser) {
+        this.commerces = commerces;
+        this.users = users;
+        this.currentUser = currentUser;
+    }
+
+    @Override
+    public UUID execute(RegisterCommerceCommand command) {
+        if (!users.isActiveWithRole(currentUser.currentUser().id(), UserRole.ADMIN)) {
+            throw new DomainException("User not authorized for this operation");
+        }
+        if (!users.isActiveWithRole(command.merchantId(), UserRole.MERCHANT)) {
+            throw new DomainException("The owner must be an active merchant");
+        }
+        Commerce commerce = Commerce.register(command.name(), command.address(), command.phone(),
+                command.merchantId());                                   // nace Deshabilitado
+        return commerces.save(commerce).getId();
+    }
+}</code></pre>
+<p>En la pantalla, el combo de dueños se llena con <code>userService.findActiveByRole(UserRole.MERCHANT)</code> (igual que el de repartidores en Entregas).</p>
+<h3>Implementar <code>CatalogService</code> y cargar <code>SampleCatalog</code> (#87)</h3>
+<p class="file">catalog-module/…/infrastructure/adapter/in/contract/CatalogServiceAdapter.java</p>
+<pre><code>/** Sirve el contrato de core a Pedidos y Entregas; reemplaza a FallbackCatalogService. */
+public class CatalogServiceAdapter implements CatalogService {
+
+    private final ProductRepositoryPort products;
+    private final CommerceRepositoryPort commerces;
+
+    // constructor…
+
+    @Override
+    public Optional&lt;ProductInfo&gt; findProduct(UUID productId) {
+        return products.findById(productId)
+                .map(p -&gt; new ProductInfo(p.getId(), p.getCommerceId(), p.getName(), p.getPrice()));
+    }
+
+    @Override
+    public boolean isAvailable(UUID productId, int quantity) {
+        return products.findById(productId)
+                .filter(p -&gt; p.isAvailable() &amp;&amp; commerces.isActive(p.getCommerceId()))
+                .map(p -&gt; quantity &gt; 0 &amp;&amp; p.getStock() &gt;= quantity).orElse(false);
+    }
+
+    @Override
+    public void reserveStock(UUID productId, int quantity) {   // corre dentro de la transacción de Pedidos
+        Product product = products.findById(productId)
+                .orElseThrow(() -&gt; new NotFoundException("Product not found: " + productId));
+        product.reserve(quantity);                              // ConflictException si no alcanza
+        products.save(product);
+    }
+
+    @Override
+    public void releaseStock(UUID productId, int quantity) { /* simétrico a reserveStock */ }
+
+    @Override
+    public List&lt;UUID&gt; findCommerceIdsByMerchant(UUID merchantId) {   // D-08
+        return commerces.findByMerchantId(merchantId).stream().map(Commerce::getId).toList();
+    }
+}</code></pre>
+<p class="file">catalog-module/…/infrastructure/config/SampleCatalogLoader.java</p>
+<pre><code>/** Guarda el SampleCatalog al arrancar con sus ids fijos, como SampleUsersLoader en user-module. */
+public class SampleCatalogLoader implements ApplicationRunner {
+
+    // constructor con CommerceRepositoryPort y ProductRepositoryPort…
+
+    @Override
+    public void run(ApplicationArguments args) {
+        if (!commerces.existsById(SampleCatalog.COMMERCE)) {
+            commerces.save(Commerce.restoreActive(SampleCatalog.COMMERCE, SampleCatalog.COMMERCE_NAME,
+                    "Calle de Prueba 1", null, SampleUsers.MERCHANT));
+        }
+        if (!products.existsById(SampleCatalog.PIZZA)) {
+            products.save(Product.restore(SampleCatalog.PIZZA, SampleCatalog.COMMERCE, SampleCatalog.PIZZA_NAME,
+                    SampleCatalog.PIZZA_PRICE, SampleCatalog.PIZZA_STOCK));
+        }
+        if (!products.existsById(SampleCatalog.EMPANADA)) {
+            products.save(Product.restore(SampleCatalog.EMPANADA, SampleCatalog.COMMERCE,
+                    SampleCatalog.EMPANADA_NAME, SampleCatalog.EMPANADA_PRICE, 0));
+        }
+    }
+}</code></pre>
+<p>Registra <code>CatalogServiceAdapter</code> y <code>SampleCatalogLoader</code> como <code>@Bean</code>: el aviso "No module provides CatalogService" desaparece. <b>Habilitar un comercio</b> (FUN-004: comprobar producto Disponible + cambiar estado) va en <code>transactions.inTransaction</code>.</p>
+</div>
+
+<div class="panel" id="payment">
+<h3>Implementar <code>PaymentService.pay</code> con el método de pago (#86)</h3>
+<p>Requerimientos: PAY FUN-002 (regla documentada, monto &gt; 0), FUN-003 (transacción registrada, sin doble cobro), INT-001, INT-002 (usuario activo).</p>
+<p class="file">payment-module/src/main/java/org/jala/edu/payment/infrastructure/adapter/in/contract/PaymentServiceAdapter.java</p>
+<pre><code>package org.jala.edu.payment.infrastructure.adapter.in.contract;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+import org.jala.edu.core.contract.PaymentResult;
+import org.jala.edu.core.contract.PaymentService;
+import org.jala.edu.payment.application.port.in.ProcessPaymentCommand;
+import org.jala.edu.payment.application.usecase.ProcessPaymentUseCase;
+import org.jala.edu.payment.domain.model.PaymentTransaction;
+
+/** Sirve el contrato de core a Pedidos; reemplaza a FallbackPaymentService. */
+public class PaymentServiceAdapter implements PaymentService {
+
+    private final ProcessPaymentUseCase processPayment;
+
+    public PaymentServiceAdapter(ProcessPaymentUseCase processPayment) {
+        this.processPayment = processPayment;
+    }
+
+    @Override
+    public PaymentResult pay(UUID orderId, UUID userId, UUID paymentMethodId, BigDecimal amount) {
+        PaymentTransaction tx = processPayment.execute(
+                new ProcessPaymentCommand(orderId, userId, paymentMethodId, amount));
+        return new PaymentResult(tx.getReference(), tx.isApproved(), tx.getReason());
+    }
+}</code></pre>
+<p class="file">payment-module/…/application/usecase/ProcessPaymentUseCase.java (el núcleo)</p>
+<pre><code>public PaymentTransaction execute(ProcessPaymentCommand command) {
+    if (!users.isActiveWithRole(command.userId(),                         // INT-002: cualquier rol activo
+            UserRole.CUSTOMER, UserRole.MERCHANT, UserRole.COURIER, UserRole.ADMIN)) {
+        return transactions.inTransaction(() -&gt; history.save(
+                PaymentTransaction.rejected(command, "User not authorized")));
+    }
+    return transactions.inTransaction(() -&gt; {
+        if (history.existsApprovedForOrder(command.orderId())) {          // FUN-003: sin doble cobro
+            throw new ConflictException("Order already paid: " + command.orderId());
+        }
+        PaymentMethod method = methods.findById(command.paymentMethodId())
+                .filter(m -&gt; m.belongsTo(command.userId()))
+                .orElse(null);
+        PaymentTransaction tx = method == null
+                ? PaymentTransaction.rejected(command, "Payment method not found")
+                : rule.evaluate(command, method);                         // FUN-002: regla documentada
+        return history.save(tx);                                          // se registra también el rechazo
+    });
+}</code></pre>
+<p class="file">payment-module/…/infrastructure/config/SamplePaymentMethodsLoader.java</p>
+<pre><code>/** Guarda la tarjeta de prueba del cliente al arrancar, para que Pedidos pueda pagar en la demo. */
+public class SamplePaymentMethodsLoader implements ApplicationRunner {
+
+    @Override
+    public void run(ApplicationArguments args) {
+        if (!methods.existsById(SamplePaymentMethods.CUSTOMER_CARD)) {
+            methods.save(PaymentMethod.restore(SamplePaymentMethods.CUSTOMER_CARD, SampleUsers.CUSTOMER,
+                    PaymentType.CARD, new Alias("Sample card")));
+        }
+    }
+}</code></pre>
+<div class="note">❌ No crees un <code>UserService</code> propio ni un adaptador que devuelva <code>true</code>: usa el de <code>core</code> (<code>org.jala.edu.core.contract.UserService</code>), que user-module implementa con usuarios reales.</div>
+</div>
+
+<h2 style="margin-top:1.5em">Checklist antes de abrir tu MR</h2>
+<ul>
+<li>El caso de uso recibe contratos por constructor, no ids fijos ni clases de otro módulo.</li>
+<li>El rol se valida en el caso de uso con <code>isActiveWithRole</code>.</li>
+<li>Si escribe más de una vez, usa <code>transactions.inTransaction</code>.</li>
+<li>La pantalla lee la sesión dentro de <code>BackgroundTasks.run</code>.</li>
+<li>Pruebas con <code>FallbackUserService</code>, <code>FallbackCatalogService</code>, <code>TransactionRunner.direct()</code> y <code>SampleCatalog</code>.</li>
+<li><code>./mvnw verify</code> en verde, <code>Closes #n</code> y comentario de avance en la historia.</li>
+</ul>
+<p class="lead" style="margin-top:28px">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Dudas: comenta en tu historia mencionando al practitioner. Relacionado: <a href="usuarios-integracion.html">Integrar user-module</a> · <a href="manual-implementacion.html">Manual de implementación</a>.</p>
+</div>
+
+<script>
+(function(){var b=document.getElementById("themeBtn"),r=document.documentElement;function paint(){b.textContent=r.getAttribute("data-theme")==="dark"?"☀️ Modo claro":"🌙 Modo oscuro"}paint();b.addEventListener("click",function(){var t=r.getAttribute("data-theme")==="dark"?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}paint()})})();
+(function(){
+  var steps=[].slice.call(document.querySelectorAll(".step")),cap=document.getElementById("cap");
+  function show(step){
+    steps.forEach(function(s){s.classList.toggle("active",s===step)});
+    var hl=(step.dataset.hl||"").split(" "),ed=(step.dataset.edges||"").split(" ");
+    document.querySelectorAll("svg .n").forEach(function(n){n.classList.toggle("on",hl.indexOf(n.id)>=0)});
+    document.querySelectorAll("svg .e").forEach(function(e){e.classList.toggle("on",ed.indexOf(e.id)>=0)});
+    cap.textContent=step.dataset.cap||"";
+  }
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)show(e.target)})},{rootMargin:"-45% 0px -45% 0px"});
+    steps.forEach(function(s){io.observe(s)});
+  }
+  show(steps[0]);
+  var tabs=[].slice.call(document.querySelectorAll(".tabs button"));
+  tabs.forEach(function(t){t.addEventListener("click",function(){
+    tabs.forEach(function(x){x.setAttribute("aria-selected",x===t?"true":"false")});
+    document.querySelectorAll(".panel").forEach(function(p){p.classList.toggle("show",p.id===t.dataset.tab)});
+  })});
+})();
+</script>
+</body>
+</html>
