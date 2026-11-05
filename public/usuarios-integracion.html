@@ -44,6 +44,12 @@ pre{background:var(--chip);padding:12px;border-radius:8px;overflow-x:auto;font-s
 <h2>1. Qué hay nuevo en <code>main</code></h2>
 <div class="card tw"><table>
 <tr><th>Historia</th><th>Qué hace</th><th>Qué cambia para tu equipo</th></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/85">#85</a> Datos de un usuario</td><td><code>UserService.findUser(id)</code> → <code>UserSummary</code> (nombre, correo, teléfono, rol, activo) y <code>findActiveByRole(rol)</code></td><td>Guarda solo el <b>id</b> del usuario y lee el resto de aquí (ver punto 4). <b>A:</b> nombre y teléfono del repartidor · <b>C:</b> lista de comerciantes · <b>B:</b> cliente en "Pedidos de mi comercio"</td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/86">#86</a> Método de pago</td><td><code>PaymentService.pay(orderId, userId, <b>paymentMethodId</b>, amount)</code> y la tarjeta de prueba <code>SamplePaymentMethods.CUSTOMER_CARD</code></td><td><b>B:</b> pasa el método al pagar · <b>D:</b> valida el método y guarda la tarjeta de prueba al arrancar</td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/87">#87</a> Catálogo de prueba</td><td><code>SampleCatalog</code> en <code>core</code>: comercio, Pizza y Empanada con los mismos ids de siempre</td><td>Úsalo en pruebas y pantallas (ver punto 8). <code>FallbackCatalogService.AVAILABLE_PRODUCT</code> y similares quedan <b>obsoletos</b> · <b>C:</b> cárgalo al arrancar</td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/88">#88</a> Sesión siempre al día</td><td>Si el ADMIN desactiva a alguien con la sesión abierta, su siguiente operación lo rechaza; un rol o nombre nuevo aplica de inmediato</td><td><code>currentUser()</code> puede lanzar <code>NotAuthenticatedException</code> en cualquier momento: muestra el error, no lo ignores</td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/89">#89</a> Registro de clientes</td><td>"New customer? Create an account" en el login crea un CUSTOMER activo y entra</td><td>Nada en tu código</td></tr>
+<tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/90">#90</a> My account</td><td>Botón para todos los roles: datos del usuario y cambio de contraseña</td><td>Nada en tu código; el menú tiene un botón más</td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/79">#79</a> Botón del comerciante</td><td><code>RoleMenu</code>: el botón <code>My commerce orders</code> solo lo ve el MERCHANT (D-08, opción 2)</td><td><b>Pedidos (B):</b> declarar ese <code>NavigationItem</code> en #72; <b>Catálogo (C):</b> <code>findCommerceIdsByMerchant</code></td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/82">#82</a> Historial de estados</td><td>El ADMIN ve quién activó o desactivó a cada usuario y cuándo (botón <b>History</b> en la lista de usuarios); con <code>-Pjpa</code> se guarda en la tabla <code>user_status_changes</code></td><td>Nada en tu código; ejemplo de migración Flyway con clave foránea <b>dentro del mismo módulo</b></td></tr>
 <tr><td><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/work_items/80">#80</a> Repartidor inactivo de prueba</td><td><code>SampleUsers.INACTIVE_COURIER</code> (COURIER inactivo); <code>isActiveWithRole(INACTIVE_COURIER, COURIER)</code> responde <code>false</code></td><td><b>Entregas (A):</b> úsalo en las pruebas de #21 y #26 para rechazar a un repartidor inactivo</td></tr>
@@ -104,6 +110,13 @@ public class NewCartController {
 if (!users.isActiveWithRole(customerId, UserRole.CUSTOMER)) {
     throw new DomainException(&quot;User not authorized for this operation&quot;);
 }</code></pre></div>
+<div class="card"><h3>Mostrar o elegir un usuario (#85)</h3><pre><code>// Guarda solo el id; el nombre y el teléfono se leen cuando se necesitan
+UserSummary courier = userService.findUser(courierId).orElseThrow();
+courier.fullName();      // "Sample Courier"
+courier.phoneNumber();   // puede ser null
+
+// Lista para un ComboBox: comerciantes activos, ordenados por nombre
+List&lt;UserSummary&gt; merchants = userService.findActiveByRole(UserRole.MERCHANT);</code></pre><p class="lead">En pruebas usa <code>new FallbackUserService()</code>: ya responde <code>findUser</code> y <code>findActiveByRole</code> con los usuarios de prueba. <code>UserService</code> ya <b>no</b> se puede escribir como lambda.</p></div>
 <div class="card"><h3>Pruebas sin user-module</h3><pre><code>// En las pruebas no hace falta user-module: CurrentUserService tiene un solo método
 CurrentUserService asCustomer = () -&gt; Optional.of(
         new CurrentUser(SampleUsers.CUSTOMER, UserRole.CUSTOMER, &quot;Sample Customer&quot;));
@@ -116,6 +129,7 @@ CurrentUserService nobody = Optional::empty;   // currentUser() lanza NotAuthent
 <div class="tw"><table>
 <tr><th>Título del botón</th><th>Módulo</th><th>Roles que lo ven</th></tr>
 <tr><td><code>Users</code></td><td>user-module</td><td>ADMIN</td></tr>
+<tr><td><code>My account</code></td><td>user-module</td><td>Todos (no está en <code>RoleMenu</code>)</td></tr>
 <tr><td><code>Catalog</code></td><td>catalog-module</td><td>ADMIN, MERCHANT</td></tr>
 <tr><td><code>Orders</code></td><td>order-module</td><td>CUSTOMER</td></tr>
 <tr><td><code>My commerce orders</code></td><td>order-module</td><td>MERCHANT</td></tr>
@@ -148,6 +162,15 @@ docker compose up -d              # MySQL en Docker
 <tr><td>D · Pagos</td><td>Casos de uso de #29, #30 y #33</td><td><code>userId</code> recibido como dato</td><td>id del CUSTOMER con sesión desde el controlador</td></tr>
 </table></div></div>
 
+<h2>8. Datos de prueba compartidos</h2>
+<div class="card tw"><p>Como <code>SampleUsers</code>, estos ids sirven <b>hoy</b> con el respaldo de <code>core</code> y <b>después</b> con los módulos reales, que los cargan al arrancar.</p><table>
+<tr><th>Constante</th><th>Id</th><th>Dato</th><th>Lo carga</th></tr>
+<tr><td><code>SampleCatalog.COMMERCE</code></td><td><code>…0301</code></td><td>"Sample Pizzeria", activo, del MERCHANT de prueba</td><td>catalog-module</td></tr>
+<tr><td><code>SampleCatalog.PIZZA</code></td><td><code>…0101</code></td><td>Pizza, 50.00, disponible, stock 10</td><td>catalog-module</td></tr>
+<tr><td><code>SampleCatalog.EMPANADA</code></td><td><code>…0102</code></td><td>Empanada, 8.50, agotada</td><td>catalog-module</td></tr>
+<tr><td><code>SamplePaymentMethods.CUSTOMER_CARD</code></td><td><code>…0401</code></td><td>Tarjeta del cliente de prueba</td><td>payment-module</td></tr>
+</table><p>Si tu historia cambia lo que necesita un producto, un comercio o un pago (un campo o estado nuevo), actualiza los datos de prueba <b>en el mismo MR</b> y pide el cambio en <code>core</code> al practitioner.</p></div>
+
 <h2>Checklist por equipo</h2>
 <div class="card"><ul class="chk">
 <li>Rebase de mi rama sobre <code>main</code> y <code>install</code> de core-module y user-module.</li>
@@ -155,6 +178,9 @@ docker compose up -d              # MySQL en Docker
 <li>Reemplazar <code>SampleUsers.X</code> en controladores por <code>currentUserService.currentUser().id()</code>.</li>
 <li>Mantener <code>isActiveWithRole</code> en el caso de uso y probar con el usuario inactivo.</li>
 <li>Pruebas con un <code>CurrentUserService</code> falso (lambda), sin user-module.</li>
+<li>Guardar solo el id de los usuarios y leer nombre o teléfono con <code>userService.findUser</code>.</li>
+<li>Usar <code>SampleCatalog</code> y <code>SamplePaymentMethods</code> en lugar de ids propios o constantes obsoletas.</li>
+<li>Mostrar el error cuando <code>currentUser()</code> lanza <code>NotAuthenticatedException</code>.</li>
 <li>Comentario de avance en la historia y MR en Draft con <code>Closes #n</code>.</li>
 </ul></div>
 
