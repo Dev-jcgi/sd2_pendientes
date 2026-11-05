@@ -1,9 +1,6 @@
-# Pendientes · Capstone Sección E
+# SD2 · Pendientes del Capstone Delivery System
 
-Páginas con los pendientes de cada equipo y guías del practitioner, publicadas con GitLab Pages.
+Páginas de pendientes, guías y tutoriales del practitioner para la Sección E (Desarrollo de Software 2, Jala University).
 
-- `public/index.html`: índice de todas las páginas.
-- `public/pendientes-sprint-<n>.html`: pendientes de cada corte de sprint.
-- `public/usuarios-integracion.html`: cómo integrar user-module en cada módulo.
-- `public/manual-implementacion.html`: manual de implementación con diagramas interactivos.
-- `diagramas/`: código fuente de los diagramas ([react-diagrams](https://github.com/projectstorm/react-diagrams)). Para cambiarlos: `cd diagramas && npm install && npm run build`; el resultado queda en `public/manual/` y se sube con el commit.
+- Sitio: https://dev-jcgi.github.io/sd2_pendientes/
+- El contenido está en `public/` y se publica con GitHub Pages (`.github/workflows/pages.yml`) y con GitLab Pages (`.gitlab-ci.yml`).
