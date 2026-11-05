@@ -51,7 +51,7 @@ svg .zone{fill:none;stroke:var(--line);stroke-dasharray:4 4}svg .zl{fill:var(--s
 <div class="wrap">
 <span class="tag">Capstone Delivery System · Sección E</span> <a href="index.html">← Índice</a> · <a href="usuarios-integracion.html">Integrar user-module</a>
 <h1>Tutorial: integrar tu módulo con core y user-module</h1>
-<p class="lead">Paso a paso, con el código completo. Baja despacio: el diagrama de la izquierda muestra en cada paso <b>qué parte de la arquitectura</b> estás tocando y por dónde viaja la llamada. Al final, cada equipo tiene su sección con el código de su módulo (Pedidos, Entregas, Catálogo y Pagos).</p>
+<p class="lead">Un curso corto, para quien está aprendiendo a programar, sobre <b>lo que se agregó a core-module y user-module</b> y <b>lo que debe hacer tu módulo</b> para integrarse. Son 9 lecciones: cada una explica primero <b>el problema</b>, después <b>la idea</b> y al final <b>el código, línea por línea</b>. El diagrama de la izquierda muestra en qué parte de la arquitectura estás. Al final, cada equipo tiene su pestaña con los pasos y el código completo.</p>
 
 <div class="note good"><b>Antes de empezar:</b> todo esto ya está en <code>main</code> (historias #85–#101). Actualiza tu rama:
 <pre><code>git switch main &amp;&amp; git pull --rebase origin main
@@ -59,16 +59,16 @@ git switch FEAT-&lt;n&gt;/feature/&lt;tu-rama&gt; &amp;&amp; git rebase main
 cd core-module &amp;&amp; ./mvnw install -DskipTests &amp;&amp; cd ../user-module &amp;&amp; ./mvnw install -DskipTests</code></pre></div>
 
 <ol class="toc">
-<li><a href="#s1">El mapa: capas y contratos</a></li>
-<li><a href="#s2">¿Quién es? <code>CurrentUserService</code></a></li>
-<li><a href="#s3">¿Puede? <code>isActiveWithRole</code> en el caso de uso</a></li>
-<li><a href="#s4">Mostrar o elegir un usuario: <code>findUser</code></a></li>
+<li><a href="#s1">¿Qué es la arquitectura hexagonal?</a></li>
+<li><a href="#s2">¿Quién usa la app? <code>CurrentUserService</code></a></li>
+<li><a href="#s3">¿Tiene permiso? <code>isActiveWithRole</code></a></li>
+<li><a href="#s4">Mostrar o elegir usuarios: <code>findUser</code></a></li>
 <li><a href="#s5">Todo o nada: <code>TransactionRunner</code></a></li>
-<li><a href="#s6">Conectar: la configuración Spring</a></li>
-<li><a href="#s7">La pantalla: <code>BackgroundTasks</code> y la sesión</a></li>
+<li><a href="#s6">Conectar las piezas: configuración Spring</a></li>
+<li><a href="#s7">La pantalla y la sesión</a></li>
 <li><a href="#s8">Datos de prueba compartidos</a></li>
-<li><a href="#s9">Pruebas sin base de datos ni user-module</a></li>
-<li><a href="#modulos">Código por módulo</a></li>
+<li><a href="#s9">Probar sin base de datos</a></li>
+<li><a href="#modulos">Qué debe hacer tu módulo (con el código)</a></li>
 </ol>
 
 <div class="explainer">
@@ -103,142 +103,146 @@ cd core-module &amp;&amp; ./mvnw install -DskipTests &amp;&amp; cd ../user-modul
 
 <div class="steps">
 
-<section class="step" id="s1" data-hl="n-ui n-uc n-repo n-tx n-contract n-core n-user n-session n-db" data-cap="Las tres zonas: tu módulo, core (contratos y respaldos) y user-module (la implementación real).">
-<h2><span class="num">1</span>El mapa: capas y contratos</h2>
-<p>Tu módulo es hexagonal: la <b>pantalla</b> llama a un <b>caso de uso</b>; el caso de uso solo conoce <b>interfaces</b> (puertos y contratos). Nunca importa clases de otro módulo.</p>
-<table><tr><th>Necesitas…</th><th>Usa (paquete)</th><th>Lo implementa</th></tr>
-<tr><td>Saber quién está usando la app</td><td><code>CurrentUserService</code> (<code>org.jala.edu.core.contract</code>)</td><td>user-module (login)</td></tr>
-<tr><td>Saber si puede operar</td><td><code>UserService.isActiveWithRole</code></td><td>user-module</td></tr>
-<tr><td>Mostrar o elegir usuarios</td><td><code>UserService.findUser</code>, <code>findActiveByRole</code></td><td>user-module</td></tr>
-<tr><td>Guardar varias cosas juntas</td><td><code>TransactionRunner</code> (<code>org.jala.edu.core.application.port.out</code>)</td><td>core</td></tr>
-<tr><td>Productos, pedidos, pagos</td><td><code>CatalogService</code>, <code>OrderService</code>, <code>PaymentService</code></td><td>C, B, D (respaldo en core mientras tanto)</td></tr></table>
-<p>Mientras otro equipo no implementa su contrato, <code>core</code> registra un <b>fallback</b> con datos de prueba (<code>Sample*</code>). Por eso tu módulo arranca desde el primer día.</p>
+<section class="step" id="s1" data-hl="n-ui n-uc n-repo n-tx n-contract n-core n-user n-session n-db" data-cap="Tres zonas: tu módulo, core (los contratos y los respaldos) y user-module (los usuarios de verdad).">
+<h2><span class="num">1</span>Lección 1 · ¿Qué es la arquitectura hexagonal y por qué la usamos?</h2>
+<p><b>El problema.</b> Imagina que en tu código de Pedidos escribes directamente "busca al usuario en la tabla <code>users</code>". El día que el equipo de Usuarios cambie esa tabla, tu módulo se rompe sin que tú hayas tocado nada.</p>
+<p><b>La idea.</b> En la arquitectura hexagonal el centro de tu módulo (la <b>lógica de negocio</b>) no conoce bases de datos, pantallas ni otros módulos. Solo conoce <b>interfaces</b>: "contratos" que dicen <i>qué</i> se puede pedir, sin decir <i>cómo</i> se hace.</p>
+<p><b>Una comparación.</b> Es como un enchufe: tu lámpara (tu módulo) no sabe si la electricidad viene de una planta solar o de una batería. Solo sabe que el enchufe tiene una forma fija. En el proyecto, los "enchufes" están en <code>core-module</code>.</p>
+<table><tr><th>Capa (en el diagrama)</th><th>Qué hace</th><th>Ejemplo en el proyecto</th></tr>
+<tr><td><b>Pantalla</b> (Controller)</td><td>Lee lo que escribe el usuario y muestra resultados. No decide reglas.</td><td><code>LoginController</code>, <code>MyAccountController</code></td></tr>
+<tr><td><b>Caso de uso</b></td><td>La regla de negocio: "un cliente activo puede confirmar su pedido".</td><td><code>ChangeUserStatusUseCase</code></td></tr>
+<tr><td><b>Puertos</b></td><td>Interfaces que el caso de uso necesita (guardar, consultar).</td><td><code>UserRepositoryPort</code>, <code>TransactionRunner</code></td></tr>
+<tr><td><b>Contratos de core</b></td><td>Interfaces para hablar con <b>otro módulo</b>.</td><td><code>UserService</code>, <code>CurrentUserService</code>, <code>CatalogService</code></td></tr>
+<tr><td><b>Adaptadores</b></td><td>La implementación real de un puerto o contrato.</td><td><code>UserServiceAdapter</code> (en user-module)</td></tr></table>
+<p><b>Qué aprenderás:</b> en las lecciones 2 a 9 vas a usar cada "enchufe" que ya está listo en <code>main</code>. Al final, en <a href="#modulos">Código por módulo</a>, está lo que debe hacer tu equipo, con el código completo.</p>
 </section>
 
-<section class="step" id="s2" data-hl="n-uc n-contract n-session" data-edges="e-uc-contract e-contract-user" data-cap="El caso de uso pregunta a CurrentUserService; user-module responde con el usuario del login.">
-<h2><span class="num">2</span>¿Quién es? <code>CurrentUserService</code></h2>
-<p>Nunca uses un id fijo (<code>SampleUsers.CUSTOMER</code>) en el código de producción. Recibe <code>CurrentUserService</code> por constructor y pregunta <b>dentro del caso de uso</b>:</p>
-<pre><code>CurrentUser me = currentUserService.currentUser();   // id(), role(), displayName()
-UUID customerId = me.id();</code></pre>
-<ul>
-<li>Si nadie inició sesión, o la sesión terminó, lanza <code>NotAuthenticatedException</code>. <b>No la atrapes</b>: la pantalla vuelve sola al login (#94).</li>
-<li>La sesión termina si el ADMIN desactiva al usuario (#88) o tras 30 min sin actividad (#100, #101).</li>
-</ul>
+<section class="step" id="s2" data-hl="n-uc n-contract n-session" data-edges="e-uc-contract e-contract-user" data-cap="El caso de uso le pregunta a CurrentUserService quién inició sesión; user-module responde.">
+<h2><span class="num">2</span>Lección 2 · ¿Quién está usando la aplicación? <code>CurrentUserService</code></h2>
+<p><b>El problema.</b> Antes, muchos módulos usaban un id fijo: <code>SampleUsers.CUSTOMER</code>. Así, <i>todos</i> los pedidos parecían del mismo cliente, aunque entrara otra persona.</p>
+<p><b>La solución.</b> Preguntar al contrato <code>CurrentUserService</code> quién inició sesión. Lo implementa user-module con el login.</p>
+<pre><code>CurrentUser me = currentUserService.currentUser();  // 1
+UUID customerId = me.id();                          // 2
+UserRole role = me.role();                          // 3</code></pre>
+<ol><li>Pide el usuario que inició sesión. Devuelve un <code>CurrentUser</code> (un <i>record</i>: un objeto que solo guarda datos).</li>
+<li>Su identificador único (UUID). Es lo único que debes guardar en tus tablas.</li>
+<li>Su rol: <code>ADMIN</code>, <code>MERCHANT</code>, <code>CUSTOMER</code> o <code>COURIER</code>.</li></ol>
+<div class="note"><b>¿Y si nadie inició sesión?</b> <code>currentUser()</code> lanza <code>NotAuthenticatedException</code>. <b>No la atrapes con try/catch</b>: <code>core</code> la usa para volver al login (lección 7). La sesión también termina si el ADMIN desactiva al usuario o tras 30 minutos sin actividad.</div>
 </section>
 
-<section class="step" id="s3" data-hl="n-uc n-contract n-user" data-edges="e-uc-contract e-contract-user" data-cap="La regla de acceso se valida en el caso de uso, no solo escondiendo el botón del menú.">
-<h2><span class="num">3</span>¿Puede? <code>isActiveWithRole</code> en el caso de uso</h2>
-<p>El menú esconde botones, pero eso no es seguridad (RF-1.14). Valida el rol <b>en el caso de uso</b>, como hace user-module desde #95:</p>
-<pre><code>if (!userService.isActiveWithRole(me.id(), UserRole.CUSTOMER)) {
-    throw new DomainException("User not authorized for this operation");
+<section class="step" id="s3" data-hl="n-uc n-contract n-user" data-edges="e-uc-contract e-contract-user" data-cap="Antes de hacer algo, el caso de uso confirma que el usuario existe, está activo y tiene el rol correcto.">
+<h2><span class="num">3</span>Lección 3 · ¿Tiene permiso? <code>isActiveWithRole</code></h2>
+<p><b>El problema.</b> El menú esconde el botón "Users" a un cliente. Pero esconder un botón <b>no es seguridad</b>: si otro código llama al caso de uso, la regla no se cumple.</p>
+<p><b>La solución.</b> Validar dentro del caso de uso. Así lo hace user-module desde la historia #95:</p>
+<pre><code>if (!userService.isActiveWithRole(me.id(), UserRole.CUSTOMER)) {      // 1
+    throw new DomainException("User not authorized for this operation"); // 2
 }</code></pre>
-<p>Usa los nombres del enum (<code>ADMIN</code>, <code>MERCHANT</code>, <code>CUSTOMER</code>, <code>COURIER</code>). Puedes pasar varios: <code>isActiveWithRole(id, ADMIN, MERCHANT)</code>.</p>
+<ol><li><code>isActiveWithRole</code> responde <code>true</code> solo si el usuario existe, está <b>activo</b> y tiene alguno de los roles. Puedes pasar varios: <code>isActiveWithRole(id, UserRole.ADMIN, UserRole.MERCHANT)</code>.</li>
+<li>Si no cumple, el caso de uso se detiene con un error de negocio (<code>DomainException</code>), que la pantalla mostrará tal cual.</li></ol>
+<p><b>Ejercicio:</b> ¿qué rol debe validar el caso de uso "tomar un pedido"? <i>(Respuesta: COURIER.)</i></p>
 </section>
 
-<section class="step" id="s4" data-hl="n-uc n-contract n-user" data-edges="e-uc-contract e-contract-user" data-cap="Tu módulo guarda solo el UUID del usuario; el nombre y el teléfono se piden a user-module cuando se muestran.">
-<h2><span class="num">4</span>Mostrar o elegir un usuario: <code>findUser</code></h2>
-<p>Guarda solo el <b>id</b> del usuario en tus tablas (sin claves foráneas entre módulos, propuesta 1). Para mostrar datos, pídelos (#85):</p>
-<pre><code>// Un usuario: nombre, correo, teléfono (puede ser null), rol y si está activo
-UserSummary courier = userService.findUser(courierId)
-        .orElseThrow(() -&gt; new NotFoundException("User not found: " + courierId));
-String label = courier.fullName() + " · " + courier.phoneNumber();
+<section class="step" id="s4" data-hl="n-uc n-contract n-user" data-edges="e-uc-contract e-contract-user" data-cap="Tu módulo guarda solo el UUID; el nombre y el teléfono se piden a user-module cuando se muestran.">
+<h2><span class="num">4</span>Lección 4 · Mostrar o elegir un usuario: <code>findUser</code> y <code>findActiveByRole</code></h2>
+<p><b>El problema.</b> Entregas necesitaba el nombre y el teléfono del repartidor, y Catálogo necesitaba elegir al comerciante dueño de un comercio. Copiar esos datos en cada módulo los deja desactualizados.</p>
+<p><b>La solución (#85).</b> Guardar <b>solo el id</b> y pedir el resto a <code>UserService</code> cuando se necesita:</p>
+<pre><code>Optional&lt;UserSummary&gt; found = userService.findUser(courierId);          // 1
+UserSummary courier = found.orElseThrow(                                   // 2
+        () -&gt; new NotFoundException("User not found: " + courierId));
+String text = courier.fullName() + " · " + courier.phoneNumber();          // 3
 
-// Una lista para un ComboBox: activos de un rol, ordenados por nombre
-List&lt;UserSummary&gt; merchants = userService.findActiveByRole(UserRole.MERCHANT);</code></pre>
+List&lt;UserSummary&gt; merchants = userService.findActiveByRole(UserRole.MERCHANT); // 4</code></pre>
+<ol><li><code>Optional</code> significa "puede venir vacío": si el id no existe, no hay usuario.</li>
+<li><code>orElseThrow</code>: "dame el usuario o lanza este error".</li>
+<li><code>UserSummary</code> trae id, nombre, apellido, correo, teléfono (puede ser <code>null</code>), rol y si está activo. Nunca la contraseña.</li>
+<li>Una lista de los usuarios <b>activos</b> de un rol, ordenada por nombre. Ideal para llenar un <code>ComboBox</code>.</li></ol>
 </section>
 
 <section class="step" id="s5" data-hl="n-uc n-tx n-repo n-txi n-db" data-edges="e-uc-tx e-uc-repo e-tx-db e-repo-db" data-cap="TransactionRunner abre una transacción: todas las escrituras del caso de uso se confirman juntas o se deshacen juntas.">
-<h2><span class="num">5</span>Todo o nada: <code>TransactionRunner</code></h2>
-<p>Si tu caso de uso <b>escribe más de una vez</b> (pedido + líneas, pedido + stock, pago + transacción), una falla a la mitad dejaría datos a medias. <code>TransactionRunner</code> (#96) lo evita (RNF-1.05):</p>
-<pre><code>return transactions.inTransaction(() -&gt; {
-    Order saved = orders.save(order);
-    catalog.reserveStock(productId, quantity);   // si lanza excepción…
-    return saved.getId();                        // …se deshace también el save
+<h2><span class="num">5</span>Lección 5 · Todo o nada: <code>TransactionRunner</code></h2>
+<p><b>El problema.</b> Al confirmar un pedido se hacen varias cosas: guardar el pedido, descontar el stock y registrar el pago. Si el programa falla después de guardar el pedido pero antes del pago, queda un pedido sin pagar y el stock descontado.</p>
+<p><b>Una comparación.</b> Una transferencia bancaria: o se descuenta de una cuenta <b>y</b> se suma a la otra, o no pasa nada. Nunca solo la mitad. Eso es una <b>transacción</b>.</p>
+<p><b>La solución (#96).</b> Envolver las escrituras en <code>transactions.inTransaction(...)</code>:</p>
+<pre><code>return transactions.inTransaction(() -&gt; {        // 1
+    Order saved = orders.save(order);             // 2
+    catalog.reserveStock(productId, quantity);    // 3
+    return saved.getId();                         // 4
 });</code></pre>
-<ul>
-<li>Con <code>-Pjpa</code> es una transacción real de MySQL; en memoria solo ejecuta.</li>
-<li>La aplicación no conoce Spring: solo el puerto <code>TransactionRunner</code>.</li>
-<li>Las validaciones que no escriben (rol, existencia) van <b>antes</b> de la transacción.</li>
-</ul>
+<ol><li>Abre una transacción. Lo que va dentro de <code>() -&gt; { ... }</code> (una <i>lambda</i>: un bloque de código que se pasa como dato) se ejecuta como una unidad.</li>
+<li>Primera escritura.</li>
+<li>Segunda escritura. Si lanza un error (por ejemplo, no hay stock), <b>se deshace también la primera</b>.</li>
+<li>Lo que devuelves sale de <code>inTransaction</code>.</li></ol>
+<ul><li>Con MySQL (<code>-Pjpa</code>) es una transacción real; en memoria simplemente se ejecuta.</li>
+<li>Las validaciones que <b>no escriben</b> (rol, existencia) van <b>antes</b>, fuera del bloque.</li>
+<li>user-module ya lo usa: el cambio de estado y su historial se guardan juntos (#97).</li></ul>
 </section>
 
 <section class="step" id="s6" data-hl="n-uc n-tx n-contract n-repo" data-edges="e-uc-tx e-uc-contract e-uc-repo" data-cap="La configuración de tu módulo arma el caso de uso con los beans que core y user-module ya registran.">
-<h2><span class="num">6</span>Conectar: la configuración Spring</h2>
-<p>Los contratos y el <code>TransactionRunner</code> ya son beans: solo pídelos como parámetros del <code>@Bean</code>:</p>
-<pre><code>@Configuration
+<h2><span class="num">6</span>Lección 6 · Conectar las piezas: la configuración Spring</h2>
+<p><b>La idea.</b> El caso de uso es Java puro: no sabe de Spring. Alguien tiene que "armarlo" y pasarle sus piezas por el constructor. Eso hace la clase de configuración de tu módulo.</p>
+<pre><code>@Configuration                                              // 1
 public class OrderModuleConfiguration {
 
-    @Bean
+    @Bean                                                   // 2
     public ConfirmOrderUseCase confirmOrderUseCase(OrderRepositoryPort orders, CartRepositoryPort carts,
                                                    CatalogService catalog, PaymentService payments,
                                                    UserService users, CurrentUserService currentUser,
-                                                   TransactionRunner transactions) {
+                                                   TransactionRunner transactions) {   // 3
         return new ConfirmOrderUseCase(orders, carts, catalog, payments, users, currentUser, transactions);
     }
 }</code></pre>
-<p>El caso de uso <b>no</b> lleva <code>@Component</code>: es Java puro, se crea aquí.</p>
+<ol><li><code>@Configuration</code>: "esta clase fabrica objetos para Spring".</li>
+<li><code>@Bean</code>: el objeto que devuelve este método queda disponible para quien lo necesite, por ejemplo la pantalla.</li>
+<li>Spring busca un objeto de cada tipo y te lo pasa. <code>UserService</code> lo da user-module, <code>TransactionRunner</code> lo da core y tus puertos los da tu propio módulo.</li></ol>
 </section>
 
 <section class="step" id="s7" data-hl="n-ui n-uc n-session" data-edges="e-ui-uc e-ui-session" data-cap="La pantalla corre el caso de uso en segundo plano; si la sesión terminó, core vuelve al login con un aviso.">
-<h2><span class="num">7</span>La pantalla: <code>BackgroundTasks</code> y la sesión</h2>
-<p>Toda llamada a un caso de uso va en <code>BackgroundTasks.run</code>. Lee la sesión <b>dentro</b> del trabajo, no antes:</p>
+<h2><span class="num">7</span>Lección 7 · La pantalla: <code>BackgroundTasks</code> y la sesión</h2>
+<p><b>El problema.</b> Si la pantalla espera a la base de datos en el mismo hilo que dibuja la ventana, la ventana se congela.</p>
+<p><b>La solución.</b> <code>BackgroundTasks.run(trabajo, siSaleBien, siFalla)</code> ejecuta el trabajo en segundo plano y luego vuelve a la pantalla:</p>
 <pre><code>@FXML
 void onConfirm() {
-    String address = addressField.getText();               // lee la pantalla aquí (hilo JavaFX)
-    form.setDisable(true);
+    String address = addressField.getText();                 // 1
+    form.setDisable(true);                                   // 2
     BackgroundTasks.run(
-            () -&gt; confirmOrder.execute(new ConfirmOrderCommand(address, SamplePaymentMethods.CUSTOMER_CARD)),
-            orderId -&gt; showMessage("Order confirmed", "success"),
-            error -&gt; {                                      // nunca llega aquí si la sesión terminó:
-                showMessage(ErrorMessages.of(error, "confirm the order"), "error");   // core abre el login
+            () -&gt; confirmOrder.execute(                      // 3
+                    new ConfirmOrderCommand(address, SamplePaymentMethods.CUSTOMER_CARD)),
+            orderId -&gt; showMessage("Order confirmed", "success"),               // 4
+            error -&gt; {                                                          // 5
+                showMessage(ErrorMessages.of(error, "confirm the order"), "error");
                 form.setDisable(false);
             });
 }</code></pre>
-<div class="note">❌ Si llamas <code>currentUserService.currentUser()</code> <b>fuera</b> de <code>BackgroundTasks.run</code> y la sesión terminó, el botón "no hace nada". Este error se encontró y corrigió en My account (#98).</div>
+<ol><li>Lee los campos de la pantalla <b>antes</b>, en el hilo de la ventana.</li>
+<li>Desactiva el formulario para que no se presione dos veces.</li>
+<li>El trabajo en segundo plano: el caso de uso, que adentro pregunta quién es el usuario.</li>
+<li>Si sale bien, se muestra el resultado.</li>
+<li>Si falla con un error de negocio, se muestra el mensaje. <b>Si la sesión terminó, nunca llega aquí</b>: core vuelve al login con "Your session has ended" (#94).</li></ol>
+<div class="note">❌ <b>Error común:</b> llamar <code>currentUserService.currentUser()</code> <b>fuera</b> de <code>BackgroundTasks.run</code>. Si la sesión terminó, el botón "no hace nada". Este error se encontró y se corrigió en My account.</div>
 </section>
 
 <section class="step" id="s8" data-hl="n-core n-contract" data-edges="e-contract-core" data-cap="Los ids de prueba viven en core y valen igual con el respaldo y con el módulo real.">
-<h2><span class="num">8</span>Datos de prueba compartidos</h2>
-<table><tr><th>Constante</th><th>Dato</th></tr>
+<h2><span class="num">8</span>Lección 8 · Datos de prueba compartidos</h2>
+<p><b>La idea.</b> Para probar, todos los equipos usan los <b>mismos</b> ids fijos. Hoy los responden los <i>fallbacks</i> de core; cuando un módulo real exista, los cargará al arrancar con los mismos ids.</p>
+<table><tr><th>Constante</th><th>Qué es</th></tr>
 <tr><td><code>SampleUsers.ADMIN / MERCHANT / CUSTOMER / COURIER</code></td><td>Un usuario activo por rol (contraseña en el README de user-module)</td></tr>
-<tr><td><code>SampleUsers.INACTIVE_CUSTOMER / INACTIVE_COURIER</code></td><td>Para probar el rechazo de inactivos</td></tr>
-<tr><td><code>SampleCatalog.COMMERCE</code></td><td>"Sample Pizzeria", del MERCHANT de prueba</td></tr>
+<tr><td><code>SampleUsers.INACTIVE_CUSTOMER / INACTIVE_COURIER</code></td><td>Para probar que un inactivo es rechazado</td></tr>
+<tr><td><code>SampleCatalog.COMMERCE</code></td><td>"Sample Pizzeria", del comerciante de prueba</td></tr>
 <tr><td><code>SampleCatalog.PIZZA</code> / <code>EMPANADA</code></td><td>50.00 con stock 10 / 8.50 agotada</td></tr>
 <tr><td><code>SamplePaymentMethods.CUSTOMER_CARD</code></td><td>Tarjeta del cliente de prueba</td></tr></table>
-<div class="note">⚠️ <code>FallbackCatalogService.AVAILABLE_PRODUCT</code>, <code>SOLD_OUT_PRODUCT</code> y <code>SAMPLE_COMMERCE</code> están <b>obsoletos</b> y se eliminarán: usa <code>SampleCatalog</code>.</div>
+<div class="note">⚠️ <code>FallbackCatalogService.AVAILABLE_PRODUCT</code>, <code>SOLD_OUT_PRODUCT</code> y <code>SAMPLE_COMMERCE</code> están <b>obsoletos</b>: usa <code>SampleCatalog</code>. Pronto se eliminarán.</div>
 </section>
 
 <section class="step" id="s9" data-hl="n-uc n-core n-repo" data-edges="e-contract-core" data-cap="En las pruebas, los respaldos de core y un TransactionRunner directo reemplazan a user-module y a MySQL.">
-<h2><span class="num">9</span>Pruebas sin base de datos ni user-module</h2>
-<pre><code>class ConfirmOrderUseCaseTest {
-
-    private static final CurrentUserService AS_CUSTOMER = () -&gt; Optional.of(
-            new CurrentUser(SampleUsers.CUSTOMER, UserRole.CUSTOMER, "Sample Customer"));
-
-    private final InMemoryOrderRepositoryAdapter orders = new InMemoryOrderRepositoryAdapter();
-    private final InMemoryCartRepositoryAdapter carts = new InMemoryCartRepositoryAdapter();
-    private final FallbackCatalogService catalog = new FallbackCatalogService();
-    private final ConfirmOrderUseCase confirm = new ConfirmOrderUseCase(orders, carts, catalog,
-            new FallbackPaymentService(), new FallbackUserService(), AS_CUSTOMER, TransactionRunner.direct());
-
-    @Test
-    void confirmsAPaidOrderAndReservesTheStock() {
-        // Arrange
-        Cart cart = carts.findOrCreate(SampleUsers.CUSTOMER);
-        cart.add(SampleCatalog.PIZZA, 2);
-        carts.save(cart);
-
-        // Act
-        UUID orderId = confirm.execute(new ConfirmOrderCommand("Av. Siempre Viva 742",
-                SamplePaymentMethods.CUSTOMER_CARD));
-
-        // Assert
-        assertThat(orders.findById(orderId)).isPresent();
-        assertThat(catalog.isAvailable(SampleCatalog.PIZZA, SampleCatalog.PIZZA_STOCK - 2)).isTrue();
-        assertThat(catalog.isAvailable(SampleCatalog.PIZZA, SampleCatalog.PIZZA_STOCK - 1)).isFalse();
-    }
-}</code></pre>
-<p><code>CurrentUserService</code> se puede escribir como lambda; <code>UserService</code> ya no (tiene tres métodos): usa <code>new FallbackUserService()</code>.</p>
+<h2><span class="num">9</span>Lección 9 · Probar sin base de datos ni user-module</h2>
+<p><b>La idea.</b> Una prueba unitaria debe correr rápido y sin MySQL. Reemplazas cada pieza externa por una versión simple:</p>
+<table><tr><th>Pieza real</th><th>En la prueba usa</th></tr>
+<tr><td><code>CurrentUserService</code> (login)</td><td>Una lambda: <code>() -&gt; Optional.of(new CurrentUser(SampleUsers.CUSTOMER, UserRole.CUSTOMER, "Sample Customer"))</code></td></tr>
+<tr><td><code>UserService</code></td><td><code>new FallbackUserService()</code> (ya no se puede como lambda: tiene tres métodos)</td></tr>
+<tr><td><code>TransactionRunner</code></td><td><code>TransactionRunner.direct()</code></td></tr>
+<tr><td><code>CatalogService</code> / <code>PaymentService</code></td><td><code>new FallbackCatalogService()</code> / <code>new FallbackPaymentService()</code></td></tr>
+<tr><td>Tu repositorio</td><td>Tu adaptador en memoria</td></tr></table>
+<p>Escribe cada prueba en tres partes: <b>Arrange</b> (preparar), <b>Act</b> (ejecutar) y <b>Assert</b> (comprobar). La prueba completa de cada módulo está en su pestaña, abajo.</p>
 </section>
 
 </div>
@@ -254,6 +258,7 @@ void onConfirm() {
 </div>
 
 <div class="panel show" id="orders">
+<div class="note good"><b>Qué debe hacer Pedidos (equipo B), en orden:</b><ol><li><b>Reemplaza los ids fijos</b> (<code>SampleUsers.CUSTOMER</code>) en <code>NewCartController</code> y en tus casos de uso por <code>currentUserService.currentUser().id()</code> (lección 2).</li><li>En cada caso de uso del carrito y del pedido, <b>valida</b> <code>isActiveWithRole(id, UserRole.CUSTOMER)</code> (lección 3, INT-003).</li><li>Crea <code>ConfirmOrderUseCase</code> (#41): precio vigente con <code>CatalogService</code>, reservar stock, pedir el pago <b>con el método</b> (<code>SamplePaymentMethods.CUSTOMER_CARD</code> mientras no haya pantalla) y todo dentro de <code>TransactionRunner</code> (lección 5).</li><li>Si el pago se rechaza: el pedido queda <b>Cancelado</b> y el stock se <b>libera</b> (INT-002).</li><li>En "Pedidos de mi comercio" (#72) muestra el nombre del cliente con <code>findUser</code> y declara el botón <code>My commerce orders</code>.</li><li>Cambia <code>FallbackCatalogService.AVAILABLE_PRODUCT</code>/<code>SOLD_OUT_PRODUCT</code> por <code>SampleCatalog.PIZZA</code>/<code>EMPANADA</code> en código y pruebas.</li></ol>Abajo está el código completo. Léelo con las lecciones al lado: cada comentario <code>// paso N</code> remite a una lección.</div>
 <h3>Finalizar la compra (#41): usuario, catálogo, pago y stock en una transacción</h3>
 <p>Requerimientos: ORD FUN-002, INT-001 (precio vigente y disponibilidad), INT-002 (pago → Confirmado o Cancelado), INT-003 (cliente activo), D-09 (stock).</p>
 <p class="file">order-module/src/main/java/org/jala/edu/order/application/port/in/ConfirmOrderCommand.java</p>
@@ -353,6 +358,36 @@ public ConfirmOrderUseCase confirmOrderUseCase(OrderRepositoryPort orders, CartR
     return new ConfirmOrderUseCase(orders, carts, catalog, payments, users, currentUser, transactions);
 }</code></pre>
 <p>La pantalla es la del paso 7. La prueba es la del paso 9; agrega dos más: <b>pago rechazado</b> (monto &gt; <code>FallbackPaymentService.MAX_AMOUNT</code>) → pedido Cancelado y stock liberado; <b>cliente inactivo</b> (<code>SampleUsers.INACTIVE_CUSTOMER</code>) → excepción y nada guardado.</p>
+<h3>La prueba del caso de uso (lección 9)</h3>
+<p class="file">order-module/src/test/java/org/jala/edu/order/application/usecase/ConfirmOrderUseCaseTest.java</p>
+<pre><code>class ConfirmOrderUseCaseTest {
+
+    private static final CurrentUserService AS_CUSTOMER = () -&gt; Optional.of(
+            new CurrentUser(SampleUsers.CUSTOMER, UserRole.CUSTOMER, "Sample Customer"));
+
+    private final InMemoryOrderRepositoryAdapter orders = new InMemoryOrderRepositoryAdapter();
+    private final InMemoryCartRepositoryAdapter carts = new InMemoryCartRepositoryAdapter();
+    private final FallbackCatalogService catalog = new FallbackCatalogService();
+    private final ConfirmOrderUseCase confirm = new ConfirmOrderUseCase(orders, carts, catalog,
+            new FallbackPaymentService(), new FallbackUserService(), AS_CUSTOMER, TransactionRunner.direct());
+
+    @Test
+    void confirmsAPaidOrderAndReservesTheStock() {
+        // Arrange: el cliente de prueba tiene 2 pizzas en su carrito
+        Cart cart = carts.findOrCreate(SampleUsers.CUSTOMER);
+        cart.add(SampleCatalog.PIZZA, 2);
+        carts.save(cart);
+
+        // Act
+        UUID orderId = confirm.execute(new ConfirmOrderCommand("Av. Siempre Viva 742",
+                SamplePaymentMethods.CUSTOMER_CARD));
+
+        // Assert: el pedido existe y quedan 8 pizzas (10 - 2)
+        assertThat(orders.findById(orderId)).isPresent();
+        assertThat(catalog.isAvailable(SampleCatalog.PIZZA, 8)).isTrue();
+        assertThat(catalog.isAvailable(SampleCatalog.PIZZA, 9)).isFalse();
+    }
+}</code></pre>
 <h3>"Pedidos de mi comercio" (#72, D-08): mostrar el cliente</h3>
 <pre><code>// En el caso de uso que lista los pedidos del comercio del MERCHANT
 UUID merchantId = currentUser.currentUser().id();
@@ -365,6 +400,7 @@ return orders.findReadyOrConfirmedByCommerces(myCommerces).stream()
 </div>
 
 <div class="panel" id="delivery">
+<div class="note good"><b>Qué debe hacer Entregas (equipo A), en orden:</b><ol><li><b>Registrar repartidor:</b> en vez de escribir nombre y teléfono, elige al usuario de una lista (<code>findActiveByRole(UserRole.COURIER)</code>) y guarda solo su id, transporte y disponibilidad (lección 4).</li><li>Valida <code>isActiveWithRole(courierId, UserRole.COURIER)</code> antes de registrar, tomar o avanzar una entrega (INT-002). Prueba con <code>SampleUsers.INACTIVE_COURIER</code>.</li><li>Usa el repartidor de la sesión (<code>currentUser().id()</code>) en el historial y al tomar pedidos, nunca un campo de texto con el id (lección 2).</li><li><b>Tomar un pedido</b> (#24) y <b>marcar Entregado</b>: guarda tu entrega y avisa a <code>OrderService</code> dentro de <code>TransactionRunner</code> (lección 5).</li><li>"Retirado" es solo tuyo (D-01): no lo envíes a <code>OrderService</code>.</li></ol>Abajo está el código completo. Léelo con las lecciones al lado: cada comentario <code>// paso N</code> remite a una lección.</div>
 <h3>Registrar repartidor con los datos del usuario (Entregas FUN-001)</h3>
 <p>El nombre y el teléfono ya están en user-module: el repartidor guarda solo su id, el medio de transporte y la disponibilidad.</p>
 <p class="file">delivery-module/src/main/java/org/jala/edu/delivery/application/usecase/RegisterCourierUseCase.java</p>
@@ -440,6 +476,7 @@ void initialize() {
 </div>
 
 <div class="panel" id="catalog">
+<div class="note good"><b>Qué debe hacer Catálogo (equipo C), en orden:</b><ol><li><b>Registrar comercio</b> (#75): el ADMIN elige al dueño de una lista de comerciantes (<code>findActiveByRole(UserRole.MERCHANT)</code>) y validas que sea MERCHANT activo (lección 4).</li><li><b>Implementa <code>CatalogService</code></b> con un adaptador (<code>CatalogServiceAdapter</code>): así Pedidos y Entregas dejan de usar el respaldo de core.</li><li><b>Carga <code>SampleCatalog</code> al arrancar</b> con sus mismos ids (<code>SampleCatalogLoader</code>), para que las pruebas de los otros equipos sigan funcionando (lección 8).</li><li><b>Habilitar comercio</b> (FUN-004) y <b>guardar producto con stock</b> en <code>TransactionRunner</code> (lección 5).</li><li>Cambia <code>FallbackCatalogService.SAMPLE_COMMERCE</code> por <code>SampleCatalog.COMMERCE</code> en tus controladores y pruebas (comentado en !14–!23).</li></ol>Abajo está el código completo. Léelo con las lecciones al lado: cada comentario <code>// paso N</code> remite a una lección.</div>
 <h3>Registrar un comercio eligiendo al MERCHANT (CAT FUN-001, #75)</h3>
 <p class="file">catalog-module/src/main/java/org/jala/edu/catalog/application/usecase/RegisterCommerceUseCase.java</p>
 <pre><code>package org.jala.edu.catalog.application.usecase;
@@ -547,6 +584,7 @@ public class SampleCatalogLoader implements ApplicationRunner {
 </div>
 
 <div class="panel" id="payment">
+<div class="note good"><b>Qué debe hacer Pagos (equipo D), en orden:</b><ol><li><b>Borra tu <code>UserService</code> propio</b> y el adaptador que devuelve <code>true</code>: usa el de core (lección 3).</li><li><b>Implementa <code>PaymentService.pay(orderId, userId, paymentMethodId, amount)</code></b> con <code>PaymentServiceAdapter</code>: valida que el método exista y sea del usuario.</li><li>Registra cada intento (aprobado o rechazado) y <b>evita el doble cobro</b> dentro de <code>TransactionRunner</code> (FUN-003, lección 5).</li><li><b>Carga <code>SamplePaymentMethods.CUSTOMER_CARD</code></b> al arrancar como tarjeta de <code>SampleUsers.CUSTOMER</code>, para que Pedidos pueda pagar en la demo.</li><li>Pon el puerto en <code>application/port/out</code> y agrega la migración Flyway de <code>pay_payment_methods</code> (guía Persistencia JPA).</li></ol>Abajo está el código completo. Léelo con las lecciones al lado: cada comentario <code>// paso N</code> remite a una lección.</div>
 <h3>Implementar <code>PaymentService.pay</code> con el método de pago (#86)</h3>
 <p>Requerimientos: PAY FUN-002 (regla documentada, monto &gt; 0), FUN-003 (transacción registrada, sin doble cobro), INT-001, INT-002 (usuario activo).</p>
 <p class="file">payment-module/src/main/java/org/jala/edu/payment/infrastructure/adapter/in/contract/PaymentServiceAdapter.java</p>
