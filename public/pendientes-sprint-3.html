@@ -71,10 +71,10 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <tr><th>Contrato (core-module)</th><th>Lo implementa</th><th>Estado</th><th>Quién espera</th></tr>
 <tr><td><code>UserService</code> · <code>CurrentUserService</code></td><td>Usuarios</td><td class="ok">✅</td><td>Todos</td></tr>
 <tr><td><code>CatalogService</code></td><td>C</td><td class="ok">✅ implementado</td><td>B ya lo usa (#36, #37)</td></tr>
-<tr><td><code>OrderService</code> (INT-004 pedidos)</td><td>B</td><td class="bad">❌ sin historia</td><td>A: pedidos listos, asignación, avance de estados</td></tr>
+<tr><td><code>OrderService</code> (INT-004 pedidos)</td><td>B</td><td class="bad">❌ sin adaptador · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/72">#72</a> sin hito</td><td>A: pedidos listos, asignación, avance de estados</td></tr>
 <tr><td><code>PaymentService</code> (INT-001 pagos)</td><td>D</td><td class="bad">❌ sin adaptador</td><td>B: autorizar el pago y confirmar el pedido (#64)</td></tr>
 </table></div>
-<p><b>Requerimientos sin historia:</b> pedidos FUN-003 (máquina de estados) y FUN-004 (consultar y cancelar), pagos FUN-004 (código de descuento). Se crean y refinan en la Planning del Sprint 3.</p>
+<p><b>Requerimientos con historia pero sin planificar</b> (sin hito, responsable o peso): pedidos FUN-003 máquina de estados (#73) y FUN-004 consultar y cancelar (#69–#71), pagos FUN-004 código de descuento (#53–#55). Se asignan, estiman y planifican en la Planning del Sprint 3.</p>
 <p><b>Persistencia:</b> ningún módulo de los equipos tiene aún adaptadores JPA. Se agregan en la historia que necesita guardar datos, con la <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Gu%C3%ADas/Persistencia-JPA">guía Persistencia JPA</a> (propuesta 1).</p></div>
 
 <h2>Qué se trabaja en el Sprint 3</h2>
@@ -92,7 +92,7 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <li><b>Lab 6 antes del 11/11:</b> diagramas en Mermaid, Seguimiento, Refinamiento y Sprint Review del Sprint 2.</li>
 <li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/39">#39</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/72">!72</a>: aprobación de <b>otro SM</b> (la autora es la SM) y merge.</li>
 <li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/64">#64</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/71">!71</a>: agregar <code>Closes #64</code> y el peso.</li>
-<li><b>Crear y priorizar</b>: <code>OrderService</code> para Entregas (INT-004), máquina de estados del pedido (FUN-003) y consultar y cancelar pedidos (FUN-004).</li>
+<li><b>Planificar y priorizar</b> (ya existen en el backlog, sin responsable): #72 pedidos listos para entrega con el adaptador de <code>OrderService</code> (INT-004), #73 máquina de estados (FUN-003) y #69–#71 consultar y cancelar pedidos (FUN-004).</li>
 <li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/40">#40</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/42">#42</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/74">#74</a>: MR en Draft desde el primer commit.</li>
 </ul></div>
 
@@ -110,7 +110,7 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/29">#29</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/38">!38</a>: commits <code>FEAT-29:</code>, <code>Closes #29</code> y revisión.</li>
 <li><b>Crear y priorizar</b> el adaptador de <code>PaymentService</code> (INT-001): bloquea al equipo B.</li>
 <li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/31">#31</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/32">#32</a> con MR en Draft; asignar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/51">#51</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/52">#52</a> o devolverlas al backlog.</li>
-<li>Crear y refinar el <b>código de descuento</b> (FUN-004).</li>
+<li>Asignar las promociones y el <b>código de descuento</b> #53–#55 (FUN-004) cuando avance <code>PaymentService</code>.</li>
 </ul></div>
 
 <h2 id="lab-7">Laboratorio semana 7 · entrega 15/11</h2>
