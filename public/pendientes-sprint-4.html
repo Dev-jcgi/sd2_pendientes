@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pendientes Sprint 4</title>
+<style>
+:root{--bg:#f7f7fb;--card:#fff;--text:#1d1b2c;--soft:#5d5a72;--line:#e3e1ee;--acc:#6c4cf5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--chip:#f0edff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}}
+:root[data-theme="dark"]{--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.7rem;margin:.2em 0}h2{font-size:1.25rem;margin:1.6em 0 .6em}h3{margin:0 0 .4em;font-size:1.05rem}
+.lead{color:var(--soft)}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}th{color:var(--soft);font-weight:600}
+.tw{overflow-x:auto}code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:.88em}
+.ok{color:var(--ok);font-weight:600}.warn{color:var(--warn);font-weight:600}.bad{color:var(--bad);font-weight:600}
+.tag{display:inline-block;background:var(--chip);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;position:relative}ul.chk li::before{content:"☐";position:absolute;left:4px;color:var(--acc)}
+.team{border-left:4px solid var(--acc)}a{color:var(--acc)}
+.foot{color:var(--soft);font-size:.85rem;margin-top:32px}
+.theme-btn{position:fixed;top:12px;right:12px;z-index:10;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font:600 .85rem system-ui,sans-serif;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+</style>
+<script>(function(){var t="light";try{t=localStorage.getItem("theme")||"light"}catch(e){}document.documentElement.setAttribute("data-theme",t)})();</script>
+
+</head>
+<body>
+<button class="theme-btn" id="themeBtn" type="button" aria-label="Cambiar entre modo claro y oscuro">🌙 Modo oscuro</button>
+<script>(function(){var b=document.getElementById("themeBtn"),r=document.documentElement;function paint(){b.textContent=r.getAttribute("data-theme")==="dark"?"☀️ Modo claro":"🌙 Modo oscuro"}paint();b.addEventListener("click",function(){var t=r.getAttribute("data-theme")==="dark"?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}paint()})})();</script>
+<div class="wrap">
+<span class="tag">Capstone Delivery System · Sección E</span> <a href="index.html">← Índice</a>
+<h1>Pendientes Sprint 4</h1>
+<p class="lead">Sprint 4: <b>16 – 22 de noviembre de 2026</b>. Corte al <b>15 de noviembre</b>, al cierre del Sprint 3 (tag <code>v0.4.0</code>). Es el <b>último sprint de desarrollo</b>: después vienen integración y pruebas (23–29/11) y la demo del <b>30/11</b>. Prioridad: los contratos <code>OrderService</code> y <code>PaymentService</code>.</p>
+
+<div class="grid">
+<div class="card"><h3>🔗 Enlaces</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone">Repositorio</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/boards">Board</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/home">Wiki</a><br><a href="https://jcgi.lat/guia_git_flow/paso-a-paso.html">Paso a paso</a> · <a href="https://jcgi.lat/guia_git_flow/requerimientos.html">Requerimientos</a> · <a href="pendientes-sprint-3.html">Pendientes Sprint 3</a> · <a href="tutorial-integracion.html">Tutorial de integración</a></div>
+<div class="card"><h3>📝 Feedback de la semana 7</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-7---General-report">General</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-7---Equipo-A">A</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-7---Equipo-B">B</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-7---Equipo-C">C</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-7---Equipo-D">D</a><br>Lab 7, corrección del Lab 6 y cierre del Sprint 3, con el detalle por integrante.</div>
+<div class="card"><h3>🗓️ Fechas</h3><b>Mar 17/11</b> defensa del lineamiento de pruebas · <b>Mié 18/11</b> plazo de pendientes y reunión de SM · <b>Dom 22/11</b> cierre del Sprint 4 · <b>23–29/11</b> integración y pruebas · <b>Lun 30/11</b> demo</div>
+</div>
+
+<h2 id="plazo-18-11">⏰ Plazo: miércoles 18/11, 23:59 (UTC-4)</h2>
+<div class="card" style="border-left:4px solid var(--bad)">
+<p>Todo lo pendiente del <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-7---General-report">feedback de la semana 7</a> (Lab 6, Lab 7, actas, Seguimiento y metodología Scrum de los Sprints 1 a 3) se actualiza a más tardar el <b>18/11</b>.</p>
+<ul>
+<li><b>Midterm:</b> se evalúa con lo registrado <b>hasta el cierre del Sprint 3 (15/11)</b>.</li>
+<li><b>El plazo no cambia las políticas de evaluación:</b> cada punto faltante se penaliza en la nota del laboratorio de la semana que corresponde, tanto lo entregado tarde como lo que no tiene evidencia.</li>
+<li><b>Evidencias:</b> grabaciones de Daily, Refinamiento, Sprint Review, Retrospectiva y reunión de SM; reportes y páginas de laboratorio; actas y Seguimiento; objetivo SMART, Scrum Poker, DoR/DoD; reglas de GitLab; TDD verificable; acuerdos de integración con su issue.</li>
+<li><b>Reunión de SM obligatoria a más tardar el 18/11:</b> es el último sprint de desarrollo y la semana siguiente es de integración y pruebas. Acta con grabación en <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Integracion/Reuniones-SM">Integracion/Reuniones-SM</a> y un issue de Acuerdo por cada acuerdo (<code>OrderService</code>, <code>PaymentService</code>, plan de integración).</li>
+<li>Lo que no esté al 18/11 se registra como <b>no entregado</b>.</li>
+</ul></div>
+
+<h2>Cómo cerró el Sprint 3</h2>
+<div class="card tw"><table>
+<tr><th></th><th>A · Entregas</th><th>B · Pedidos</th><th>C · Catálogo</th><th>D · Pagos</th></tr>
+<tr><td>Historias cerradas en el sprint</td><td class="bad">1 (#112)</td><td class="warn">5 de 12</td><td class="ok">5</td><td class="bad">1 (#29)</td></tr>
+<tr><td>Contrato que implementa</td><td>—</td><td class="bad"><code>OrderService</code> ❌</td><td class="ok"><code>CatalogService</code> ✅ + <code>findAvailableProducts</code></td><td class="bad"><code>PaymentService</code> ❌</td></tr>
+<tr><td>Persistencia JPA</td><td>—</td><td class="ok">✅ tablas de pedidos (#119)</td><td>—</td><td class="warn">migraciones, sin adaptador</td></tr>
+<tr><td>JaCoCo en <code>main</code></td><td class="warn">en rama (#117)</td><td class="bad">no</td><td class="ok">✅</td><td class="bad">no</td></tr>
+<tr><td>Lab 6 corregido al 11/11</td><td class="bad">parcial</td><td class="ok">casi completo</td><td class="warn">parcial</td><td class="bad">no</td></tr>
+</table>
+<p><b>Historias cerradas sin MR fusionado:</b> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/26">#26</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/110">#110</a> (A) y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/30">#30</a> (D). Una historia se cierra cuando su MR está en <code>main</code>: se reabren y pasan al Sprint 4. ✅ Usuarios (PO): 3 de 3 historias, entre ellas <code>findAvailableProducts</code> en <code>CatalogService</code> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/115">#115</a>).</p></div>
+
+<h2>Lo que falta para la demo del 30/11</h2>
+<div class="card" style="border-left:4px solid var(--bad)"><div class="tw"><table>
+<tr><th>Contrato (core-module)</th><th>Lo implementa</th><th>Estado</th><th>Quién espera</th></tr>
+<tr><td><code>UserService</code> · <code>CurrentUserService</code></td><td>Usuarios</td><td class="ok">✅</td><td>Todos</td></tr>
+<tr><td><code>CatalogService</code></td><td>C</td><td class="ok">✅ con <code>findAvailableProducts</code> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/116">#116</a>)</td><td>B: reemplazar su lista temporal de productos</td></tr>
+<tr><td><code>OrderService</code> (INT-004 pedidos)</td><td>B</td><td class="bad">❌ sin adaptador · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/72">#72</a> sin MR</td><td>A: pedidos listos, asignación, avance de estados</td></tr>
+<tr><td><code>PaymentService</code> (INT-001 pagos)</td><td>D</td><td class="bad">❌ <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/35">!35</a> sin fusionar</td><td>B: autorizar el pago y confirmar el pedido</td></tr>
+</table></div>
+<p>Si un contrato no está en <code>main</code> el <b>22/11</b>, la demo usa el <i>fallback</i> de <code>core</code> para ese módulo.</p></div>
+
+<h2>Qué se trabaja en el Sprint 4</h2>
+<p class="lead">Lo que quedó abierto sigue en el hito Sprint 3 (o Sprint 2): en la Planning, cada SM decide si se termina, se divide o vuelve al backlog, y lo pasa al hito <b>Sprint 4</b>.</p>
+
+<div class="card team"><h3>Equipo A · delivery-module <span class="tag">[DEL] · &amp;3</span></h3><ul class="chk">
+<li><b>Reabrir</b> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/26">#26</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/110">#110</a>: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/80">!80</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/79">!79</a> necesitan aprobación del SM y merge.</li>
+<li>JaCoCo: fusionar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/117">#117</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/83">!83</a>) y subir la cobertura de dominio y aplicación de <b>53 %</b> al <b>80 %</b>.</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/25">#25</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/76">!76</a>): dividirla, ponerle el epic &amp;3 y commits <code>FEAT-25:</code> con la prueba primero.</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/27">#27</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/75">!75</a>) y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/28">#28</a> (Block): terminarlas o devolverlas al backlog.</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/118">#118</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/86">!86</a>): revisión y merge. Poner el epic &amp;3 a #110, #112 y #118.</li>
+<li>Acordar con B el estado "Listo para entrega" de <code>OrderService</code> (reunión de SM).</li>
+</ul></div>
+
+<div class="card team"><h3>Equipo B · order-module <span class="tag">[ORD] · &amp;2</span></h3><ul class="chk">
+<li><b>Prioridad:</b> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/72">#72</a> adaptador de <code>OrderService</code> (INT-004): bloquea al equipo A.</li>
+<li>Usar <code>CatalogService.findAvailableProducts()</code> en lugar de la lista temporal de productos.</li>
+<li>Revisión y merge: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/40">#40</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/77">!77</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/65">#65</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/88">!88</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/66">#66</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/92">!92</a>. Abrir MR de <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/42">#42</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/68">#68</a>; resolver el bloqueo de <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/74">#74</a>.</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/69">#69</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/70">#70</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/71">#71</a> (FUN-004): asignar responsable o devolverlas al backlog.</li>
+<li>JaCoCo en <code>order-module</code> y cobertura medida (80 %). Refinamiento del Sprint 2 pendiente.</li>
+<li><code>git pull --rebase</code>, nunca <i>merge</i> de <code>main</code> en la rama (pasó en <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/71">!71</a>).</li>
+</ul></div>
+
+<div class="card team"><h3>Equipo C · catalog-module <span class="tag">[CAT] · &amp;1</span></h3><ul class="chk">
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/49">#49</a> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/16">!16</a>: abierto desde el 31/10; rebase y merge, o cerrarlo.</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/123">#123</a> Deshabilitar un producto (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/91">!91</a>): ponerle hito, revisión y merge. <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/121">#121</a> eliminar comercio ya está en el Sprint 4.</li>
+<li>Hitos: cada historia y MR en el hito del sprint en que se trabaja (#93, #107 y #116 se cerraron en otros hitos).</li>
+<li>Cobertura al 80 % y <code>Seguimiento/Sprint-2</code> pendiente.</li>
+</ul></div>
+
+<div class="card team"><h3>Equipo D · payment-module <span class="tag">[PAY] · &amp;4</span></h3><ul class="chk">
+<li><b>Reabrir</b> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/30">#30</a> y fusionar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/35">!35</a>: es el adaptador de <code>PaymentService</code> que espera el equipo B.</li>
+<li>Adaptador JPA de los métodos de pago (la migración ya está en <code>main</code>).</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/31">#31</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/32">#32</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/51">#51</a> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/52">#52</a>: pasarlas al Sprint 4 con responsable y MR, o devolverlas al backlog.</li>
+<li>JaCoCo en <code>payment-module</code>, con el mínimo medido en <b>líneas</b>.</li>
+<li>Repartir la documentación: hoy la escribe una sola persona.</li>
+</ul></div>
+
+<h2>Para todos los equipos</h2>
+<div class="grid">
+<div class="card"><h3>📌 En GitLab</h3><ul class="chk">
+<li><b>Una historia se cierra cuando su MR está fusionado</b>, no antes.</li>
+<li><b>TDD</b> en cada historia: commit de pruebas antes del código, sin squash.</li>
+<li>Historia y MR con el hito <b>Sprint 4</b> y el epic de su equipo.</li>
+<li>Comentario de avance en la historia y <code>Closes #n</code> en el MR.</li>
+</ul></div>
+<div class="card"><h3>🗓️ En la wiki</h3><ul class="chk">
+<li>Sprint Review, Retrospectiva y Seguimiento del Sprint 3 (faltan en A, C y D).</li>
+<li>Actas del Sprint 4 el <b>mismo día</b>, con el enlace de la reunión.</li>
+<li>Reunión de SM con acta y grabación a más tardar el <b>18/11</b>.</li>
+<li>Objetivo SMART del Sprint 4 en la epic, publicado por el SM el primer día.</li>
+</ul></div>
+</div>
+
+<h2>Practitioner · user-module <span class="tag">[USR] · &amp;5</span></h2>
+<div class="card"><p>✅ Sprint 3 cerrado: 3 de 3 historias — JaCoCo (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/108">#108</a>), SM del Sprint 3 en CODEOWNERS (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/109">#109</a>) y <code>findAvailableProducts</code> en <code>CatalogService</code> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/115">#115</a>). Tag <code>v0.4.0</code>. <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Usuarios/Seguimiento/Sprint-3">Seguimiento Sprint 3</a>.</p>
+<p class="lead">Sprint 4: apoyo a <code>OrderService</code> y <code>PaymentService</code>, quitar los datos de ejemplo antiguos de <code>core</code> cuando ninguna rama los use, y preparar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/91">#91</a> (prueba de punta a punta) y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/92">#92</a> (guion de la demo).</p></div>
+
+<p class="foot">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Esta página se actualiza en cada corte del sprint.</p>
+</div></body></html>
