@@ -36,7 +36,8 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <div class="grid">
 <div class="card"><h3>🔗 Enlaces</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone">Repositorio</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/boards">Board</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/home">Wiki</a><br><a href="https://jcgi.lat/guia_git_flow/paso-a-paso.html">Paso a paso</a> · <a href="https://jcgi.lat/guia_git_flow/requerimientos.html">Requerimientos</a> · <a href="pendientes-sprint-3.html">Pendientes Sprint 3</a> · <a href="tutorial-integracion.html">Tutorial de integración</a></div>
 <div class="card"><h3>📝 Feedback de la semana 7</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-7---General-report">General</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-7---Equipo-A">A</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-7---Equipo-B">B</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-7---Equipo-C">C</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-7---Equipo-D">D</a><br>Lab 7, corrección del Lab 6 y cierre del Sprint 3, con el detalle por integrante.</div>
-<div class="card"><h3>🗓️ Fechas</h3><b>Mar 17/11</b> defensa del lineamiento de pruebas · <b>Mié 18/11</b> plazo de pendientes y reunión de SM · <b>Dom 22/11</b> cierre del Sprint 4 · <b>23–29/11</b> integración y pruebas · <b>Lun 30/11</b> demo</div>
+<div class="card"><h3>🧭 Scrum Masters · Sprint 4</h3>A <b>José Cardona</b> · B <b>Félix Urquidi</b> · C <b>Heyner Rico</b> · D <b>Steven García</b><br>Aprueban los MR de su módulo y de su archivo <code>.gitlab/ci/&lt;módulo&gt;.yml</code>; si el autor es el SM, aprueba otro SM.</div>
+<div class="card"><h3>🗓️ Fechas</h3><b>Mar 17/11</b> defensa del lineamiento de pruebas · <b>Mié 18/11</b> plazo de pendientes y reunión de SM · <b>Dom 22/11</b> cierre del Sprint 4 y entrega del Lab 8 · <b>Lun 23/11</b> el linter bloquea el pipeline · <b>23–29/11</b> integración y pruebas · <b>Lun 30/11</b> demo</div>
 </div>
 
 <h2 id="plazo-18-11">⏰ Plazo: miércoles 18/11, 23:59 (UTC-4)</h2>
@@ -107,6 +108,19 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <li>Repartir la documentación: hoy la escribe una sola persona.</li>
 </ul></div>
 
+<h2 id="lab-8">Laboratorio semana 8 · entrega 22/11</h2>
+<div class="card" style="border-left:4px solid var(--acc)"><div class="tw"><table><tr><th>Actividad</th><th>Qué</th><th>Dónde</th></tr>
+<tr><td><b>1 · Pipeline de CI y revisión de código</b> (equipo)</td><td>En el archivo de su equipo: <b>linter</b>, <b>pruebas unitarias</b>, <b>cobertura</b> (mínimo <b>80 %</b> en dominio y aplicación) y <b>artefactos</b>, integrado con <code>core</code>, <code>user</code> y <code>delivery-system</code>. Benchmarking del linter y guía de cada job. <b>Reporte de revisión de código antes de la integración</b>: una fila por integrante</td><td><code>.gitlab/ci/&lt;módulo&gt;.yml</code> y <code>pom.xml</code> · <code>Modulos/&lt;módulo&gt;/Pipeline-CI</code> · <code>Modulos/&lt;módulo&gt;/Revision-de-codigo</code></td></tr>
+<tr><td><b>2 · Progreso del Sprint 4</b> (individual)</td><td>PBI, daily, ceremonias con grabación, GitHub Flow sobre <code>main</code>, commits, MR y revisiones, DoD y wiki</td><td><code>Modulos/&lt;módulo&gt;/Laboratorio-semana-8/&lt;Nombre-Apellido&gt;</code></td></tr>
+</table></div>
+<ul>
+<li>⚠️ <b>El linter solo reporta hasta el 22/11.</b> Desde el <b>23/11</b> hace fallar el pipeline: lleguen con <b>0 infracciones</b> o no podrán fusionar en la semana de integración.</li>
+<li>Cada equipo trabaja <b>solo en su archivo</b> de <code>.gitlab/ci/</code>; no editen <code>.gitlab-ci.yml</code>, <code>templates.yml</code>, <code>practitioner.yml</code> ni el archivo de otro equipo.</li>
+<li>La actividad 1 es la historia de <b>un integrante</b>; todos deben poder explicarla y defenderla.</li>
+<li>El practitioner <b>no aprueba MR</b> de los equipos: aprueba el SM.</li>
+</ul>
+<p>📘 <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Gu%C3%ADas/Laboratorio-semana-8"><b>Guía del Lab 8</b></a> · Ejemplos con <code>user-module</code>: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Usuarios/Pipeline-CI">Pipeline-CI</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Usuarios/Revision-de-codigo">Revisión de código</a> · Pipeline separado por módulo: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/93">!93</a></p></div>
+
 <h2>Para todos los equipos</h2>
 <div class="grid">
 <div class="card"><h3>📌 En GitLab</h3><ul class="chk">
@@ -125,6 +139,7 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 
 <h2>Practitioner · user-module <span class="tag">[USR] · &amp;5</span></h2>
 <div class="card"><p>✅ Sprint 3 cerrado: 3 de 3 historias — JaCoCo (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/108">#108</a>), SM del Sprint 3 en CODEOWNERS (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/109">#109</a>) y <code>findAvailableProducts</code> en <code>CatalogService</code> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/115">#115</a>). Tag <code>v0.4.0</code>. <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Usuarios/Seguimiento/Sprint-3">Seguimiento Sprint 3</a>.</p>
+<p class="lead">✅ Lab 8: pipeline separado por módulo con linter, cobertura y artefactos (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/124">#124</a>), pruebas de <code>user-module</code> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/125">#125</a>), cobertura de <code>core-module</code> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/126">#126</a>) y SM del Sprint 4 en CODEOWNERS (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/127">#127</a>).</p>
 <p class="lead">Sprint 4: apoyo a <code>OrderService</code> y <code>PaymentService</code>, quitar los datos de ejemplo antiguos de <code>core</code> cuando ninguna rama los use, y preparar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/91">#91</a> (prueba de punta a punta) y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/92">#92</a> (guion de la demo).</p></div>
 
 <p class="foot">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Esta página se actualiza en cada corte del sprint.</p>
