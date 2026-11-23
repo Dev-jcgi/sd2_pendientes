@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evaluación final</title>
+<style>
+:root{--bg:#f7f7fb;--card:#fff;--text:#1d1b2c;--soft:#5d5a72;--line:#e3e1ee;--acc:#6c4cf5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--chip:#f0edff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}}
+:root[data-theme="dark"]{--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.7rem;margin:.2em 0}h2{font-size:1.25rem;margin:1.6em 0 .6em}h3{margin:0 0 .4em;font-size:1.05rem}
+.lead{color:var(--soft)}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}th{color:var(--soft);font-weight:600}
+.tw{overflow-x:auto}code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:.88em}
+.ok{color:var(--ok);font-weight:600}.warn{color:var(--warn);font-weight:600}.bad{color:var(--bad);font-weight:600}
+.tag{display:inline-block;background:var(--chip);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;position:relative}ul.chk li::before{content:"☐";position:absolute;left:4px;color:var(--acc)}
+.team{border-left:4px solid var(--acc)}a{color:var(--acc)}
+.foot{color:var(--soft);font-size:.85rem;margin-top:32px}
+.theme-btn{position:fixed;top:12px;right:12px;z-index:10;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font:600 .85rem system-ui,sans-serif;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+</style>
+<script>(function(){var t="light";try{t=localStorage.getItem("theme")||"light"}catch(e){}document.documentElement.setAttribute("data-theme",t)})();</script>
+
+</head>
+<body>
+<button class="theme-btn" id="themeBtn" type="button" aria-label="Cambiar entre modo claro y oscuro">🌙 Modo oscuro</button>
+<script>(function(){var b=document.getElementById("themeBtn"),r=document.documentElement;function paint(){b.textContent=r.getAttribute("data-theme")==="dark"?"☀️ Modo claro":"🌙 Modo oscuro"}paint();b.addEventListener("click",function(){var t=r.getAttribute("data-theme")==="dark"?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}paint()})})();</script>
+<div class="wrap">
+<span class="tag">Capstone Delivery System · Sección E</span> <a href="index.html">← Índice</a> · <a href="pendientes-integracion.html">Integración, pruebas y demo</a>
+<h1>Evaluación final · E.10 Demo y revisión técnica</h1>
+<p class="lead">Lo que se evalúa el <b>30/11</b>, el <b>1/12</b> y el <b>2/12/2026</b>: la demo del producto (en equipo, 40 %) y una revisión técnica de cada estudiante (individual, 60 %) sobre todo lo desarrollado en el Capstone.</p>
+
+<div class="grid">
+<div class="card"><h3>🗓️ Lun 30/11 · 2 h</h3><b>Demo del producto</b> por equipo: 15 min desde <code>main</code> (tag <code>v1.0.0</code>) con MySQL y los módulos reales, y 5 min de preguntas. Cada integrante responde al menos una pregunta de arquitectura.</div>
+<div class="card"><h3>🧑‍💻 Mar 1/12 · 2 h</h3><b>Revisión técnica individual</b>, unos 8 min por estudiante en su máquina: explica su aporte, resuelve un cambio pequeño en vivo y responde sobre las integraciones de su módulo.</div>
+<div class="card"><h3>🤝 Mié 2/12</h3><b>Sesión conjunta</b> con otra sección: cada equipo presenta el producto integrado y responde las preguntas de otro Faculty Practitioner. Sus observaciones se suman a la evaluación.</div>
+<div class="card"><h3>✅ Requisito</h3>El <b>75 %</b> de los labs 1 a 9 y del midterm. Quien no lo alcance y haya demostrado avance real en su trabajo individual durante la semana de integración puede presentar su desarrollo individual.</div>
+</div>
+
+<h2 id="preparacion">Cómo prepararse</h2>
+<div class="card"><ul class="chk">
+<li>Diapositivas finales subidas a Canvas antes de la sesión del 30/11 y página <code>Demo</code> del módulo al día.</li>
+<li>Repositorio actualizado (<code>git switch main &amp;&amp; git pull --rebase origin main</code>), el proyecto compilando y MySQL disponible (<code>docker compose up -d</code>).</li>
+<li>Repasar <b>tu propio código</b>: tus historias, tus MR, tus decisiones y tus pruebas.</li>
+<li>Saber qué contrato de <code>core-module</code> ofrece tu módulo, cuáles consume y qué pasa si el otro módulo no está.</li>
+<li>Practicar un cambio pequeño con GitHub Flow: rama <code>FEAT-&lt;n&gt;/…</code>, prueba primero (rojo → verde) y pipeline en verde.</li>
+</ul></div>
+
+<h2 id="rubrica">Cómo se califica (100 puntos)</h2>
+<div class="card tw"><table>
+<tr><th>Actividad</th><th>Criterio</th><th>Pts</th><th>Muy bueno, Bueno</th></tr>
+<tr><td rowspan="3"><b>1 · Demo del producto</b><br>equipo, misma nota para todos</td><td>Demo funcional desde <code>main</code></td><td>15</td><td>Corre con MySQL y los módulos reales; flujo feliz, un caso alterno y la integración con otro módulo sin errores.</td></tr>
+<tr><td>Cobertura de lo desarrollado</td><td>10</td><td>Historias terminadas, contratos que ofrece y consume, Release 1.0.0 y wiki del módulo al día.</td></tr>
+<tr><td>Presentación y tiempo</td><td>15</td><td>Organizada, dentro de los 15 minutos y con la participación de todos.</td></tr>
+<tr><td rowspan="4"><b>2 · Revisión técnica</b><br>individual</td><td>Teoría y arquitectura</td><td>15</td><td>Explica la arquitectura limpia y hexagonal y ubica cada clase en su capa, justificando por qué.</td></tr>
+<tr><td>Defensa de su aporte</td><td>15</td><td>Explica su código, sus MR, sus decisiones y sus pruebas.</td></tr>
+<tr><td>Implementación en vivo</td><td>20</td><td>Resuelve solo un cambio pequeño, con su prueba, en la capa correcta y con GitHub Flow.</td></tr>
+<tr><td>Integraciones</td><td>10</td><td>Explica los contratos que ofrece y consume y el caso de falla del otro módulo; resuelve o explica un cambio de integración.</td></tr>
+</table>
+<p class="lead">Niveles: Muy bueno (puntaje completo) · Aceptable (≈ 2/3) · Necesita mejorar (≈ 1/3) · No se presentó (0).</p></div>
+
+<h2 id="preguntas">Preguntas de teoría y arquitectura (ejemplos)</h2>
+<div class="card"><p class="lead">Las preguntas se hacen sobre el código real del Capstone, en cualquier nivel de la arquitectura.</p><ol>
+<li>¿Por qué <code>CatalogService</code> está en <code>core-module</code> y <code>CatalogServiceAdapter</code> en <code>catalog-module</code>? ¿Hacia dónde apuntan las dependencias?</li>
+<li>¿Qué diferencia hay entre un puerto de entrada, un puerto de salida y un adaptador? Muestra uno de cada uno en tu módulo.</li>
+<li>¿Para qué sirve <code>FallbackCatalogService</code> (o <code>FallbackUserService</code>) y cuándo se usa?</li>
+<li>¿Qué hace <code>MissingJpaAdaptersAutoConfiguration</code> y por qué cada bean tiene <code>@ConditionalOnMissingBean</code>?</li>
+<li>¿Dónde pondrías la regla «un comercio deshabilitado no se puede modificar»: en la entidad o en el caso de uso? ¿Por qué?</li>
+<li>¿Qué cambia entre el adaptador en memoria y el JPA? ¿Qué pruebas deben pasar con los dos?</li>
+<li>¿Por qué <code>TransactionRunner</code> es un puerto de <code>core</code> y el caso de uso no usa <code>@Transactional</code>?</li>
+<li>¿Qué es una entidad y qué es un value object en tu módulo? Muestra uno de cada uno.</li>
+<li>¿Qué mide la cobertura de «dominio + aplicación» y por qué no incluye la interfaz?</li>
+</ol></div>
+
+<h2 id="ejercicios">Ejercicios en vivo (ejemplos por capa)</h2>
+<div class="card tw"><p class="lead">Cada estudiante resuelve uno, de unos 8 minutos. El ejercicio real puede ser distinto, pero del mismo tamaño y en una de estas capas.</p><table>
+<tr><th>Capa</th><th>A · Entregas</th><th>B · Pedidos</th><th>C · Catálogo</th><th>D · Pagos</th></tr>
+<tr><td><b>Entidad</b> (regla de negocio)</td><td>Una entrega no pasa a <code>DELIVERED</code> sin el código de confirmación</td><td><code>Order</code> no se cancela si ya está en <code>DELIVERED</code></td><td><code>Product</code> no se habilita si su comercio está deshabilitado</td><td>Un pago no se aprueba con monto ≤ 0</td></tr>
+<tr><td><b>Caso de uso</b></td><td>Validar con <code>UserService.isActiveWithRole(…, COURIER)</code> antes de tomar un pedido</td><td>Rechazar agregar al carrito un producto no disponible</td><td>Solo el ADMIN o el dueño del comercio cambia su estado</td><td>Reintentar solo pagos rechazados</td></tr>
+<tr><td><b>Puerto y adaptador</b></td><td>Nuevo método de consulta en el puerto del historial y su adaptador en memoria</td><td>Consulta de pedidos por estado</td><td>Contar productos activos por comercio</td><td>Consultar los pagos de un pedido</td></tr>
+<tr><td><b>Prueba</b></td><td colspan="4">Prueba unitaria de la regla elegida, primero en rojo y luego en verde</td></tr>
+<tr><td><b>Integración</b></td><td>Mostrar el nombre del repartidor con <code>UserService.findUser</code></td><td>Mensaje claro cuando <code>PaymentService</code> rechaza el pago</td><td>Devolver solo productos disponibles en <code>findAvailableProducts()</code></td><td>Caso «pago aprobado, pero pedido no confirmado»</td></tr>
+</table></div>
+
+<h2>Material para repasar</h2>
+<div class="card"><ul>
+<li><a href="tutorial-integracion.html">Tutorial de integración</a> (contratos de <code>core</code>, sesión, permisos y datos de prueba)</li>
+<li><a href="usuarios-integracion.html">Integrar user-module en tu módulo</a></li>
+<li>Wiki: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Gu%C3%ADas/Persistencia-JPA">Persistencia JPA</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Gu%C3%ADas/Laboratorio-semana-9">Laboratorio semana 9</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Usuarios/Patrones">Patrones (ejemplo de Usuarios)</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Usuarios/Pruebas-unitarias">Pruebas unitarias (ejemplo de Usuarios)</a></li>
+</ul></div>
+
+<p class="foot">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Publicado el 23/11/2026.</p>
+</div></body></html>
