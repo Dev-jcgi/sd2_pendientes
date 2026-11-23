@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Integración y pruebas</title>
+<style>
+:root{--bg:#f7f7fb;--card:#fff;--text:#1d1b2c;--soft:#5d5a72;--line:#e3e1ee;--acc:#6c4cf5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--chip:#f0edff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}}
+:root[data-theme="dark"]{--bg:#22232b;--card:#2b2d37;--text:#d9dae3;--soft:#a3a6b5;--line:#3a3d4b;--chip:#353849;--acc:#9d8cf7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.7rem;margin:.2em 0}h2{font-size:1.25rem;margin:1.6em 0 .6em}h3{margin:0 0 .4em;font-size:1.05rem}
+.lead{color:var(--soft)}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}th{color:var(--soft);font-weight:600}
+.tw{overflow-x:auto}code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:.88em}
+.ok{color:var(--ok);font-weight:600}.warn{color:var(--warn);font-weight:600}.bad{color:var(--bad);font-weight:600}
+.tag{display:inline-block;background:var(--chip);color:var(--acc);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:600}
+ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;position:relative}ul.chk li::before{content:"☐";position:absolute;left:4px;color:var(--acc)}
+.team{border-left:4px solid var(--acc)}a{color:var(--acc)}
+.foot{color:var(--soft);font-size:.85rem;margin-top:32px}
+.theme-btn{position:fixed;top:12px;right:12px;z-index:10;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font:600 .85rem system-ui,sans-serif;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+</style>
+<script>(function(){var t="light";try{t=localStorage.getItem("theme")||"light"}catch(e){}document.documentElement.setAttribute("data-theme",t)})();</script>
+
+</head>
+<body>
+<button class="theme-btn" id="themeBtn" type="button" aria-label="Cambiar entre modo claro y oscuro">🌙 Modo oscuro</button>
+<script>(function(){var b=document.getElementById("themeBtn"),r=document.documentElement;function paint(){b.textContent=r.getAttribute("data-theme")==="dark"?"☀️ Modo claro":"🌙 Modo oscuro"}paint();b.addEventListener("click",function(){var t=r.getAttribute("data-theme")==="dark"?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}paint()})})();</script>
+<div class="wrap">
+<span class="tag">Capstone Delivery System · Sección E</span> <a href="index.html">← Índice</a>
+<h1>Integración, pruebas y demo</h1>
+<p class="lead">Semana de integración y pruebas: <b>23 – 29 de noviembre de 2026</b>. Corte al <b>22 de noviembre</b>, cierre del Sprint 4 (tag <code>v0.5.0</code>). Hito en GitLab: <b>Integración, pruebas y demo</b>. La <b>demo es el lunes 30/11</b>.</p>
+
+<div class="grid">
+<div class="card"><h3>🔗 Enlaces</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone">Repositorio</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/boards">Board</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/home">Wiki</a><br><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Gu%C3%ADas/Laboratorio-semana-9">Guía del Laboratorio semana 9</a></div>
+<div class="card"><h3>📝 Feedback de la semana 8</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-8---General-report">General</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-8---Equipo-A">A</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-8---Equipo-B">B</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-8---Equipo-C">C</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-8---Equipo-D">D</a><br>Lab 8 y cierre del Sprint 4.</div>
+<div class="card"><h3>🧭 Aprobación de MR</h3>Aprueba el <b>SM del equipo</b>. Si el autor es el SM, aprueba <b>otro SM o el practitioner</b>: desde el 23/11 los SM de los otros equipos son code owners de cada módulo.</div>
+<div class="card"><h3>🗓️ Fechas</h3><b>Lun 23/11</b> linter bloqueante · <b>hasta Mié 25/11</b> reunión de SM y congelamiento de <code>main</code> · <b>sesión de la semana 9</b> predemo · <b>Vie 27/11</b> ensayo · <b>Dom 29/11</b> entrega del Lab 9 · <b>Lun 30/11</b> demo y tag <code>v1.0.0</code></div>
+</div>
+
+<h2 id="linter">⚠️ Desde el 23/11 el linter bloquea el pipeline</h2>
+<div class="card" style="border-left:4px solid var(--bad)">
+<p>Cada equipo necesita <b>su pipeline por módulo</b> en <code>main</code>: <code>lint-&lt;módulo&gt;</code> y <code>build-&lt;módulo&gt;</code> en <code>.gitlab/ci/&lt;módulo&gt;.yml</code>, con <b>0 infracciones</b>, pruebas, cobertura de al menos 80 % y artefacto.</p>
+<ul>
+<li>Si el linter de un módulo falla en <code>main</code>, el pipeline de <code>main</code> queda en rojo y <b>bloquea los MR de todos los equipos</b>.</li>
+<li>Antes de fusionar, el pipeline del MR debe estar <b>en verde</b>. Corran <code>./mvnw checkstyle:check</code> en su módulo antes de subir.</li>
+<li>Al 22/11 ningún pipeline de equipo estaba en <code>main</code>: A <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/109">!109</a> (rebase), B <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/101">!101</a> y C <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/108">!108</a> están en verde y falta fusionarlos; D aún no tiene MR (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/140">#140</a>).</li>
+</ul></div>
+
+<h2>Cómo cerró el Sprint 4</h2>
+<div class="card tw"><table>
+<tr><th></th><th>A · Entregas</th><th>B · Pedidos</th><th>C · Catálogo</th><th>D · Pagos</th></tr>
+<tr><td>Historias cerradas con MR fusionado</td><td class="warn">3</td><td class="ok">5</td><td class="ok">4</td><td class="warn">2</td></tr>
+<tr><td>Pipeline del módulo (Lab 8) en <code>main</code></td><td class="warn">MR en verde, sin fusionar</td><td class="warn">MR en verde, sin fusionar</td><td class="warn">MR en verde, sin fusionar</td><td class="bad">sin MR</td></tr>
+<tr><td>Cobertura dominio + aplicación en <code>main</code></td><td class="bad">61,8 %</td><td class="ok">88,8 %</td><td class="ok">94,7 %</td><td class="ok">91,5 %</td></tr>
+<tr><td>Objetivo SMART del Sprint 4 en la epic</td><td class="bad">no</td><td class="bad">no</td><td class="bad">no</td><td class="bad">no</td></tr>
+</table>
+<p><b>Historias cerradas sin MR fusionado (se reabren):</b> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/135">#135</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/139">#139</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/49">#49</a>. Una historia se cierra cuando su MR se fusiona en <code>main</code>.</p></div>
+
+<h2>Lo que falta para la demo del 30/11</h2>
+<div class="card" style="border-left:4px solid var(--bad)"><div class="tw"><table>
+<tr><th>Contrato (core-module)</th><th>Lo implementa</th><th>Estado</th><th>Quién espera</th></tr>
+<tr><td><code>UserService</code> · <code>CurrentUserService</code></td><td>Usuarios</td><td class="ok">✅</td><td>Todos</td></tr>
+<tr><td><code>CatalogService</code></td><td>C</td><td class="ok">✅</td><td>B: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/132">#132</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/103">!103</a>)</td></tr>
+<tr><td><code>PaymentService</code></td><td>D</td><td class="ok">✅ desde el 17/11</td><td>B: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/130">#130</a> conectar el pago</td></tr>
+<tr><td><code>OrderService</code></td><td>B</td><td class="bad">❌ <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/72">#72</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/107">!107</a> sin fusionar)</td><td>A: pedidos listos, asignación y entrega</td></tr>
+</table></div></div>
+
+<h2>Cómo se trabaja esta semana en GitLab</h2>
+<div class="card"><div class="tw"><table>
+<tr><th>Qué</th><th>Cómo</th></tr>
+<tr><td>Planning (lunes 23/11)</td><td>Cada SM decide qué historias abiertas se terminan y las mueve al hito <b>Integración, pruebas y demo</b>; lo demás vuelve al backlog. Se publica el objetivo SMART de la semana en la epic.</td></tr>
+<tr><td>Tareas y errores</td><td>Un issue por cada uno: plantilla <b>Historia</b> o <b>Bug</b>, con epic, hito, persona asignada y Weight.</td></tr>
+<tr><td>Ramas y MR (GitHub Flow)</td><td>Rama corta desde <code>main</code> (<code>FEAT-&lt;n&gt;/…</code> o <code>ISSUE-&lt;n&gt;/bug/…</code>), MR hacia <code>main</code> con <code>Closes #n</code>; plantilla <b>Release</b> para la versión y las correcciones.</td></tr>
+<tr><td>Congelamiento</td><td>Desde el acuerdo de SM (issue de Acuerdo y acta con grabación) solo entran correcciones y ramas de versión.</td></tr>
+<tr><td>Actas y avance</td><td><code>Modulos/&lt;módulo&gt;/Actas/Integracion</code> y <code>Modulos/&lt;módulo&gt;/Seguimiento/Integracion</code>, con el enlace de cada reunión.</td></tr>
+</table></div></div>
+
+<h2 id="lab-9">Laboratorio semana 9 · entrega 29/11</h2>
+<div class="card" style="border-left:4px solid var(--acc)"><div class="tw"><table><tr><th>Actividad</th><th>Qué</th><th>Dónde</th></tr>
+<tr><td><b>1 · Preparación de la demo</b> (equipo)</td><td>Diapositivas, reparto de los 15 minutos (todos presentan), pruebas con MySQL y errores corregidos</td><td>Canvas y <code>Modulos/&lt;módulo&gt;/Demo</code></td></tr>
+<tr><td><b>2 · Release artifact</b> (equipo)</td><td>Rama <code>FEAT-&lt;n&gt;/release/&lt;módulo&gt;-1.0.0</code> desde <code>main</code>, versión <code>1.0.0</code> en el POM, pipeline en verde (el job <code>check-release-versions</code> dice qué falta), jar probado y notas de la versión</td><td><code>Modulos/&lt;módulo&gt;/Release-1.0.0</code></td></tr>
+</table></div>
+<p><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Gu%C3%ADas/Laboratorio-semana-9">Guía completa</a> · Ejemplo: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Usuarios/Release-1.0.0">Usuarios · Release-1.0.0</a></p></div>
+
+<h2>Qué hace cada equipo esta semana</h2>
+<div class="card team"><h3>Equipo A · delivery-module <span class="tag">[DEL] · &amp;3</span></h3><ul class="chk">
+<li>Rebase y fusión del pipeline <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/109">!109</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/138">#138</a>): sube la cobertura de <code>main</code> al 80 %.</li>
+<li>Terminar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/76">!76</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/25">#25</a>), <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/75">!75</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/27">#27</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/113">#113</a>) y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/86">!86</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/118">#118</a>); decidir <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/28">#28</a>.</li>
+<li>Conectar con <code>OrderService</code> cuando B fusione <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/107">!107</a>.</li>
+<li>Lab 9: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Entregas/Demo">Demo</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Entregas/Release-1.0.0">Release-1.0.0</a></li>
+</ul></div>
+<div class="card team"><h3>Equipo B · order-module <span class="tag">[ORD] · &amp;2</span></h3><ul class="chk">
+<li><b>Prioridad:</b> <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/72">#72</a> <code>OrderService</code> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/107">!107</a>): bloquea al equipo A.</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/130">#130</a> pago con <code>PaymentService</code> y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/132">#132</a> productos con <code>CatalogService</code> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/103">!103</a>).</li>
+<li>Fusionar el pipeline <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/101">!101</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/131">#131</a>).</li>
+<li>Terminar o devolver al backlog <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/69">#69</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/70">#70</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/71">#71</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/74">#74</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/129">#129</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/137">#137</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/42">#42</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/67">#67</a>.</li>
+<li>Lab 9: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Pedidos/Demo">Demo</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Pedidos/Release-1.0.0">Release-1.0.0</a></li>
+</ul></div>
+<div class="card team"><h3>Equipo C · catalog-module <span class="tag">[CAT] · &amp;1</span></h3><ul class="chk">
+<li>Fusionar el pipeline <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/108">!108</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/139">#139</a>) y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/110">!110</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/135">#135</a>).</li>
+<li><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/16">!16</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/49">#49</a>): rebase y fusión, o cerrar el MR y devolver la historia al backlog.</li>
+<li>Apoyar a B con <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/132">#132</a>.</li>
+<li>Lab 9: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Catalogo/Demo">Demo</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Catalogo/Release-1.0.0">Release-1.0.0</a></li>
+</ul></div>
+<div class="card team"><h3>Equipo D · payment-module <span class="tag">[PAY] · &amp;4</span></h3><ul class="chk">
+<li><b>Pipeline del módulo</b> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/140">#140</a>): <code>lint-payment</code>, cobertura y artefacto, y la página <code>Pipeline-CI</code>.</li>
+<li>Fusionar <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/112">!112</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/51">#51</a>) y <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/104">!104</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/32">#32</a>); decidir <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/31">#31</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/52">#52</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/55">#55</a>.</li>
+<li>Apoyar a B con <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/130">#130</a>.</li>
+<li>Lab 9: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Pagos/Demo">Demo</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Pagos/Release-1.0.0">Release-1.0.0</a></li>
+</ul></div>
+
+<h2>Para presentar la demo</h2>
+<div class="card"><p>Cada integrante necesita el <b>75 %</b> de los puntos de los laboratorios 1 a 9 y del midterm (300 de 400). El detalle por integrante está en el reporte de la semana 7 de cada equipo, en la wiki.</p></div>
+
+<p class="foot">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Página del corte del 22/11/2026.</p>
+</div></body></html>
