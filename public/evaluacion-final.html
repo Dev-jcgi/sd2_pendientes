@@ -42,7 +42,7 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 
 <h2 id="preparacion">Cómo prepararse</h2>
 <div class="card"><ul class="chk">
-<li>Diapositivas finales subidas a Canvas antes de la sesión del 30/11 y página <code>Demo</code> del módulo al día.</li>
+<li>Diapositivas finales subidas a Canvas antes de la sesión del 30/11 y la <a href="#documentacion">wiki del módulo completa desde el Sprint 1</a>, con la página <code>Demo</code> al día.</li>
 <li>Repositorio actualizado (<code>git switch main &amp;&amp; git pull --rebase origin main</code>), el proyecto compilando y MySQL disponible (<code>docker compose up -d</code>).</li>
 <li>Repasar <b>tu propio código</b>: tus historias, tus MR, tus decisiones y tus pruebas.</li>
 <li>Saber qué contrato de <code>core-module</code> ofrece tu módulo, cuáles consume y qué pasa si el otro módulo no está.</li>
@@ -53,7 +53,7 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <div class="card tw"><table>
 <tr><th>Actividad</th><th>Criterio</th><th>Pts</th><th>Muy bueno, Bueno</th></tr>
 <tr><td rowspan="3"><b>1 · Demo del producto</b><br>equipo, misma nota para todos</td><td>Demo funcional desde <code>main</code></td><td>15</td><td>Corre con MySQL y los módulos reales; flujo feliz, un caso alterno y la integración con otro módulo sin errores.</td></tr>
-<tr><td>Cobertura de lo desarrollado</td><td>10</td><td>Historias terminadas, contratos que ofrece y consume, Release 1.0.0 y wiki del módulo al día.</td></tr>
+<tr><td>Cobertura de lo desarrollado y documentación</td><td>10</td><td>Historias terminadas, contratos que ofrece y consume, y la <a href="#documentacion">wiki del módulo completa desde el Sprint 1 hasta la demo</a>, coherente con GitLab.</td></tr>
 <tr><td>Presentación y tiempo</td><td>15</td><td>Organizada, dentro de los 15 minutos y con la participación de todos.</td></tr>
 <tr><td rowspan="4"><b>2 · Revisión técnica</b><br>individual</td><td>Teoría y arquitectura</td><td>15</td><td>Explica la arquitectura limpia y hexagonal y ubica cada clase en su capa, justificando por qué.</td></tr>
 <tr><td>Defensa de su aporte</td><td>15</td><td>Explica su código, sus MR, sus decisiones y sus pruebas.</td></tr>
@@ -61,6 +61,16 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <tr><td>Integraciones</td><td>10</td><td>Explica los contratos que ofrece y consume y el caso de falla del otro módulo; resuelve o explica un cambio de integración.</td></tr>
 </table>
 <p class="lead">Niveles: Muy bueno (puntaje completo) · Aceptable (≈ 2/3) · Necesita mejorar (≈ 1/3) · No se presentó (0).</p></div>
+
+<h2 id="documentacion">Documentación completa en la wiki (Sprint 1 a la demo)</h2>
+<div class="card"><p>La wiki del módulo (<code>Modulos/&lt;módulo&gt;</code>) debe estar <b>completa y al día desde el Sprint 1 hasta la entrega final de la demo</b>, a más tardar el <b>domingo 29/11, 23:59 (UTC-4)</b>. Cada integrante responde por las páginas que le tocaron.</p>
+<div class="tw"><table><tr><th>Periodo</th><th>Páginas que deben estar completas</th></tr>
+<tr><td>Inicio del proyecto</td><td><code>4Ps</code>, <code>Casos-de-uso</code>, <code>Plan-de-accion</code> y <code>POCs</code></td></tr>
+<tr><td>Sprint 1 (semanas 1 y 2), Sprint 2, Sprint 3 y Sprint 4</td><td>Actas de cada sprint (Planning con objetivo SMART, Daily, Refinamiento, Sprint Review y Retrospectiva, con el enlace de cada reunión) y <code>Seguimiento/&lt;sprint&gt;</code> con historias, MR y cierre</td></tr>
+<tr><td>Laboratorios 6 a 8</td><td><code>Patrones</code>, <code>Pruebas-unitarias</code>, <code>Pipeline-CI</code>, <code>Revision-de-codigo</code> y las páginas individuales <code>Laboratorio-semana-6</code> a <code>8</code></td></tr>
+<tr><td>Integración, pruebas y demo</td><td><code>Actas/Integracion</code>, <code>Seguimiento/Integracion</code>, <code>Demo</code> y <code>Release-1.0.0</code> (Laboratorio 9)</td></tr>
+</table></div>
+<p>Lo que dice la wiki debe coincidir con GitLab (historias, MR y tags) y con lo que se muestra en la demo. Ejemplo completo: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Usuarios">Modulos/Usuarios</a>.</p></div>
 
 <h2 id="preguntas">Preguntas de teoría y arquitectura (ejemplos)</h2>
 <div class="card"><p class="lead">Las preguntas se hacen sobre el código real del Capstone, en cualquier nivel de la arquitectura.</p><ol>
