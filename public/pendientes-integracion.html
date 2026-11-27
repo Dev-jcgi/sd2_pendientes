@@ -41,6 +41,20 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <div class="card"><h3>🗓️ Fechas</h3><b>Lun 23/11</b> linter bloqueante · <b>hasta Mié 25/11</b> reunión de SM y congelamiento de <code>main</code> · <b>sesión de la semana 9</b> predemo · <b>Vie 27/11</b> ensayo · <b>Dom 29/11</b> entrega del Lab 9 · <b>Lun 30/11</b> demo y tag <code>v1.0.0</code></div>
 </div>
 
+<h2 id="avisos-26-11">Aviso del 26/11: nuevo contrato <code>CatalogService.findCommerce</code></h2>
+<div class="card" style="border-left:4px solid var(--acc)">
+<p>Para que pedidos muestre el comercio de un pedido sin depender de catálogo (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/146">#146</a>), <code>core-module</code> tiene desde el 26/11 (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/123">!123</a>, <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/148">#148</a>):</p>
+<ul>
+<li><code>CommerceInfo(UUID commerceId, String name)</code> en <code>org.jala.edu.core.contract</code>.</li>
+<li><code>CatalogService.findCommerce(UUID commerceId)</code> → <code>Optional&lt;CommerceInfo&gt;</code>: id existente → su id y nombre; id inexistente o <code>null</code> → vacío; un comercio <b>deshabilitado se devuelve igual</b>. Es un método <code>default</code>: ninguna implementación deja de compilar.</li>
+<li><code>FallbackCatalogService</code> devuelve el comercio de ejemplo (<code>SampleCatalog.COMMERCE</code>, "Sample Pizzeria"): pedidos puede avanzar sin esperar a catálogo.</li>
+</ul>
+<div class="tw"><table><tr><th>Equipo</th><th>Qué hace</th></tr>
+<tr><td>C · Catálogo</td><td>Rebase e implementar <code>findCommerce</code> en <code>CatalogServiceAdapter</code> con TDD; MR con <code>Closes #146</code>.</td></tr>
+<tr><td>B · Pedidos</td><td>Rebase; tomar el <code>commerceId</code> de <code>ProductInfo</code> y llamar a <code>findCommerce</code> para el nombre (sin importar nada de <code>catalog-module</code>); si viene vacío, un texto por defecto; en pruebas, el <i>fallback</i> o un stub.</td></tr>
+</table></div>
+<p>Las dos partes en <code>main</code> antes del ensayo del <b>viernes 27/11</b>.</p></div>
+
 <h2 id="ultima-semana">🚀 Última semana: entreguemos el Delivery System completo</h2>
 <div class="card" style="border-left:4px solid var(--ok)">
 <p>Llegamos a la recta final. En cinco semanas construyeron, entre los cuatro equipos, un producto real: usuarios, catálogo, pedidos, pagos y entregas, que hoy se comunican por contratos, con pruebas, pipelines y una arquitectura limpia que pueden explicar. <b>Eso ya es mucho, y se nota.</b></p>
@@ -131,6 +145,7 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <tr><th>Contrato (core-module)</th><th>Lo implementa</th><th>Estado</th><th>Quién espera</th></tr>
 <tr><td><code>UserService</code> · <code>CurrentUserService</code></td><td>Usuarios</td><td class="ok">✅</td><td>Todos</td></tr>
 <tr><td><code>CatalogService</code></td><td>C</td><td class="ok">✅</td><td>B: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/132">#132</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/103">!103</a>)</td></tr>
+<tr><td><code>CatalogService.findCommerce</code> (id y nombre del comercio)</td><td>C</td><td class="warn">⚠️ contrato en <code>core</code> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/123">!123</a>); falta <code>CatalogServiceAdapter</code> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/146">#146</a>)</td><td>B: mostrar el comercio del pedido</td></tr>
 <tr><td><code>PaymentService</code></td><td>D</td><td class="ok">✅ desde el 17/11</td><td>B: <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/130">#130</a> conectar el pago</td></tr>
 <tr><td><code>OrderService</code></td><td>B</td><td class="bad">❌ <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/issues/72">#72</a> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/107">!107</a> sin fusionar)</td><td>A: pedidos listos, asignación y entrega</td></tr>
 </table></div></div>
@@ -183,5 +198,5 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <h2>Para presentar la demo</h2>
 <div class="card"><p>Cómo se evalúa: <a href="evaluacion-final.html">Evaluación final · E.10</a>. Cada integrante necesita el <b>75 %</b> de los puntos de los laboratorios 1 a 9 y del midterm (300 de 400). El detalle por integrante está en el reporte de la semana 7 de cada equipo, en la wiki.</p></div>
 
-<p class="foot">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Página del corte del 22/11/2026, actualizada el 24/11.</p>
+<p class="foot">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Página del corte del 22/11/2026, actualizada el 26/11.</p>
 </div></body></html>
