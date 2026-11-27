@@ -38,15 +38,27 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <div class="card"><h3>📝 Feedback de la semana 8</h3><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-8---General-report">General</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-8---Equipo-A">A</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-8---Equipo-B">B</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-8---Equipo-C">C</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Feedback/Week-8---Equipo-D">D</a><br>Lab 8 y cierre del Sprint 4.</div>
 <div class="card"><h3>🧭 Aprobación de MR</h3>Aprueba el <b>SM del equipo</b>. Si el autor es el SM, aprueba <b>otro SM o el practitioner</b>: desde el 23/11 los SM de los otros equipos son code owners de cada módulo.</div>
 <div class="card"><h3>🎯 Evaluación final</h3><a href="evaluacion-final.html">Demo y revisión técnica (E.10)</a>: 30/11, 1/12 y 2/12. Qué se evalúa, rúbrica, preguntas y ejemplos de ejercicios.</div>
-<div class="card"><h3>🗓️ Fechas</h3><b>Lun 23/11</b> linter bloqueante · <b>Sáb 28/11, 12:00</b> congelamiento de <code>main</code> · <b>sesión de la semana 9</b> predemo · <b>Vie 27/11</b> ensayo · <b>Dom 29/11</b> entrega del Lab 9 · <b>Lun 30/11</b> demo y tag <code>v1.0.0</code></div>
+<div class="card"><h3>🗓️ Fechas</h3><b>Lun 23/11</b> linter bloqueante · <b>Dom 29/11, 16:00</b> congelamiento de <code>main</code> · <b>sesión de la semana 9</b> predemo · <b>Vie 27/11</b> ensayo · <b>Dom 29/11</b> entrega del Lab 9 · <b>Lun 30/11</b> demo y tag <code>v1.0.0</code></div>
 </div>
 
-<h2 id="congelamiento-28-11">🧊 Congelamiento de <code>main</code>: sábado 28/11, 12:00 (UTC-4, hora de Bolivia)</h2>
+<h2 id="avisos-27-11">📢 Aviso del 27/11: entrega final y evaluación del miércoles</h2>
+<div class="card" style="border-left:4px solid var(--bad)"><div class="tw"><table><tr><th>Cuándo</th><th>Qué</th></tr>
+<tr><td><b>Sáb 28/11, 16:00</b></td><td>Terminar (o avanzar lo más posible) lo que <b>otros equipos necesitan</b>: contratos, adaptadores o datos que se integran. Si no llegan, coordinarlo con su SM y con el SM del equipo que depende de ustedes, y anotarlo en el issue y en <code>Seguimiento/Integracion</code>.</td></tr>
+<tr><td><b>Dom 29/11, 16:00</b></td><td>🧊 <b>Congelamiento de <code>main</code></b> (pospuesto): después solo entran correcciones (<code>ISSUE-&lt;n&gt;/bug/…</code>) y documentación; el practitioner sube todos los <code>pom.xml</code> a 1.0.0.</td></tr>
+<tr><td><b>Dom 29/11, 23:59</b></td><td><code>Demo</code>, <code>Release-1.0.0</code> y la wiki al día.</td></tr>
+<tr><td><b>Lun 30/11, 12:00</b></td><td>Rama <code>FEAT-&lt;n&gt;/release/&lt;módulo&gt;-1.0.0</code> y su MR fusionado (Lab 9, Actividad 2).</td></tr>
+<tr><td><b>Mié 2/12</b></td><td>🎤 Evaluación con practitioners de otras secciones: <b>5 a 7 min de presentación</b> y <b>3 a 5 min de preguntas</b> por equipo. Las preguntas pueden ir a cualquier integrante: <b>cada uno debe conocer lo que se desarrolló e implementó</b>.</td></tr>
+</table></div>
+<p>🧭 <b>Demo interactiva para el miércoles:</b> un recorrido del módulo y de su integración (pasos del usuario y contratos que usa). Pueden usar herramientas como <a href="https://www.storylane.io/">Storylane</a>; como la aplicación es de escritorio (JavaFX), armen el recorrido con capturas de pantalla o un video de la aplicación corriendo desde <code>main</code>.</p>
+<p>💬 Cualquier otro detalle: directamente con el practitioner por <b>Microsoft Teams</b>.</p></div>
+
+<h2 id="congelamiento-28-11">🧊 Congelamiento de <code>main</code>: domingo 29/11, 16:00 (UTC-4, hora de Bolivia)</h2>
 <div class="card" style="border-left:4px solid var(--bad)"><div class="tw"><table>
 <tr><th>Cuándo</th><th>Qué</th></tr>
-<tr><td><b>Hasta el sábado 28/11, 12:00</b></td><td>Fusionar todo lo que entra en la versión 1.0.0 (pipeline en verde y aprobación del SM). Lo que no esté en <code>main</code> a esa hora no entra en la demo: cerrar el MR, devolver la historia al backlog y anotarlo en <code>Seguimiento/Integracion</code>.</td></tr>
-<tr><td><b>Desde el sábado 28/11, 12:00</b></td><td>Solo correcciones (<code>ISSUE-&lt;n&gt;/bug/…</code>, plantilla <b>Bug</b>) y documentación. El practitioner sube todos los <code>pom.xml</code> a 1.0.0 en un solo MR; luego cada equipo hace rebase y su rama <code>FEAT-&lt;n&gt;/release/&lt;módulo&gt;-1.0.0</code> (Lab 9, Actividad 2).</td></tr>
-<tr><td><b>Dom 29/11, 23:59</b></td><td>MR de versión fusionado, <code>lint</code> y <code>build</code> del módulo en verde en <code>main</code>, <code>Demo</code> y <code>Release-1.0.0</code> completas y la wiki al día.</td></tr>
+<tr><td><b>Hasta el domingo 29/11, 16:00</b></td><td>Fusionar todo lo que entra en la versión 1.0.0 (pipeline en verde y aprobación del SM). Lo que no esté en <code>main</code> a esa hora no entra en la demo: cerrar el MR, devolver la historia al backlog y anotarlo en <code>Seguimiento/Integracion</code>.</td></tr>
+<tr><td><b>Desde el domingo 29/11, 16:00</b></td><td>Solo correcciones (<code>ISSUE-&lt;n&gt;/bug/…</code>, plantilla <b>Bug</b>) y documentación. El practitioner sube todos los <code>pom.xml</code> a 1.0.0 en un solo MR; luego cada equipo hace rebase y su rama <code>FEAT-&lt;n&gt;/release/&lt;módulo&gt;-1.0.0</code> (Lab 9, Actividad 2).</td></tr>
+<tr><td><b>Dom 29/11, 23:59</b></td><td><code>Demo</code> y <code>Release-1.0.0</code> completas y la wiki al día.</td></tr>
+<tr><td><b>Lun 30/11, 12:00</b></td><td>Rama de versión y su MR fusionado, con <code>lint</code> y <code>build</code> del módulo en verde en <code>main</code> (Lab 9, Actividad 2).</td></tr>
 <tr><td><b>Lun 30/11</b></td><td>Tag <code>v1.0.0</code> sobre <code>main</code> y demo.</td></tr>
 </table></div>
 <p>Antes del congelamiento: corregir <code>lint-delivery</code> en rojo en <code>main</code> (equipo A). SM: registrar el acuerdo en <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Integracion/Reuniones-SM">Integracion/Reuniones-SM</a> y en el <code>Seguimiento/Integracion</code> de su módulo.</p></div>
@@ -108,16 +120,17 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <li><b><code>user-module</code> y <code>delivery-system</code> en <code>1.0.0</code></b> (<a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/merge_requests/118">!118</a>). <code>check-release-versions</code> en rojo en <code>main</code> es <b>solo un aviso</b> de los módulos que faltan; bloquea únicamente el tag <code>v1.0.0</code>.</li>
 </ul>
 <div class="tw"><table><tr><th>Paso</th><th>Qué</th><th>Quién</th></tr>
-<tr><td>1 · Sáb 28/11, 12:00 (UTC-4)</td><td>Congelamiento de <code>main</code> (definido por el PO; los SM lo registran en <code>Reuniones-SM</code>)</td><td>PO · los 4 SM</td></tr>
-<tr><td>2 · Sáb 28/11, después de las 12:00</td><td>Todos los <code>pom.xml</code> a <code>1.0.0</code> en un solo MR: <code>core-module</code>, los cuatro módulos (versión y <code>&lt;core-module.version&gt;</code>) y las propiedades de <code>delivery-system</code> (lo aprueba un SM). <b>Los equipos no cambian ningún <code>pom.xml</code>.</b></td><td>Practitioner</td></tr>
+<tr><td>1 · Dom 29/11, 16:00 (UTC-4)</td><td>Congelamiento de <code>main</code> (definido por el PO; los SM lo registran en <code>Reuniones-SM</code>)</td><td>PO · los 4 SM</td></tr>
+<tr><td>2 · Dom 29/11, después de las 16:00</td><td>Todos los <code>pom.xml</code> a <code>1.0.0</code> en un solo MR: <code>core-module</code>, los cuatro módulos (versión y <code>&lt;core-module.version&gt;</code>) y las propiedades de <code>delivery-system</code> (lo aprueba un SM). <b>Los equipos no cambian ningún <code>pom.xml</code>.</b></td><td>Practitioner</td></tr>
 <tr><td>3 · después</td><td>Rebase y rama <code>FEAT-&lt;n&gt;/release/&lt;módulo&gt;-1.0.0</code>: pipeline del módulo (<code>lint</code>, cobertura ≥ 80 %, jar <code>&lt;módulo&gt;-1.0.0.jar</code>) y README del módulo; MR aprobado por el SM</td><td>Cada equipo</td></tr>
-<tr><td>4 · Dom 29/11, 23:59</td><td>MR de versión fusionado, <code>lint</code> y <code>build</code> del módulo en verde en <code>main</code>, páginas Demo y Release-1.0.0 completas</td><td>Cada equipo</td></tr>
+<tr><td>4 · Dom 29/11, 23:59</td><td>Páginas Demo y Release-1.0.0 completas</td><td>Cada equipo</td></tr>
+<tr><td>5 · Lun 30/11, 12:00</td><td>MR de versión fusionado, <code>lint</code> y <code>build</code> del módulo en verde en <code>main</code></td><td>Cada equipo</td></tr>
 </table></div>
 <p><a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Gu%C3%ADas/Laboratorio-semana-9#orden-de-los-cambios-de-versi%C3%B3n-actualizado-el-2311">Orden de los cambios en la guía</a> · <a href="https://gitlab.com/jala-university1/cohort-7/ES.CO.CSSD-125.GA.T2.26.M2/SE/capstone/-/wikis/Modulos/Usuarios/Release-1.0.0">Ejemplo resuelto (Usuarios, !118)</a></p></div>
 
 <h2 id="congelamiento">Congelamiento y documentación de la reunión de SM</h2>
 <div class="card" style="border-left:4px solid var(--bad)">
-<p><b>Qué depende del congelamiento.</b> Hasta el congelamiento de <code>main</code> (<b>sábado 28/11, 12:00</b>, definido por el PO):</p>
+<p><b>Qué depende del congelamiento.</b> Hasta el congelamiento de <code>main</code> (<b>domingo 29/11, 16:00</b>, definido por el PO):</p>
 <ul>
 <li>el practitioner no puede hacer el MR que sube todos los <code>pom.xml</code> a <code>1.0.0</code>;</li>
 <li>ningún equipo puede abrir su rama de versión;</li>
@@ -173,7 +186,7 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <tr><td>Planning (lunes 23/11)</td><td>Cada SM decide qué historias abiertas se terminan y las mueve al hito <b>Integración, pruebas y demo</b>; lo demás vuelve al backlog. Se publica el objetivo SMART de la semana en la epic.</td></tr>
 <tr><td>Tareas y errores</td><td>Un issue por cada uno: plantilla <b>Historia</b> o <b>Bug</b>, con epic, hito, persona asignada y Weight.</td></tr>
 <tr><td>Ramas y MR (GitHub Flow)</td><td>Rama corta desde <code>main</code> (<code>FEAT-&lt;n&gt;/…</code> o <code>ISSUE-&lt;n&gt;/bug/…</code>), MR hacia <code>main</code> con <code>Closes #n</code>; plantilla <b>Release</b> para la versión y las correcciones.</td></tr>
-<tr><td>Congelamiento</td><td>Desde el <b>sábado 28/11 a las 12:00 (UTC-4)</b> solo entran correcciones (<code>ISSUE-&lt;n&gt;/bug/…</code>), documentación y ramas de versión. <a href="#congelamiento">Qué depende de él</a>.</td></tr>
+<tr><td>Congelamiento</td><td>Desde el <b>domingo 29/11 a las 16:00 (UTC-4)</b> solo entran correcciones (<code>ISSUE-&lt;n&gt;/bug/…</code>), documentación y ramas de versión. <a href="#congelamiento">Qué depende de él</a>.</td></tr>
 <tr><td>Actas y avance</td><td><code>Modulos/&lt;módulo&gt;/Actas/Integracion</code> y <code>Modulos/&lt;módulo&gt;/Seguimiento/Integracion</code>, con el enlace de cada reunión.</td></tr>
 </table></div></div>
 
@@ -215,5 +228,5 @@ ul.chk{list-style:none;padding:0;margin:.3em 0}ul.chk li{padding:4px 0 4px 26px;
 <h2>Para presentar la demo</h2>
 <div class="card"><p>Cómo se evalúa: <a href="evaluacion-final.html">Evaluación final · E.10</a>. Cada integrante necesita el <b>75 %</b> de los puntos de los laboratorios 1 a 9 y del midterm (300 de 400). El detalle por integrante está en el reporte de la semana 7 de cada equipo, en la wiki.</p></div>
 
-<p class="foot">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Página del corte del 22/11/2026, actualizada el 26/11.</p>
+<p class="foot">Practitioner · Desarrollo de Software 2 · Capstone Delivery System. Página del corte del 22/11/2026, actualizada el 27/11.</p>
 </div></body></html>
